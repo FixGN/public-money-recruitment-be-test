@@ -46,7 +46,7 @@ namespace VacationRental.Api.Controllers
                 return BadRequest();
             }
 
-            return Ok(new ResourceIdViewModel { Id = bookingCreationResult.CreatedBooking.Id });;
+            return Ok(new ResourceIdViewModel(bookingCreationResult.CreatedBooking.Id));
         }
     }
 }

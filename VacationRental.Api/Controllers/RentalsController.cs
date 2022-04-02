@@ -32,7 +32,7 @@ namespace VacationRental.Api.Controllers
         {
             var rental = _rentalService.Create(model.Units);
 
-            return Ok(new ResourceIdViewModel{Id = rental.Id});
+            return Ok(new ResourceIdViewModel(rental.Id));
         }
     }
 }

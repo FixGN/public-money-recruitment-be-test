@@ -2,6 +2,11 @@
 {
     public class ResourceIdViewModel
     {
-        public int Id { get; set; }
+        public ResourceIdViewModel(int id)
+        {
+            Id = id;
+        }
+        
+        public int Id { get; }
     }
 }
