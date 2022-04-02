@@ -28,13 +28,7 @@ namespace VacationRental.Api.Controllers
 
             var calendarDates = _calendarService.GetCalendarDates(rentalId, start, nights);
             
-            var result = new CalendarViewModel
-            {
-                RentalId = rentalId,
-                Dates = calendarDates.Select(CalendarDateViewModel.FromCalendarDate).ToList()
-            };
-
-            return result;
+            return new CalendarViewModel(rentalId, calendarDates.Select(CalendarDateViewModel.FromCalendarDate).ToList());
         }
     }
 }
