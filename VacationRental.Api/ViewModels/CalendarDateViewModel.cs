@@ -7,16 +7,20 @@ namespace VacationRental.Api.ViewModels
 {
     public class CalendarDateViewModel
     {
-        public DateTime Date { get; set; }
-        public List<CalendarBookingViewModel>? Bookings { get; set; }
+        public CalendarDateViewModel(DateTime date, List<CalendarBookingViewModel> bookings)
+        {
+            Date = date;
+            Bookings = bookings ?? throw new ArgumentNullException(nameof(bookings));
+        }
+        
+        public DateTime Date { get; }
+        public List<CalendarBookingViewModel> Bookings { get; }
         
         public static CalendarDateViewModel FromCalendarDate(CalendarDate calendarDate)
         {
-            return new CalendarDateViewModel
-            {
-                Bookings = calendarDate.Bookings.Select(CalendarBookingViewModel.FromBooking).ToList(),
-                Date = calendarDate.Date
-            };
+            return new CalendarDateViewModel(
+                calendarDate.Date,
+                calendarDate.Bookings.Select(CalendarBookingViewModel.FromBooking).ToList());
         }
     }
 }
