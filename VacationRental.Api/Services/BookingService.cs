@@ -36,7 +36,7 @@ public class BookingService : IBookingService
             .GetByRentalId(rentalId)
             .Where(x => IsBookingsOverlap(x.Start, x.Nights, startDate, nights));
 
-        if (rental.Units >= currentBookings.Count())
+        if (rental.Units <= currentBookings.Count())
         {
             throw new ApplicationException("Not available");
         }
