@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using VacationRental.Api.Models;
 using VacationRental.Api.Services;
-using VacationRental.Contracts.Booking;
-using VacationRental.Contracts.Common;
+using VacationRental.Api.Contracts.Booking;
+using VacationRental.Api.Contracts.Common;
 
 namespace VacationRental.Api.Controllers
 {

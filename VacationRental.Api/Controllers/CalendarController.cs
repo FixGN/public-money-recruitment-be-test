@@ -3,7 +3,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using VacationRental.Api.Models;
 using VacationRental.Api.Services;
-using VacationRental.Contracts.Calendar;
+using VacationRental.Api.Contracts.Calendar;
 
 namespace VacationRental.Api.Controllers
 {
