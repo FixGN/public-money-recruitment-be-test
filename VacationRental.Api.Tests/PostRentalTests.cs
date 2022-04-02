@@ -20,10 +20,7 @@ namespace VacationRental.Api.Tests
         [Fact]
         public async Task GivenCompleteRequest_WhenPostRental_ThenAGetReturnsTheCreatedRental()
         {
-            var request = new RentalBindingModel
-            {
-                Units = 25
-            };
+            var request = new RentalBindingModel(25);
 
             ResourceIdViewModel postResult;
             using (var postResponse = await _client.PostAsJsonAsync($"/api/v1/rentals", request))
