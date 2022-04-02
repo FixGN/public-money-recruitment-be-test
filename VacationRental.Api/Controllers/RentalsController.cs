@@ -1,7 +1,9 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
+using VacationRental.Api.Models;
 using VacationRental.Api.Services;
-using VacationRental.Api.ViewModels;
+using VacationRental.Contracts.Common;
+using VacationRental.Contracts.Rental;
 
 namespace VacationRental.Api.Controllers
 {
@@ -24,7 +26,7 @@ namespace VacationRental.Api.Controllers
 
             return rental == null 
                 ? NotFound() 
-                : Ok(RentalViewModel.FromRental(rental));;
+                : Ok(MapRentalToRentalViewModel(rental));;
         }
 
         [HttpPost]
@@ -33,6 +35,11 @@ namespace VacationRental.Api.Controllers
             var rental = _rentalService.Create(model.Units);
 
             return Ok(new ResourceIdViewModel(rental.Id));
+        }
+        
+        private static RentalViewModel MapRentalToRentalViewModel(Rental rental)
+        {
+            return new RentalViewModel(rental.Id, rental.Units);
         }
     }
 }

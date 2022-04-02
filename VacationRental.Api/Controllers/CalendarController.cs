@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using VacationRental.Api.Models;
 using VacationRental.Api.Services;
-using VacationRental.Api.ViewModels;
+using VacationRental.Contracts.Calendar;
 
 namespace VacationRental.Api.Controllers
 {
@@ -28,7 +29,14 @@ namespace VacationRental.Api.Controllers
 
             var calendarDates = _calendarService.GetCalendarDates(rentalId, start, nights);
             
-            return new CalendarViewModel(rentalId, calendarDates.Select(CalendarDateViewModel.FromCalendarDate).ToList());
+            return new CalendarViewModel(rentalId, calendarDates.Select(MapCalendarDateToCalendarDateViewModel).ToList());
+        }
+        
+        private static CalendarDateViewModel MapCalendarDateToCalendarDateViewModel(CalendarDate calendarDate)
+        {
+            return new CalendarDateViewModel(
+                calendarDate.Date,
+                calendarDate.Bookings.Select(x => new CalendarBookingViewModel(x.Id)).ToList());
         }
     }
 }

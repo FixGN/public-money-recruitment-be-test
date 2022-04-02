@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace VacationRental.Api.ViewModels
+﻿namespace VacationRental.Contracts.Booking
 {
     public class BookingBindingModel
     {

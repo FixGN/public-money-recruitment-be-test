@@ -1,7 +1,4 @@
-﻿using System;
-using VacationRental.Api.Models;
-
-namespace VacationRental.Api.ViewModels
+﻿namespace VacationRental.Contracts.Rental
 {
     public class RentalViewModel
     {
@@ -13,10 +10,5 @@ namespace VacationRental.Api.ViewModels
         
         public int Id { get; }
         public int Units { get; }
-
-        public static RentalViewModel FromRental(Rental rental)
-        {
-            return new RentalViewModel(rental.Id, rental.Units);
-        }
     }
 }
