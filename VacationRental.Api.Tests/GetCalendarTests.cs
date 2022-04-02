@@ -29,12 +29,7 @@ namespace VacationRental.Api.Tests
                 postRentalResult = await postRentalResponse.Content.ReadAsAsync<ResourceIdViewModel>();
             }
 
-            var postBooking1Request = new BookingBindingModel
-            {
-                 RentalId = postRentalResult.Id,
-                 Nights = 2,
-                 Start = new DateTime(2000, 01, 02)
-            };
+            var postBooking1Request = new BookingBindingModel(postRentalResult.Id,  new DateTime(2000, 01, 02), 2);
 
             ResourceIdViewModel postBooking1Result;
             using (var postBooking1Response = await _client.PostAsJsonAsync($"/api/v1/bookings", postBooking1Request))
@@ -43,12 +38,7 @@ namespace VacationRental.Api.Tests
                 postBooking1Result = await postBooking1Response.Content.ReadAsAsync<ResourceIdViewModel>();
             }
 
-            var postBooking2Request = new BookingBindingModel
-            {
-                RentalId = postRentalResult.Id,
-                Nights = 2,
-                Start = new DateTime(2000, 01, 03)
-            };
+            var postBooking2Request = new BookingBindingModel(postRentalResult.Id,  new DateTime(2000, 01, 03), 2);
 
             ResourceIdViewModel postBooking2Result;
             using (var postBooking2Response = await _client.PostAsJsonAsync($"/api/v1/bookings", postBooking2Request))

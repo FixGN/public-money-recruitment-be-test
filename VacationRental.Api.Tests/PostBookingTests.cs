@@ -29,12 +29,7 @@ namespace VacationRental.Api.Tests
                 postRentalResult = await postRentalResponse.Content.ReadAsAsync<ResourceIdViewModel>();
             }
 
-            var postBookingRequest = new BookingBindingModel
-            {
-                 RentalId = postRentalResult.Id,
-                 Nights = 3,
-                 Start = new DateTime(2001, 01, 01)
-            };
+            var postBookingRequest = new BookingBindingModel(postRentalResult.Id, new DateTime(2001, 01, 01), 3);
 
             ResourceIdViewModel postBookingResult;
             using (var postBookingResponse = await _client.PostAsJsonAsync($"/api/v1/bookings", postBookingRequest))
@@ -66,24 +61,14 @@ namespace VacationRental.Api.Tests
                 postRentalResult = await postRentalResponse.Content.ReadAsAsync<ResourceIdViewModel>();
             }
 
-            var postBooking1Request = new BookingBindingModel
-            {
-                RentalId = postRentalResult.Id,
-                Nights = 3,
-                Start = new DateTime(2002, 01, 01)
-            };
+            var postBooking1Request = new BookingBindingModel(postRentalResult.Id, new DateTime(2002, 01, 01), 3);
 
             using (var postBooking1Response = await _client.PostAsJsonAsync($"/api/v1/bookings", postBooking1Request))
             {
                 Assert.True(postBooking1Response.IsSuccessStatusCode);
             }
 
-            var postBooking2Request = new BookingBindingModel
-            {
-                RentalId = postRentalResult.Id,
-                Nights = 1,
-                Start = new DateTime(2002, 01, 02)
-            };
+            var postBooking2Request = new BookingBindingModel(postRentalResult.Id, new DateTime(2002, 01, 02), 1);
 
             await Assert.ThrowsAsync<ApplicationException>(async () =>
             {

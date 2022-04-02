@@ -4,15 +4,15 @@ namespace VacationRental.Api.ViewModels
 {
     public class BookingBindingModel
     {
-        public int RentalId { get; set; }
-
-        public DateTime Start
+        public BookingBindingModel(int rentalId, DateTime start, int nights)
         {
-            get => _startIgnoreTime;
-            set => _startIgnoreTime = value.Date;
+            RentalId = rentalId;
+            Start = start.Date;
+            Nights = nights;
         }
-
-        private DateTime _startIgnoreTime;
-        public int Nights { get; set; }
+        
+        public int RentalId { get; }
+        public DateTime Start { get; }
+        public int Nights { get; }
     }
 }
