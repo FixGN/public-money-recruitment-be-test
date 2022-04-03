@@ -27,12 +27,12 @@ public class CalendarService : ICalendarService
             return GetCalendarDatesResult.Fail("Rental not found");
 
         var calendarDates = new CalendarDate[nights];
+        var availableBookings = _bookingRepository.GetByRentalId(rentalId);
         
         for (var i = 0; i < nights; i++)
         {
             var date = start.Date.AddDays(i);
-            var bookings = _bookingRepository
-                .GetByRentalId(rentalId)
+            var bookings = availableBookings
                 .Where(x => x.Start <= date && x.Start.AddDays(x.Nights) > date)
                 .ToArray();
 
