@@ -1,5 +1,6 @@
 using System;
 using NSubstitute;
+using NSubstitute.ReturnsExtensions;
 using NUnit.Framework;
 using VacationRental.Api.Models;
 using VacationRental.Api.Repositories;
@@ -47,7 +48,7 @@ public class CalendarServiceTests
     [Test]
     public void GetCalendarDates_ReturnsIsSuccessFalse_WhenRentalNotFound()
     {
-        _rentalRepository.Get(DefaultRentalId).Returns((Rental?) null);
+        _rentalRepository.Get(DefaultRentalId).ReturnsNull();
         
         var actualResult = _calendarService.GetCalendarDates(DefaultRentalId, _defaultDateTime, DefaultNights);
 
@@ -78,7 +79,6 @@ public class CalendarServiceTests
         var bookingArray = new[] {booking};
         _rentalRepository.Get(DefaultRentalId).Returns(rental);
         _bookingRepository.GetByRentalId(DefaultRentalId).Returns(bookingArray);
-        // TODO: If you a change default - tests will be broken
         var expectedResult = GetCalendarDatesResult.Success(new CalendarDate[] {
             new(_defaultDateTime, bookingArray),
             new(_defaultDateTime.AddDays(1), bookingArray)

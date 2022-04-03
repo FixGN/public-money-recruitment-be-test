@@ -1,5 +1,6 @@
 using System;
 using NSubstitute;
+using NSubstitute.ReturnsExtensions;
 using NUnit.Framework;
 using VacationRental.Api.Models;
 using VacationRental.Api.Repositories;
@@ -54,7 +55,7 @@ public class BookingServiceTests
     [Test]
     public void GetBooking_ReturnsNull_WhenBookingNotExists()
     {
-        _bookingRepository.Get(DefaultBookingId).Returns((Booking?) null);
+        _bookingRepository.Get(DefaultBookingId).ReturnsNull();
 
         var actualBooking = _bookingService.GetBooking(DefaultBookingId);
         
@@ -96,7 +97,7 @@ public class BookingServiceTests
     [Test]
     public void CreateBooking_ReturnsIsSuccessFalse_WhenRentalIsNotExists()
     {
-        _rentalRepository.Get(DefaultRentalId).Returns((Rental?) null);
+        _rentalRepository.Get(DefaultRentalId).ReturnsNull();
         
         var actualBookingCreationResult = _bookingService.CreateBooking(DefaultRentalId, _defaultStartDate, DefaultNights);
         
@@ -106,7 +107,7 @@ public class BookingServiceTests
     [Test]
     public void CreateBooking_ReturnsStatusValidationFailed_WhenRentalIsNotExists()
     {
-        _rentalRepository.Get(DefaultRentalId).Returns((Rental?) null);
+        _rentalRepository.Get(DefaultRentalId).ReturnsNull();
         
         var actualBookingCreationResult = _bookingService.CreateBooking(DefaultRentalId, _defaultStartDate, DefaultNights);
         
