@@ -1,5 +1,7 @@
 using System;
 using System.Linq;
+using Microsoft.Extensions.Logging;
+using VacationRental.Api.Logging.Extensions.Services;
 using VacationRental.Api.Models;
 using VacationRental.Api.Repositories;
 using VacationRental.Api.Services.Models;
@@ -10,11 +12,13 @@ public class BookingService : IBookingService
 {
     private readonly IBookingRepository _bookingRepository;
     private readonly IRentalRepository _rentalRepository;
+    private readonly ILogger<IBookingService> _logger;
 
-    public BookingService(IBookingRepository bookingRepository, IRentalRepository rentalRepository)
+    public BookingService(IBookingRepository bookingRepository, IRentalRepository rentalRepository, ILogger<IBookingService> logger)
     {
         _bookingRepository = bookingRepository ?? throw new ArgumentNullException(nameof(bookingRepository));
         _rentalRepository = rentalRepository ?? throw new ArgumentNullException(nameof(rentalRepository));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
     public Booking? GetBooking(int id)
@@ -24,13 +28,16 @@ public class BookingService : IBookingService
 
     public CreateBookingResult CreateBooking(int rentalId, DateTime start, int nights)
     {
+        _logger.CreateBookingStart(rentalId, start, nights);
         if (nights <= 0)
         {
+            _logger.CreateBookingNightsIsNegativeOrZero(rentalId, start, nights);
             return CreateBookingResult.ValidationFail("Nights must be positive");
         }
         var rental = _rentalRepository.Get(rentalId);
         if (rental == null)
         {
+            _logger.CreateBookingRentalNotFound(rentalId, start, nights);
             return CreateBookingResult.ValidationFail("Rental not found");
         }
         
@@ -42,11 +49,13 @@ public class BookingService : IBookingService
 
         if (rental.Units <= currentBookings.Count())
         {
+            _logger.CreateBookingAvailableUnitsNotFound(rentalId, start, nights);
             return CreateBookingResult.Conflict("Not available");
         }
         
         var booking = _bookingRepository.Create(rentalId, startDate, nights);
 
+        _logger.CreateBookingEnd(rentalId, start, nights);
         return CreateBookingResult.Successful(booking);
     }
 

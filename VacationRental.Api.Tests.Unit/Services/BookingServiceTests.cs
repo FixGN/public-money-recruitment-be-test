@@ -1,4 +1,5 @@
 using System;
+using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;
 using NUnit.Framework;
@@ -27,7 +28,7 @@ public class BookingServiceTests
     {
         _bookingRepository = Substitute.For<IBookingRepository>();
         _rentalRepository = Substitute.For<IRentalRepository>();
-        _bookingService = new BookingService(_bookingRepository, _rentalRepository);
+        _bookingService = new BookingService(_bookingRepository, _rentalRepository, new NullLogger<IBookingService>());
     }
     
     [Test]
