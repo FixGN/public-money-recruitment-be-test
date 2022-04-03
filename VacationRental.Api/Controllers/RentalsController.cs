@@ -22,7 +22,7 @@ namespace VacationRental.Api.Controllers
         [Route("{rentalId:int}")]
         public IActionResult Get(int rentalId)
         {
-            var rental = _rentalService.Get(rentalId);
+            var rental = _rentalService.GetRental(rentalId);
 
             return rental == null 
                 ? NotFound() 
@@ -32,7 +32,7 @@ namespace VacationRental.Api.Controllers
         [HttpPost]
         public IActionResult Post(RentalBindingModel model)
         {
-            var rental = _rentalService.Create(model.Units);
+            var rental = _rentalService.CreateRental(model.Units);
 
             return Ok(new ResourceIdViewModel(rental.Id));
         }

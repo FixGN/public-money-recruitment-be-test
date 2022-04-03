@@ -12,12 +12,12 @@ public class RentalService : IRentalService
         _rentalRepository = rentalRepository;
     }
     
-    public Rental? Get(int id)
+    public Rental? GetRental(int id)
     {
         return _rentalRepository.Get(id);
     }
 
-    public Rental Create(int units)
+    public Rental CreateRental(int units)
     {
         return _rentalRepository.Create(units);
     }

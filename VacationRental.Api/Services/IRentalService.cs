@@ -4,6 +4,6 @@ namespace VacationRental.Api.Services;
 
 public interface IRentalService
 {
-    public Rental? Get(int id);
-    public Rental Create(int units);
+    public Rental? GetRental(int id);
+    public Rental CreateRental(int units);
 }
