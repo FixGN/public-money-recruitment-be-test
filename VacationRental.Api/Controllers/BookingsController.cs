@@ -24,12 +24,9 @@ namespace VacationRental.Api.Controllers
         {
             var booking = _bookingService.GetBooking(bookingId);
 
-            if (booking == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(MapBookingToBookingViewModel(booking));
+            return booking == null 
+                ? NotFound()
+                : Ok(MapBookingToBookingViewModel(booking));
         }
 
         [HttpPost]
@@ -37,12 +34,9 @@ namespace VacationRental.Api.Controllers
         {
             var bookingCreationResult = _bookingService.CreateBooking(model.RentalId, model.Start, model.Nights);
 
-            if (!bookingCreationResult.IsSuccess)
-            {
-                return BadRequest(bookingCreationResult.ErrorMessage);
-            }
-
-            return Ok(new ResourceIdViewModel(bookingCreationResult.CreatedBooking.Id));
+            return bookingCreationResult.IsSuccess
+                ? Ok(new ResourceIdViewModel(bookingCreationResult.CreatedBooking.Id))
+                : BadRequest(bookingCreationResult.ErrorMessage);
         }
 
         private static BookingViewModel MapBookingToBookingViewModel(Booking booking)
