@@ -19,7 +19,7 @@ public class CalendarService : ICalendarService
     
     public GetCalendarDatesResult GetCalendarDates(int rentalId, DateTime start, int nights)
     {
-        if (nights < 0)
+        if (nights <= 0)
             return GetCalendarDatesResult.Fail("Nights must be positive");
         // TODO: It's a part of contract? Can I delete this? 
         var rental = _rentalRepository.Get(rentalId);
