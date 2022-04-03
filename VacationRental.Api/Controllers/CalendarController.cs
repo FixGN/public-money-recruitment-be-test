@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using VacationRental.Api.Models;
 using VacationRental.Api.Services;
 using VacationRental.Api.Contracts.Calendar;
+using VacationRental.Api.Contracts.Common;
 
 namespace VacationRental.Api.Controllers
 {
@@ -19,17 +20,28 @@ namespace VacationRental.Api.Controllers
         }
 
         [HttpGet]
-        public CalendarViewModel Get(int rentalId, DateTime start, int nights)
+        public IActionResult Get(int rentalId, DateTime start, int nights)
         {
-            if (nights < 0)
-                throw new ApplicationException("Nights must be positive");
-            // TODO: make readable NotFound errors
-            // if (!_rentals.ContainsKey(rentalId))
-            //     throw new ApplicationException("Rental not found");
+            var calendarDatesResult = _calendarService.GetCalendarDates(rentalId, start, nights);
 
-            var calendarDates = _calendarService.GetCalendarDates(rentalId, start, nights);
+            if (!calendarDatesResult.IsSuccess)
+            {
+                return BadRequest(new ErrorViewModel(calendarDatesResult.ErrorMessage));
+            }
+
+            if (calendarDatesResult.CalendarDates.Length == 0)
+            {
+                return NotFound();
+            }
             
-            return new CalendarViewModel(rentalId, calendarDates.Select(MapCalendarDateToCalendarDateViewModel).ToList());
+            return Ok(MapCalendarViewModelFromRentalIdAndCalendarDates(rentalId, calendarDatesResult.CalendarDates));
+        }
+        
+        private static CalendarViewModel MapCalendarViewModelFromRentalIdAndCalendarDates(int rentalId, CalendarDate[] calendarDates)
+        {
+            return new CalendarViewModel(
+                rentalId,
+                calendarDates.Select(MapCalendarDateToCalendarDateViewModel).ToList());
         }
         
         private static CalendarDateViewModel MapCalendarDateToCalendarDateViewModel(CalendarDate calendarDate)

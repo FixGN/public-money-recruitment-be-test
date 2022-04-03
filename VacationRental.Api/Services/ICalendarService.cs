@@ -1,9 +1,9 @@
 using System;
-using VacationRental.Api.Models;
+using VacationRental.Api.Services.Models;
 
 namespace VacationRental.Api.Services;
 
 public interface ICalendarService
 {
-    public CalendarDate[] GetCalendarDates(int rentalId, DateTime start, int nights);
+    public GetCalendarDatesResult GetCalendarDates(int rentalId, DateTime start, int nights);
 }

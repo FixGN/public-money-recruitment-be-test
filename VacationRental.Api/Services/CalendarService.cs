@@ -2,34 +2,43 @@ using System;
 using System.Linq;
 using VacationRental.Api.Models;
 using VacationRental.Api.Repositories;
+using VacationRental.Api.Services.Models;
 
 namespace VacationRental.Api.Services;
 
 public class CalendarService : ICalendarService
 {
     private readonly IBookingRepository _bookingRepository;
+    private readonly IRentalRepository _rentalRepository;
 
-    public CalendarService(IBookingRepository bookingRepository)
+    public CalendarService(IBookingRepository bookingRepository, IRentalRepository rentalRepository)
     {
         _bookingRepository = bookingRepository;
+        _rentalRepository = rentalRepository;
     }
     
-    public CalendarDate[] GetCalendarDates(int rentalId, DateTime start, int nights)
+    public GetCalendarDatesResult GetCalendarDates(int rentalId, DateTime start, int nights)
     {
-        var calendarDateDates = new CalendarDate[nights];
+        if (nights < 0)
+            return GetCalendarDatesResult.Fail("Nights must be positive");
+        // TODO: It's a part of contract? Can I delete this? 
+        var rental = _rentalRepository.Get(rentalId);
+        if (rental == null)
+            return GetCalendarDatesResult.Fail("Rental not found");
+
+        var calendarDates = new CalendarDate[nights];
         
         for (var i = 0; i < nights; i++)
         {
             var date = start.Date.AddDays(i);
             var bookings = _bookingRepository
-                // TODO: Can be null
                 .GetByRentalId(rentalId)
                 .Where(x => x.Start <= date && x.Start.AddDays(x.Nights) > date)
                 .ToArray();
 
-            calendarDateDates[i] = new CalendarDate(date, bookings);
+            calendarDates[i] = new CalendarDate(date, bookings);
         }
 
-        return calendarDateDates;
+        return GetCalendarDatesResult.Success(calendarDates);
     }
 }
