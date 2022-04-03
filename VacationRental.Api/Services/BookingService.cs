@@ -24,13 +24,17 @@ public class BookingService : IBookingService
 
     public CreateBookingResult CreateBooking(int rentalId, DateTime start, int nights)
     {
-        var startDate = start.Date;
-
+        if (nights <= 0)
+        {
+            return CreateBookingResult.Fail("Nights must be positive");
+        }
         var rental = _rentalRepository.Get(rentalId);
         if (rental == null)
         {
-            return CreateBookingResult.Fail();
+            return CreateBookingResult.Fail("Rental not found");
         }
+        
+        var startDate = start.Date;
         
         var currentBookings = _bookingRepository
             .GetByRentalId(rentalId)

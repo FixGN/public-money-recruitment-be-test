@@ -35,17 +35,11 @@ namespace VacationRental.Api.Controllers
         [HttpPost]
         public IActionResult Post(BookingBindingModel model)
         {
-            if (model.Nights <= 0)
-                throw new ApplicationException("Nights must be positive");
-            // TODO: make readable badRequest
-            // if (!_rentals.ContainsKey(model.RentalId))
-            //     throw new ApplicationException("Rental not found");
-
             var bookingCreationResult = _bookingService.CreateBooking(model.RentalId, model.Start, model.Nights);
 
             if (!bookingCreationResult.IsSuccess)
             {
-                return BadRequest();
+                return BadRequest(bookingCreationResult.ErrorMessage);
             }
 
             return Ok(new ResourceIdViewModel(bookingCreationResult.CreatedBooking.Id));
