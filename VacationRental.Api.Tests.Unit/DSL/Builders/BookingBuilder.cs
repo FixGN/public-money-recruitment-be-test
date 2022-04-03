@@ -10,6 +10,12 @@ internal class BookingBuilder
     private DateTime _startDate = new(2022, 1, 1);
     private int _nights = 1;
 
+    public BookingBuilder WithId(int id)
+    {
+        _id = id;
+        return this;
+    }
+    
     public BookingBuilder WithRentalId(int rentalId)
     {
         _rentalId = rentalId;
