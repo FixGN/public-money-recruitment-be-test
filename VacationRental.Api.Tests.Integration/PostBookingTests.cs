@@ -6,7 +6,7 @@ using VacationRental.Api.Contracts.Common;
 using VacationRental.Api.Contracts.Rental;
 using Xunit;
 
-namespace VacationRental.Api.Tests
+namespace VacationRental.Api.Tests.Integration
 {
     [Collection("Integration")]
     public class PostBookingTests
