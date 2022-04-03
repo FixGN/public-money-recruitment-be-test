@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using VacationRental.Api.Models;
 using VacationRental.Api.Services;
+using VacationRental.Api.Services.Models;
 using VacationRental.Api.Contracts.Booking;
 using VacationRental.Api.Contracts.Common;
 
@@ -34,9 +35,13 @@ namespace VacationRental.Api.Controllers
         {
             var bookingCreationResult = _bookingService.CreateBooking(model.RentalId, model.Start, model.Nights);
 
-            return bookingCreationResult.IsSuccess
-                ? Ok(new ResourceIdViewModel(bookingCreationResult.CreatedBooking.Id))
-                : BadRequest(bookingCreationResult.ErrorMessage);
+            return bookingCreationResult switch
+            {
+                {IsSuccess: true} => Ok(new ResourceIdViewModel(bookingCreationResult.CreatedBooking.Id)),
+                {Status: CreateBookingResultStatus.ValidationFailed} => BadRequest(new ErrorViewModel(bookingCreationResult.ErrorMessage)),
+                {Status: CreateBookingResultStatus.Conflict} => Conflict(new ErrorViewModel(bookingCreationResult.ErrorMessage)),
+                _ => throw new ApplicationException("Unknown error status")
+            };
         }
 
         private static BookingViewModel MapBookingToBookingViewModel(Booking booking)

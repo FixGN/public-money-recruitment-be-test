@@ -26,12 +26,12 @@ public class BookingService : IBookingService
     {
         if (nights <= 0)
         {
-            return CreateBookingResult.Fail("Nights must be positive");
+            return CreateBookingResult.ValidationFail("Nights must be positive");
         }
         var rental = _rentalRepository.Get(rentalId);
         if (rental == null)
         {
-            return CreateBookingResult.Fail("Rental not found");
+            return CreateBookingResult.ValidationFail("Rental not found");
         }
         
         var startDate = start.Date;
@@ -42,7 +42,7 @@ public class BookingService : IBookingService
 
         if (rental.Units <= currentBookings.Count())
         {
-            throw new ApplicationException("Not available");
+            return CreateBookingResult.Conflict("Not available");
         }
         
         var booking = _bookingRepository.Create(rentalId, startDate, nights);
