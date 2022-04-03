@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using VacationRental.Api.Contracts.Booking;
@@ -71,12 +72,15 @@ namespace VacationRental.Api.Tests.Integration
 
             var postBooking2Request = new BookingBindingModel(postRentalResult.Id, new DateTime(2002, 01, 02), 1);
 
-            await Assert.ThrowsAsync<ApplicationException>(async () =>
-            {
-                using (var postBooking2Response = await _client.PostAsJsonAsync($"/api/v1/bookings", postBooking2Request))
-                {
-                }
-            });
+            // TODO: Can I change this test? I want to return 409 instead of 500
+            // await Assert.ThrowsAsync<ApplicationException>(async () =>
+            // {
+            //     using (var postBooking2Response = await _client.PostAsJsonAsync($"/api/v1/bookings", postBooking2Request))
+            //     {
+            //     }
+            // });
+            var postBooking2Response = await _client.PostAsJsonAsync($"/api/v1/bookings", postBooking2Request);
+            Assert.Equal(HttpStatusCode.Conflict, postBooking2Response.StatusCode);
         }
     }
 }
