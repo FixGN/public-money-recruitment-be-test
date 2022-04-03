@@ -12,9 +12,9 @@ public class BookingService : IBookingService
 {
     private readonly IBookingRepository _bookingRepository;
     private readonly IRentalRepository _rentalRepository;
-    private readonly ILogger<IBookingService> _logger;
+    private readonly ILogger<BookingService> _logger;
 
-    public BookingService(IBookingRepository bookingRepository, IRentalRepository rentalRepository, ILogger<IBookingService> logger)
+    public BookingService(IBookingRepository bookingRepository, IRentalRepository rentalRepository, ILogger<BookingService> logger)
     {
         _bookingRepository = bookingRepository ?? throw new ArgumentNullException(nameof(bookingRepository));
         _rentalRepository = rentalRepository ?? throw new ArgumentNullException(nameof(rentalRepository));

@@ -28,7 +28,7 @@ public class BookingServiceTests
     {
         _bookingRepository = Substitute.For<IBookingRepository>();
         _rentalRepository = Substitute.For<IRentalRepository>();
-        _bookingService = new BookingService(_bookingRepository, _rentalRepository, new NullLogger<IBookingService>());
+        _bookingService = new BookingService(_bookingRepository, _rentalRepository, new NullLogger<BookingService>());
     }
     
     [Test]
