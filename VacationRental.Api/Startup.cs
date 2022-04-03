@@ -29,7 +29,7 @@ namespace VacationRental.Api
 
             services.AddSwaggerGen(opts => opts.SwaggerDoc("v1", new OpenApiInfo { Title = "Vacation rental information", Version = "v1" }));
 
-            // TODO: Think about logging
+            services.AddLogging();
             
             // Services
             services.AddSingleton<IBookingService, BookingService>();
