@@ -4,7 +4,7 @@ using VacationRental.Api.Models;
 using VacationRental.Api.Repositories;
 using VacationRental.Api.Services.Models;
 
-namespace VacationRental.Api.Services;
+namespace VacationRental.Api.Services.Implementation;
 
 public class BookingService : IBookingService
 {

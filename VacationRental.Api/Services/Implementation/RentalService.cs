@@ -1,7 +1,7 @@
 using VacationRental.Api.Models;
 using VacationRental.Api.Repositories;
 
-namespace VacationRental.Api.Services;
+namespace VacationRental.Api.Services.Implementation;
 
 public class RentalService : IRentalService
 {
