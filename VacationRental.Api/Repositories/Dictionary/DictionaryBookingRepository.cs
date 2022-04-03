@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using VacationRental.Api.Models;
 
-namespace VacationRental.Api.Repositories;
+namespace VacationRental.Api.Repositories.Dictionary;
 
 public class DictionaryBookingRepository : IBookingRepository
 {

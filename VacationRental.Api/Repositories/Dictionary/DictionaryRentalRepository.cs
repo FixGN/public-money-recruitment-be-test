@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using VacationRental.Api.Models;
 
-namespace VacationRental.Api.Repositories;
+namespace VacationRental.Api.Repositories.Dictionary;
 
 public class DictionaryRentalRepository : IRentalRepository
 {
