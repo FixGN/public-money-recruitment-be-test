@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using VacationRental.Api.Models;
 using VacationRental.Api.Repositories;
 using VacationRental.Api.Services;
 
@@ -25,13 +27,17 @@ namespace VacationRental.Api
 
             services.AddSwaggerGen(opts => opts.SwaggerDoc("v1", new OpenApiInfo { Title = "Vacation rental information", Version = "v1" }));
 
+            // TODO: Think about logging
+            
             // Services
             services.AddSingleton<IBookingService, BookingService>();
             services.AddSingleton<IRentalService, RentalService>();
             services.AddSingleton<ICalendarService, CalendarService>();
             
             // Repositories
+            services.AddSingleton(new Dictionary<int, Booking>());
             services.AddSingleton<IBookingRepository, DictionaryBookingRepository>();
+            services.AddSingleton(new Dictionary<int, Rental>());
             services.AddSingleton<IRentalRepository, DictionaryRentalRepository>();
         }
 

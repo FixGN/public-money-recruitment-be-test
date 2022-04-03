@@ -7,11 +7,11 @@ public class DictionaryRentalRepository : IRentalRepository
 {
     private readonly IDictionary<int, Rental> _repository;
 
-    public DictionaryRentalRepository()
+    public DictionaryRentalRepository(Dictionary<int, Rental> repository)
     {
-        _repository = new Dictionary<int, Rental>();
+        _repository = repository;
     }
-    
+
     public Rental? Get(int id)
     {
         _repository.TryGetValue(id, out var rental);

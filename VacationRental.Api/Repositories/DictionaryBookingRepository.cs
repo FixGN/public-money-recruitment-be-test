@@ -9,9 +9,9 @@ public class DictionaryBookingRepository : IBookingRepository
 {
     private readonly Dictionary<int,Booking> _repository;
 
-    public DictionaryBookingRepository()
+    public DictionaryBookingRepository(Dictionary<int, Booking> repository)
     {
-        _repository = new Dictionary<int, Booking>();
+        _repository = repository;
     }
     
     public Booking? Get(int id)
@@ -23,7 +23,9 @@ public class DictionaryBookingRepository : IBookingRepository
 
     public IEnumerable<Booking> GetByRentalId(int rentalId)
     {
-        return _repository.Values.Where(x => x.RentalId == rentalId);
+        return _repository.Values
+            .Where(x => x.RentalId == rentalId)
+            .ToList();
     }
 
     public Booking Create(int rentalId, DateTime start, int nights)
