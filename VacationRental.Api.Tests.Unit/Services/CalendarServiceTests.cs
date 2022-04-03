@@ -31,9 +31,17 @@ public class CalendarServiceTests
     [Test]
     public void GetCalendarDates_ReturnsIsSuccessFalse_WhenNightsIsNegative()
     {
-        var result = _calendarService.GetCalendarDates(DefaultRentalId, _defaultDateTime, -1);
+        var actualResult = _calendarService.GetCalendarDates(DefaultRentalId, _defaultDateTime, -1);
         
-        Assert.AreEqual(false, result.IsSuccess);
+        Assert.AreEqual(false, actualResult.IsSuccess);
+    }
+
+    [Test]
+    public void GetCalendarDates_ReturnsIsSuccessFalse_WhenNightsIsZero()
+    {
+        var actualResult = _calendarService.GetCalendarDates(DefaultRentalId, _defaultDateTime, 0);
+        
+        Assert.AreEqual(false, actualResult.IsSuccess);
     }
     
     [Test]
@@ -41,9 +49,9 @@ public class CalendarServiceTests
     {
         _rentalRepository.Get(DefaultRentalId).Returns((Rental?) null);
         
-        var result = _calendarService.GetCalendarDates(DefaultRentalId, _defaultDateTime, DefaultNights);
+        var actualResult = _calendarService.GetCalendarDates(DefaultRentalId, _defaultDateTime, DefaultNights);
 
-        Assert.AreEqual(false, result.IsSuccess);
+        Assert.AreEqual(false, actualResult.IsSuccess);
     }
 
     [Test]
@@ -53,9 +61,9 @@ public class CalendarServiceTests
         _rentalRepository.Get(DefaultRentalId).Returns(rental);
         _bookingRepository.GetByRentalId(DefaultRentalId).Returns(Array.Empty<Booking>());
         
-        var result = _calendarService.GetCalendarDates(DefaultRentalId, _defaultDateTime, DefaultNights);
+        var actualResult = _calendarService.GetCalendarDates(DefaultRentalId, _defaultDateTime, DefaultNights);
 
-        Assert.AreEqual(true, result.IsSuccess);
+        Assert.AreEqual(true, actualResult.IsSuccess);
     }
 
     [Test]
@@ -76,8 +84,8 @@ public class CalendarServiceTests
             new(_defaultDateTime.AddDays(1), bookingArray)
         });
 
-        var result = _calendarService.GetCalendarDates(DefaultRentalId, _defaultDateTime, DefaultNights);
+        var actualResult = _calendarService.GetCalendarDates(DefaultRentalId, _defaultDateTime, DefaultNights);
         
-        Assert.IsTrue(expectedResult.AreEqual(result));
+        Assert.IsTrue(expectedResult.AreEqual(actualResult));
     }
 }
