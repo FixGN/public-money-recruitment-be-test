@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using VacationRental.Api.Models;
 using VacationRental.Api.Services;
-using VacationRental.Api.Contracts.Calendar;
 using VacationRental.Api.Contracts.Common;
+using VacationRental.Api.Mappers;
 
 namespace VacationRental.Api.Controllers
 {
@@ -34,21 +32,7 @@ namespace VacationRental.Api.Controllers
                 return NotFound();
             }
             
-            return Ok(MapCalendarViewModelFromRentalIdAndCalendarDates(rentalId, calendarDatesResult.CalendarDates));
-        }
-        
-        private static CalendarViewModel MapCalendarViewModelFromRentalIdAndCalendarDates(int rentalId, CalendarDate[] calendarDates)
-        {
-            return new CalendarViewModel(
-                rentalId,
-                calendarDates.Select(MapCalendarDateToCalendarDateViewModel).ToList());
-        }
-        
-        private static CalendarDateViewModel MapCalendarDateToCalendarDateViewModel(CalendarDate calendarDate)
-        {
-            return new CalendarDateViewModel(
-                calendarDate.Date,
-                calendarDate.Bookings.Select(x => new CalendarBookingViewModel(x.Id)).ToList());
+            return Ok(ViewModelMapper.MapRentalIdAndCalendarDatesToCalendarViewModel(rentalId, calendarDatesResult.CalendarDates));
         }
     }
 }

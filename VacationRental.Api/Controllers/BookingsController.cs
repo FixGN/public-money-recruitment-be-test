@@ -1,10 +1,10 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
-using VacationRental.Api.Models;
 using VacationRental.Api.Services;
 using VacationRental.Api.Services.Models;
 using VacationRental.Api.Contracts.Booking;
 using VacationRental.Api.Contracts.Common;
+using VacationRental.Api.Mappers;
 
 namespace VacationRental.Api.Controllers
 {
@@ -27,7 +27,7 @@ namespace VacationRental.Api.Controllers
 
             return booking == null 
                 ? NotFound()
-                : Ok(MapBookingToBookingViewModel(booking));
+                : Ok(ViewModelMapper.MapBookingToBookingViewModel(booking));
         }
 
         [HttpPost]
@@ -42,16 +42,6 @@ namespace VacationRental.Api.Controllers
                 {Status: CreateBookingResultStatus.Conflict} => Conflict(new ErrorViewModel(bookingCreationResult.ErrorMessage)),
                 _ => throw new ApplicationException("Unknown error status")
             };
-        }
-
-        private static BookingViewModel MapBookingToBookingViewModel(Booking booking)
-        {
-            if (booking == null)
-            {
-                throw new ArgumentNullException(nameof(booking));
-            }
-            
-            return new BookingViewModel(booking.Id, booking.RentalId, booking.Start, booking.Nights);
         }
     }
 }
