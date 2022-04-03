@@ -13,6 +13,12 @@ internal class RentalBuilder
         return this;
     }
     
+    public RentalBuilder WithUnits(int units)
+    {
+        _units = units;
+        return this;
+    }
+    
     public Rental Please()
     {
         return new(_id, _units);
