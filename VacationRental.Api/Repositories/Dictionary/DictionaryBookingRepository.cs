@@ -21,11 +21,11 @@ public class DictionaryBookingRepository : IBookingRepository
         return booking;
     }
 
-    public IEnumerable<Booking> GetByRentalId(int rentalId)
+    public Booking[] GetByRentalId(int rentalId)
     {
         return _repository.Values
             .Where(x => x.RentalId == rentalId)
-            .ToList();
+            .ToArray();
     }
 
     public Booking Create(int rentalId, DateTime start, int nights)
