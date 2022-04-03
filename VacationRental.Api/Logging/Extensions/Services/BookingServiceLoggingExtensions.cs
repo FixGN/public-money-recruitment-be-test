@@ -21,15 +21,15 @@ internal static class BookingServiceLoggingExtension
             "CreateBooking(rentalId: {@rentalId}, start: {@start}, nights: {@nights}) - Start");
         _createBookingNightsIsNegativeOrZero = LoggerMessage.Define<int, DateTime, int>(
             LogLevel.Information,
-            new(101_000),
+            new(101_001),
             "CreateBooking(rentalId: {@rentalId}, start: {@start}, nights: {@nights}) - Nights is negative or zero");
         _createBookingRentalNotFound = LoggerMessage.Define<int, DateTime, int>(
             LogLevel.Information,
-            new(101_000),
+            new(101_002),
             "CreateBooking(rentalId: {@rentalId}, start: {@start}, nights: {@nights}) - Rental not found");
         _createBookingAvailableUnitsNotFound = LoggerMessage.Define<int, DateTime, int>(
             LogLevel.Information,
-            new(101_000),
+            new(101_003),
             "CreateBooking(rentalId: {@rentalId}, start: {@start}, nights: {@nights}) - Available for booking units not found");
         _createBookingEnd = LoggerMessage.Define<int, DateTime, int>(
             LogLevel.Debug,
