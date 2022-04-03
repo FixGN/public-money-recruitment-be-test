@@ -1,5 +1,7 @@
 using System;
 using System.Linq;
+using Microsoft.Extensions.Logging;
+using VacationRental.Api.Logging.Extensions.Services;
 using VacationRental.Api.Models;
 using VacationRental.Api.Repositories;
 using VacationRental.Api.Services.Models;
@@ -10,24 +12,34 @@ public class CalendarService : ICalendarService
 {
     private readonly IBookingRepository _bookingRepository;
     private readonly IRentalRepository _rentalRepository;
+    private readonly ILogger<CalendarService> _logger;
 
-    public CalendarService(IBookingRepository bookingRepository, IRentalRepository rentalRepository)
+    public CalendarService(IBookingRepository bookingRepository, IRentalRepository rentalRepository, ILogger<CalendarService> logger)
     {
-        _bookingRepository = bookingRepository;
-        _rentalRepository = rentalRepository;
+        _bookingRepository = bookingRepository ?? throw new ArgumentNullException(nameof(bookingRepository));
+        _rentalRepository = rentalRepository ?? throw new ArgumentNullException(nameof(rentalRepository));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
-    
+
     public GetCalendarDatesResult GetCalendarDates(int rentalId, DateTime start, int nights)
     {
+        _logger.GetCalendarDatesStart(rentalId, start, nights);
         if (nights <= 0)
+        {
+            _logger.GetCalendarDatesNightsIsNegativeOrZero(rentalId, start, nights);
             return GetCalendarDatesResult.Fail("Nights must be positive");
+        }
         // TODO: It's a part of contract? Can I delete this? 
         var rental = _rentalRepository.Get(rentalId);
         if (rental == null)
+        {
+            _logger.GetCalendarDatesRentalNotFound(rentalId, start, nights);
             return GetCalendarDatesResult.Fail("Rental not found");
+        }
 
         var calendarDates = new CalendarDate[nights];
         var availableBookings = _bookingRepository.GetByRentalId(rentalId);
+        _logger.GetCalendarDatesFoundBookings(rentalId, start, nights, availableBookings.Length);
         
         for (var i = 0; i < nights; i++)
         {
@@ -39,6 +51,7 @@ public class CalendarService : ICalendarService
             calendarDates[i] = new CalendarDate(date, bookings);
         }
 
+        _logger.GetCalendarDatesEnd(rentalId, start, nights);
         return GetCalendarDatesResult.Success(calendarDates);
     }
 }
