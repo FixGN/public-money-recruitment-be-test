@@ -46,10 +46,10 @@ public class BookingService : IBookingService
         var currentBookings = _bookingRepository
             .GetByRentalIdAndDatePeriod(rentalId, startDate, startDate.AddDays(nights - 1));
 
-        if (rental.Units <= currentBookings.Count())
+        if (rental.Units <= currentBookings.Length)
         {
             _logger.CreateBookingAvailableUnitsNotFound(rentalId, start, nights);
-            return CreateBookingResult.Conflict("Not available");
+            return CreateBookingResult.Conflict("No available rooms for the specified dates");
         }
         
         var booking = _bookingRepository.Create(rentalId, startDate, nights);
