@@ -34,9 +34,9 @@ public class DictionaryBookingRepository : IBookingRepository
             .ToArray();
     }
 
-    public Booking Create(int rentalId, DateTime start, int nights)
+    public Booking Create(int rentalId, int unit, DateTime start, int nights)
     {
-        var booking = new Booking(_repository.Count + 1, rentalId, start, nights);
+        var booking = new Booking(_repository.Count + 1, rentalId, unit, start, nights);
 
         _repository.Add(booking.Id, booking);
 
