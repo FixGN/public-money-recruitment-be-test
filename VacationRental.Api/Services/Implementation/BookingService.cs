@@ -53,7 +53,8 @@ public class BookingService : IBookingService
             return CreateBookingResult.Conflict("Not available");
         }
         
-        var booking = _bookingRepository.Create(rentalId, startDate, nights);
+        // TODO: don't forget about default
+        var booking = _bookingRepository.Create(rentalId, default, startDate, nights);
 
         _logger.CreateBookingEnd(rentalId, start, nights);
         return CreateBookingResult.Successful(booking);
