@@ -64,8 +64,7 @@ public class BookingService : IBookingService
         var firstEndDate = firstStartDate.AddDays(firstNights);
         var secondEndDate = secondStartDate.AddDays(secondNights);
 
-        return firstStartDate <= secondStartDate && firstEndDate > secondStartDate
-               || firstStartDate < secondEndDate && firstEndDate >= secondEndDate
-               || firstStartDate > secondStartDate && firstEndDate < secondEndDate;
+        return firstStartDate <= secondEndDate
+            && secondStartDate <= firstEndDate;
     }
 }
