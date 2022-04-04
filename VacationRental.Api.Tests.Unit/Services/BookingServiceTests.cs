@@ -168,11 +168,15 @@ public class BookingServiceTests
                 defaultStartDate,
                 defaultStartDate.AddDays(DefaultNights - 1))
             .Returns(Array.Empty<Booking>());
-        _bookingRepository.Create(expectedBooking.RentalId, expectedBooking.Start, expectedBooking.Nights).Returns(expectedBooking);
+        _bookingRepository
+            .Create(expectedBooking.RentalId, expectedBooking.Unit, expectedBooking.Start, expectedBooking.Nights)
+            .Returns(expectedBooking);
         
         _bookingService.CreateBooking(expectedBooking.RentalId, expectedBooking.Start, expectedBooking.Nights);
 
-        _bookingRepository.Received(1).Create(expectedBooking.RentalId, expectedBooking.Start, expectedBooking.Nights);
+        _bookingRepository
+            .Received(1)
+            .Create(expectedBooking.RentalId, expectedBooking.Unit, expectedBooking.Start, expectedBooking.Nights);
     }
     
     [Test]
@@ -188,7 +192,9 @@ public class BookingServiceTests
                 defaultStartDate,
                 defaultStartDate.AddDays(DefaultNights - 1))
             .Returns(Array.Empty<Booking>());
-        _bookingRepository.Create(expectedBooking.RentalId, expectedBooking.Start, expectedBooking.Nights).Returns(expectedBooking);
+        _bookingRepository
+            .Create(expectedBooking.RentalId, expectedBooking.Unit, expectedBooking.Start, expectedBooking.Nights)
+            .Returns(expectedBooking);
         
         var actualBookingCreationResult = _bookingService.CreateBooking(
             expectedBooking.RentalId,
@@ -211,7 +217,9 @@ public class BookingServiceTests
                 defaultStartDate,
                 defaultStartDate.AddDays(DefaultNights - 1))
             .Returns(Array.Empty<Booking>());
-        _bookingRepository.Create(expectedBooking.RentalId, expectedBooking.Start, expectedBooking.Nights).Returns(expectedBooking);
+        _bookingRepository
+            .Create(expectedBooking.RentalId, expectedBooking.Unit, expectedBooking.Start, expectedBooking.Nights)
+            .Returns(expectedBooking);
         
         var actualBookingCreationResult = _bookingService.CreateBooking(
             expectedBooking.RentalId,
