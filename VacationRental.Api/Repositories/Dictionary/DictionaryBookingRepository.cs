@@ -7,14 +7,15 @@ namespace VacationRental.Api.Repositories.Dictionary;
 
 public class DictionaryBookingRepository : IBookingRepository
 {
-    private readonly Dictionary<int,Booking> _repository;
+    private readonly IDictionary<int,Booking> _repository;
+    private readonly object _lock = new();
 
-    public DictionaryBookingRepository(Dictionary<int, Booking> repository)
+    public DictionaryBookingRepository(IDictionary<int, Booking> repository)
     {
         _repository = repository;
     }
     
-    public Booking? Get(int id)
+    public Booking? GetOrDefault(int id)
     {
         _repository.TryGetValue(id, out var booking);
 
@@ -34,12 +35,14 @@ public class DictionaryBookingRepository : IBookingRepository
             .ToArray();
     }
 
-    public Booking Create(int rentalId, int unit, DateTime start, int nights)
+    public Booking Create(int rentalId, DateTime start, int nights)
     {
-        var booking = new Booking(_repository.Count + 1, rentalId, unit, start, nights);
+        lock (_lock)
+        {
+            var booking = new Booking(_repository.Count + 1, rentalId, start, nights);
+            _repository.Add(booking.Id, booking);
 
-        _repository.Add(booking.Id, booking);
-
-        return booking;
+            return booking;
+        }
     }
 }

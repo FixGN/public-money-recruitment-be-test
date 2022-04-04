@@ -6,7 +6,7 @@ using VacationRental.Api.Contracts.Calendar;
 using VacationRental.Api.Contracts.Rental;
 using VacationRental.Api.Models;
 
-namespace VacationRental.Api.Mappers;
+namespace VacationRental.Api.Controllers.v1.Mappers;
 
 public static class ViewModelMapper
 {

@@ -22,9 +22,9 @@ public class BookingService : IBookingService
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
-    public Booking? GetBooking(int id)
+    public Booking? GetBookingOrDefault(int id)
     {
-        return _bookingRepository.Get(id);
+        return _bookingRepository.GetOrDefault(id);
     }
 
     public CreateBookingResult CreateBooking(int rentalId, DateTime start, int nights)
@@ -35,7 +35,7 @@ public class BookingService : IBookingService
             _logger.CreateBookingNightsIsNegativeOrZero(rentalId, start, nights);
             return CreateBookingResult.ValidationFail("Nights must be positive");
         }
-        var rental = _rentalRepository.Get(rentalId);
+        var rental = _rentalRepository.GetOrDefault(rentalId);
         if (rental == null)
         {
             _logger.CreateBookingRentalNotFound(rentalId, start, nights);
@@ -50,7 +50,7 @@ public class BookingService : IBookingService
         if (rental.Units <= currentBookings.Length)
         {
             _logger.CreateBookingAvailableUnitsNotFound(rentalId, start, nights);
-            return CreateBookingResult.Conflict("Not available");
+            return CreateBookingResult.Conflict("No available rooms for the specified dates");
         }
         
         // In current implementation - ok, but better get available unit and create booking in one transaction

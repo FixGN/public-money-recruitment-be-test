@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using VacationRental.Api.Models;
 
 namespace VacationRental.Api.Repositories.Dictionary;
@@ -6,24 +7,28 @@ namespace VacationRental.Api.Repositories.Dictionary;
 public class DictionaryRentalRepository : IRentalRepository
 {
     private readonly IDictionary<int, Rental> _repository;
+    private readonly object _lock = new();
 
-    public DictionaryRentalRepository(Dictionary<int, Rental> repository)
+    public DictionaryRentalRepository(IDictionary<int, Rental> repository)
     {
         _repository = repository;
     }
 
-    public Rental? Get(int id)
+    [SuppressMessage("ReSharper", "InconsistentlySynchronizedField")]
+    public Rental? GetOrDefault(int id)
     {
         _repository.TryGetValue(id, out var rental);
         return rental;
     }
 
-    public Rental Create(int units, int preparationTimeInDays)
+    public Rental Create(int units)
     {
-        var rental = new Rental(_repository.Count + 1, units, preparationTimeInDays);
+        lock (_lock)
+        {
+            var rental = new Rental(_repository.Count + 1, units);
+            _repository.Add(rental.Id, rental);
 
-        _repository.Add(rental.Id, rental);
-
-        return rental;
+            return rental;
+        }
     }
 }

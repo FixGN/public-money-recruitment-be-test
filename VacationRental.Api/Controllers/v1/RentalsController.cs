@@ -1,11 +1,11 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
-using VacationRental.Api.Services;
 using VacationRental.Api.Contracts.Common;
 using VacationRental.Api.Contracts.Rental;
-using VacationRental.Api.Mappers;
+using VacationRental.Api.Controllers.v1.Mappers;
+using VacationRental.Api.Services;
 
-namespace VacationRental.Api.Controllers
+namespace VacationRental.Api.Controllers.v1
 {
     [Route("api/v1/rentals")]
     [ApiController]
@@ -22,11 +22,11 @@ namespace VacationRental.Api.Controllers
         [Route("{rentalId:int}")]
         public IActionResult Get(int rentalId)
         {
-            var rental = _rentalService.GetRental(rentalId);
+            var rental = _rentalService.GetRentalOrDefault(rentalId);
 
             return rental == null 
                 ? NotFound() 
-                : Ok(ViewModelMapper.MapRentalToRentalViewModel(rental));;
+                : Ok(ViewModelMapper.MapRentalToRentalViewModel(rental));
         }
 
         [HttpPost]

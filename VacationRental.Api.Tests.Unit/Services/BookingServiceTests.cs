@@ -35,9 +35,9 @@ public class BookingServiceTests
     public void GetBooking_ReturnsBooking_WhenBookingExists()
     {
         var expectedBooking = Create.Booking().WithId(DefaultBookingId).Please();
-        _bookingRepository.Get(DefaultBookingId).Returns(expectedBooking);
+        _bookingRepository.GetOrDefault(DefaultBookingId).Returns(expectedBooking);
 
-        var actualBooking = _bookingService.GetBooking(DefaultBookingId);
+        var actualBooking = _bookingService.GetBookingOrDefault(DefaultBookingId);
         
         Assert.NotNull(actualBooking);
     }
@@ -46,9 +46,9 @@ public class BookingServiceTests
     public void GetBooking_ReturnsCorrectBooking_WhenBookingExists()
     {
         var expectedBooking = Create.Booking().WithId(DefaultBookingId).Please();
-        _bookingRepository.Get(DefaultBookingId).Returns(expectedBooking);
+        _bookingRepository.GetOrDefault(DefaultBookingId).Returns(expectedBooking);
 
-        var actualBooking = _bookingService.GetBooking(DefaultBookingId);
+        var actualBooking = _bookingService.GetBookingOrDefault(DefaultBookingId);
         
         Assert.IsTrue(actualBooking!.AreEqual(expectedBooking));
     }
@@ -56,9 +56,9 @@ public class BookingServiceTests
     [Test]
     public void GetBooking_ReturnsNull_WhenBookingNotExists()
     {
-        _bookingRepository.Get(DefaultBookingId).ReturnsNull();
+        _bookingRepository.GetOrDefault(DefaultBookingId).ReturnsNull();
 
-        var actualBooking = _bookingService.GetBooking(DefaultBookingId);
+        var actualBooking = _bookingService.GetBookingOrDefault(DefaultBookingId);
         
         Assert.Null(actualBooking);
     }
@@ -98,7 +98,7 @@ public class BookingServiceTests
     [Test]
     public void CreateBooking_ReturnsIsSuccessFalse_WhenRentalIsNotExists()
     {
-        _rentalRepository.Get(DefaultRentalId).ReturnsNull();
+        _rentalRepository.GetOrDefault(DefaultRentalId).ReturnsNull();
         
         var actualBookingCreationResult = _bookingService.CreateBooking(DefaultRentalId, _defaultStartDate, DefaultNights);
         
@@ -108,7 +108,7 @@ public class BookingServiceTests
     [Test]
     public void CreateBooking_ReturnsStatusValidationFailed_WhenRentalIsNotExists()
     {
-        _rentalRepository.Get(DefaultRentalId).ReturnsNull();
+        _rentalRepository.GetOrDefault(DefaultRentalId).ReturnsNull();
         
         var actualBookingCreationResult = _bookingService.CreateBooking(DefaultRentalId, _defaultStartDate, DefaultNights);
         
@@ -121,7 +121,7 @@ public class BookingServiceTests
         var rental = Create.Rental().WithId(DefaultRentalId).WithUnits(1).Please();
         var booking = Create.Booking().WithRentalId(DefaultRentalId).WithStartDate(_defaultStartDate).WithNights(DefaultNights).Please();
         var bookingArray = new[] {booking};
-        _rentalRepository.Get(DefaultRentalId).Returns(rental);
+        _rentalRepository.GetOrDefault(DefaultRentalId).Returns(rental);
         var defaultStartDate = _defaultStartDate.Date;
         _bookingRepository
             .GetByRentalIdAndDatePeriod(
@@ -141,7 +141,7 @@ public class BookingServiceTests
         var rental = Create.Rental().WithId(DefaultRentalId).WithUnits(1).Please();
         var booking = Create.Booking().WithRentalId(DefaultRentalId).WithStartDate(_defaultStartDate).WithNights(DefaultNights).Please();
         var bookingArray = new[] {booking};
-        _rentalRepository.Get(DefaultRentalId).Returns(rental);
+        _rentalRepository.GetOrDefault(DefaultRentalId).Returns(rental);
         var defaultStartDate = _defaultStartDate.Date;
         _bookingRepository
             .GetByRentalIdAndDatePeriod(
@@ -160,7 +160,7 @@ public class BookingServiceTests
     {
         var rental = Create.Rental().WithId(DefaultRentalId).WithUnits(1).Please();
         var expectedBooking = Create.Booking().WithRentalId(DefaultRentalId).Please();
-        _rentalRepository.Get(DefaultRentalId).Returns(rental);
+        _rentalRepository.GetOrDefault(DefaultRentalId).Returns(rental);
         var defaultStartDate = _defaultStartDate.Date;
         _bookingRepository
             .GetByRentalIdAndDatePeriod(
@@ -184,7 +184,7 @@ public class BookingServiceTests
     {
         var rental = Create.Rental().WithId(DefaultRentalId).WithUnits(1).Please();
         var expectedBooking = Create.Booking().WithRentalId(DefaultRentalId).Please();
-        _rentalRepository.Get(DefaultRentalId).Returns(rental);
+        _rentalRepository.GetOrDefault(DefaultRentalId).Returns(rental);
         var defaultStartDate = _defaultStartDate.Date;
         _bookingRepository
             .GetByRentalIdAndDatePeriod(
@@ -209,7 +209,7 @@ public class BookingServiceTests
     {
         var rental = Create.Rental().WithId(DefaultRentalId).WithUnits(1).Please();
         var expectedBooking = Create.Booking().WithRentalId(DefaultRentalId).Please();
-        _rentalRepository.Get(DefaultRentalId).Returns(rental);
+        _rentalRepository.GetOrDefault(DefaultRentalId).Returns(rental);
         var defaultStartDate = _defaultStartDate.Date;
         _bookingRepository
             .GetByRentalIdAndDatePeriod(

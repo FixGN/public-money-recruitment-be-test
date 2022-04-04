@@ -1,12 +1,12 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
-using VacationRental.Api.Services;
-using VacationRental.Api.Services.Models;
 using VacationRental.Api.Contracts.Booking;
 using VacationRental.Api.Contracts.Common;
-using VacationRental.Api.Mappers;
+using VacationRental.Api.Controllers.v1.Mappers;
+using VacationRental.Api.Services;
+using VacationRental.Api.Services.Models;
 
-namespace VacationRental.Api.Controllers
+namespace VacationRental.Api.Controllers.v1
 {
     [Route("api/v1/bookings")]
     [ApiController]
@@ -23,7 +23,7 @@ namespace VacationRental.Api.Controllers
         [Route("{bookingId:int}")]
         public IActionResult Get(int bookingId)
         {
-            var booking = _bookingService.GetBooking(bookingId);
+            var booking = _bookingService.GetBookingOrDefault(bookingId);
 
             return booking == null 
                 ? NotFound()

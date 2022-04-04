@@ -6,6 +6,6 @@ namespace VacationRental.Api.Services;
 
 public interface IBookingService
 {
-    public Booking? GetBooking(int id);
+    public Booking? GetBookingOrDefault(int id);
     public CreateBookingResult CreateBooking(int rentalId, DateTime start, int nights);
 }

@@ -12,9 +12,9 @@ public class RentalService : IRentalService
         _rentalRepository = rentalRepository;
     }
     
-    public Rental? GetRental(int id)
+    public Rental? GetRentalOrDefault(int id)
     {
-        return _rentalRepository.Get(id);
+        return _rentalRepository.GetOrDefault(id);
     }
 
     public Rental CreateRental(int units, int preparationTimeInDays)
