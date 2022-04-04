@@ -15,9 +15,9 @@ namespace VacationRental.Api.Contracts.Booking
                 throw new ArgumentOutOfRangeException(nameof(rentalId),"Rental id cannot be negative");
             }
 
-            if (nights < 0)
+            if (nights <= 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(nights),"Nights cannot be negative");
+                throw new ArgumentOutOfRangeException(nameof(nights),"Nights must be greater than 0");
             }
 
             RentalId = rentalId;
