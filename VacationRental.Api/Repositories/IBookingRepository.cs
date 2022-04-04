@@ -6,6 +6,6 @@ namespace VacationRental.Api.Repositories;
 public interface IBookingRepository
 {
     public Booking? Get(int id);
-    public Booking[] GetByRentalId(int rentalId);
+    public Booking[] GetByRentalIdAndDatePeriod(int rentalId, DateTime startDate, DateTime endDate);
     public Booking Create(int rentalId, DateTime start, int nights);
 }

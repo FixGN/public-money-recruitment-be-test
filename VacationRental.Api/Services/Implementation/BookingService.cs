@@ -44,7 +44,7 @@ public class BookingService : IBookingService
         var startDate = start.Date;
         
         var currentBookings = _bookingRepository
-            .GetByRentalId(rentalId)
+            .GetByRentalIdAndDatePeriod(rentalId, startDate, startDate.AddDays(nights - 1))
             .Where(x => IsBookingsOverlap(x.Start, x.Nights, startDate, nights));
 
         if (rental.Units <= currentBookings.Count())

@@ -20,7 +20,7 @@ public class CalendarServiceTests
     private readonly IBookingRepository _bookingRepository;
 
     private const int DefaultRentalId = 1;
-    private readonly DateTime _defaultDateTime = new(2022, 1, 1);
+    private readonly DateTime _defaultStartDate = new(2022, 1, 1);
     private const int DefaultNights = 2;
 
     public CalendarServiceTests()
@@ -33,7 +33,7 @@ public class CalendarServiceTests
     [Test]
     public void GetCalendarDates_ReturnsIsSuccessFalse_WhenNightsIsNegative()
     {
-        var actualResult = _calendarService.GetCalendarDates(DefaultRentalId, _defaultDateTime, -1);
+        var actualResult = _calendarService.GetCalendarDates(DefaultRentalId, _defaultStartDate, -1);
         
         Assert.AreEqual(false, actualResult.IsSuccess);
     }
@@ -41,7 +41,7 @@ public class CalendarServiceTests
     [Test]
     public void GetCalendarDates_ReturnsIsSuccessFalse_WhenNightsIsZero()
     {
-        var actualResult = _calendarService.GetCalendarDates(DefaultRentalId, _defaultDateTime, 0);
+        var actualResult = _calendarService.GetCalendarDates(DefaultRentalId, _defaultStartDate, 0);
         
         Assert.AreEqual(false, actualResult.IsSuccess);
     }
@@ -51,7 +51,7 @@ public class CalendarServiceTests
     {
         _rentalRepository.Get(DefaultRentalId).ReturnsNull();
         
-        var actualResult = _calendarService.GetCalendarDates(DefaultRentalId, _defaultDateTime, DefaultNights);
+        var actualResult = _calendarService.GetCalendarDates(DefaultRentalId, _defaultStartDate, DefaultNights);
 
         Assert.AreEqual(false, actualResult.IsSuccess);
     }
@@ -61,9 +61,14 @@ public class CalendarServiceTests
     {
         var rental = Create.Rental().WithId(DefaultRentalId).Please();
         _rentalRepository.Get(DefaultRentalId).Returns(rental);
-        _bookingRepository.GetByRentalId(DefaultRentalId).Returns(Array.Empty<Booking>());
-        
-        var actualResult = _calendarService.GetCalendarDates(DefaultRentalId, _defaultDateTime, DefaultNights);
+        var defaultStartDate = _defaultStartDate.Date;
+        _bookingRepository
+            .GetByRentalIdAndDatePeriod(
+                DefaultRentalId,
+                defaultStartDate,
+                defaultStartDate.AddDays(DefaultNights - 1))
+            .Returns(Array.Empty<Booking>());        
+        var actualResult = _calendarService.GetCalendarDates(DefaultRentalId, _defaultStartDate, DefaultNights);
 
         Assert.AreEqual(true, actualResult.IsSuccess);
     }
@@ -74,18 +79,24 @@ public class CalendarServiceTests
         var rental = Create.Rental().WithId(DefaultRentalId).Please();
         var booking = Create.Booking()
             .WithRentalId(DefaultRentalId)
-            .WithStartDate(_defaultDateTime)
+            .WithStartDate(_defaultStartDate)
             .WithNights(DefaultNights)
             .Please();
         var bookingArray = new[] {booking};
         _rentalRepository.Get(DefaultRentalId).Returns(rental);
-        _bookingRepository.GetByRentalId(DefaultRentalId).Returns(bookingArray);
+        var defaultStartDate = _defaultStartDate.Date;
+        _bookingRepository
+            .GetByRentalIdAndDatePeriod(
+                DefaultRentalId,
+                defaultStartDate,
+                defaultStartDate.AddDays(DefaultNights - 1))
+            .Returns(Array.Empty<Booking>());
         var expectedResult = GetCalendarDatesResult.Success(new CalendarDate[] {
-            new(_defaultDateTime, bookingArray),
-            new(_defaultDateTime.AddDays(1), bookingArray)
+            new(_defaultStartDate, bookingArray),
+            new(_defaultStartDate.AddDays(1), bookingArray)
         });
 
-        var actualResult = _calendarService.GetCalendarDates(DefaultRentalId, _defaultDateTime, DefaultNights);
+        var actualResult = _calendarService.GetCalendarDates(DefaultRentalId, _defaultStartDate, DefaultNights);
         
         Assert.IsTrue(expectedResult.AreEqual(actualResult));
     }

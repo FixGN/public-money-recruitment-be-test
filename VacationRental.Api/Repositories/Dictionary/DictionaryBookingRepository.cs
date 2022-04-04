@@ -21,10 +21,16 @@ public class DictionaryBookingRepository : IBookingRepository
         return booking;
     }
 
-    public Booking[] GetByRentalId(int rentalId)
+    public Booking[] GetByRentalIdAndDatePeriod(int rentalId, DateTime startDate, DateTime endDate)
     {
         return _repository.Values
-            .Where(x => x.RentalId == rentalId)
+            .Where(x =>
+            {
+                var currentEndDate = x.Start.AddDays(x.Nights - 1);
+                return x.RentalId == rentalId
+                       && x.Start <= endDate.Date
+                       && startDate.Date <= currentEndDate;
+            })
             .ToArray();
     }
 
