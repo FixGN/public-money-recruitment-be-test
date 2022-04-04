@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using VacationRental.Api.Contracts.Booking;
 using VacationRental.Api.Contracts.Calendar;
@@ -23,7 +24,8 @@ public static class ViewModelMapper
     {
         return new CalendarViewModel(
             rentalId,
-            calendarDates.Select(MapCalendarDatesToCalendarDatesViewModel).ToList());
+            calendarDates.Select(MapCalendarDatesToCalendarDatesViewModel).ToList(),
+            new List<CalendarPreparationTimeViewModel>());
     }
     
     public static RentalViewModel MapRentalToRentalViewModel(Rental rental)
@@ -35,6 +37,6 @@ public static class ViewModelMapper
     {
         return new CalendarDateViewModel(
             calendarDate.Date,
-            calendarDate.Bookings.Select(x => new CalendarBookingViewModel(x.Id)).ToList());
+            calendarDate.Bookings.Select(x => new CalendarBookingViewModel(x.Id, default)).ToList());
     }
 }
