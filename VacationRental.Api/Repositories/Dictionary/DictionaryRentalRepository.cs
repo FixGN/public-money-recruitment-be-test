@@ -7,7 +7,7 @@ public class DictionaryRentalRepository : IRentalRepository
 {
     private readonly IDictionary<int, Rental> _repository;
 
-    public DictionaryRentalRepository(Dictionary<int, Rental> repository)
+    public DictionaryRentalRepository(IDictionary<int, Rental> repository)
     {
         _repository = repository;
     }

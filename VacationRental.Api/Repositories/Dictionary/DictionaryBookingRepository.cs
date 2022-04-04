@@ -7,9 +7,9 @@ namespace VacationRental.Api.Repositories.Dictionary;
 
 public class DictionaryBookingRepository : IBookingRepository
 {
-    private readonly Dictionary<int,Booking> _repository;
+    private readonly IDictionary<int,Booking> _repository;
 
-    public DictionaryBookingRepository(Dictionary<int, Booking> repository)
+    public DictionaryBookingRepository(IDictionary<int, Booking> repository)
     {
         _repository = repository;
     }

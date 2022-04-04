@@ -37,9 +37,9 @@ namespace VacationRental.Api
             services.AddSingleton<ICalendarService, CalendarService>();
             
             // Repositories
-            services.AddSingleton(new Dictionary<int, Booking>());
+            services.AddSingleton<IDictionary<int, Booking>>(new Dictionary<int, Booking>());
             services.AddSingleton<IBookingRepository, DictionaryBookingRepository>();
-            services.AddSingleton(new Dictionary<int, Rental>());
+            services.AddSingleton<IDictionary<int, Rental>>(new Dictionary<int, Rental>());
             services.AddSingleton<IRentalRepository, DictionaryRentalRepository>();
         }
 
