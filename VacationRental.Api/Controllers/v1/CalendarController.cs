@@ -1,10 +1,10 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
-using VacationRental.Api.Services;
 using VacationRental.Api.Contracts.Common;
-using VacationRental.Api.Mappers;
+using VacationRental.Api.Controllers.v1.Mappers;
+using VacationRental.Api.Services;
 
-namespace VacationRental.Api.Controllers
+namespace VacationRental.Api.Controllers.v1
 {
     [Route("api/v1/calendar")]
     [ApiController]
