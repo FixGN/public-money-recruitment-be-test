@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using VacationRental.Api.Contracts.Common;
 using VacationRental.Api.Controllers.v1.Mappers;
+using VacationRental.Api.Models;
 using VacationRental.Api.Services;
 
 namespace VacationRental.Api.Controllers.v1
@@ -32,7 +33,12 @@ namespace VacationRental.Api.Controllers.v1
                 return NotFound();
             }
             
-            return Ok(ViewModelMapper.MapRentalIdAndCalendarDatesToCalendarViewModel(rentalId, calendarDatesResult.CalendarDates));
+            return Ok(
+                ViewModelMapper
+                    .MapRentalIdAndCalendarDatesToCalendarViewModel(
+                        rentalId,
+                        calendarDatesResult.CalendarDates,
+                        Array.Empty<CalendarPreparationTime>()));
         }
     }
 }
