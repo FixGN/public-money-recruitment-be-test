@@ -32,7 +32,7 @@ namespace VacationRental.Api.Controllers
         [HttpPost]
         public IActionResult Post(RentalBindingModel model)
         {
-            var rental = _rentalService.CreateRental(model.Units);
+            var rental = _rentalService.CreateRental(model.Units, model.PreparationTimeInDays);
 
             return Ok(new ResourceIdViewModel(rental.Id));
         }
