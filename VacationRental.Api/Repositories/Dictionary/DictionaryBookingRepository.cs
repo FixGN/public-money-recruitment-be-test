@@ -8,6 +8,7 @@ namespace VacationRental.Api.Repositories.Dictionary;
 public class DictionaryBookingRepository : IBookingRepository
 {
     private readonly IDictionary<int,Booking> _repository;
+    private readonly object _lock = new();
 
     public DictionaryBookingRepository(IDictionary<int, Booking> repository)
     {
@@ -36,10 +37,12 @@ public class DictionaryBookingRepository : IBookingRepository
 
     public Booking Create(int rentalId, DateTime start, int nights)
     {
-        var booking = new Booking(_repository.Count + 1, rentalId, start, nights);
+        lock (_lock)
+        {
+            var booking = new Booking(_repository.Count + 1, rentalId, start, nights);
+            _repository.Add(booking.Id, booking);
 
-        _repository.Add(booking.Id, booking);
-
-        return booking;
+            return booking;
+        }
     }
 }
