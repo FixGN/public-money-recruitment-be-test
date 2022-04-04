@@ -59,20 +59,20 @@ public class RentalServiceTests
     public void CreateRental_CreateRental()
     {
         var expectedRental = Create.Rental().Please();
-        _rentalRepository.Create(expectedRental.Units).Returns(expectedRental);
+        _rentalRepository.Create(expectedRental.Units, expectedRental.PreparationTimeInDays).Returns(expectedRental);
 
-        _rentalService.CreateRental(expectedRental.Units);
+        _rentalService.CreateRental(expectedRental.Units, expectedRental.PreparationTimeInDays);
 
-        _rentalRepository.Received(1).Create(expectedRental.Units);
+        _rentalRepository.Received(1).Create(expectedRental.Units, expectedRental.PreparationTimeInDays);
     }
     
     [Test]
     public void CreateRental_ReturnCreatedRental()
     {
         var expectedRental = Create.Rental().Please();
-        _rentalRepository.Create(expectedRental.Units).Returns(expectedRental);
+        _rentalRepository.Create(expectedRental.Units, expectedRental.PreparationTimeInDays).Returns(expectedRental);
 
-        var actualRental = _rentalService.CreateRental(expectedRental.Units);
+        var actualRental = _rentalService.CreateRental(expectedRental.Units, expectedRental.PreparationTimeInDays);
         
         Assert.IsTrue(actualRental.AreEqual(expectedRental));
     }
