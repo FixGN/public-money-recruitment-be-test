@@ -10,9 +10,9 @@ namespace VacationRental.Api.Contracts.Rental
     {
         public RentalBindingModel(int units)
         {
-            if (units < 0)
+            if (units <= 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(units), "Units must be greater than 0");
+                throw new ArgumentOutOfRangeException(nameof(units), "Units must be 0 or greater.");
             }
 
             Units = units;
