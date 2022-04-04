@@ -20,12 +20,15 @@ public static class ViewModelMapper
         return new BookingViewModel(booking.Id, booking.RentalId, booking.Start, booking.Nights);
     }
     
-    public static CalendarViewModel MapRentalIdAndCalendarDatesToCalendarViewModel(int rentalId, CalendarDate[] calendarDates)
+    public static CalendarViewModel MapRentalIdAndCalendarDatesToCalendarViewModel(
+        int rentalId,
+        IEnumerable<CalendarDate> calendarDates,
+        IEnumerable<CalendarPreparationTime> preparationTimes)
     {
         return new CalendarViewModel(
             rentalId,
             calendarDates.Select(MapCalendarDatesToCalendarDatesViewModel).ToList(),
-            new List<CalendarPreparationTimeViewModel>());
+            preparationTimes.Select(MapCalendarPreparationTimeToCalendarPreparationTimeViewModel).ToList());
     }
     
     public static RentalViewModel MapRentalToRentalViewModel(Rental rental)
@@ -38,5 +41,11 @@ public static class ViewModelMapper
         return new CalendarDateViewModel(
             calendarDate.Date,
             calendarDate.Bookings.Select(x => new CalendarBookingViewModel(x.Id, default)).ToList());
+    }
+
+    private static CalendarPreparationTimeViewModel MapCalendarPreparationTimeToCalendarPreparationTimeViewModel(
+        CalendarPreparationTime preparationTime)
+    {
+        return new CalendarPreparationTimeViewModel(preparationTime.Unit);
     }
 }
