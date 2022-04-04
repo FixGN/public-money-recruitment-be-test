@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Logging;
 using VacationRental.Api.Logging.Extensions.Services;
@@ -46,16 +47,23 @@ public class BookingService : IBookingService
         var currentBookings = _bookingRepository
             .GetByRentalIdAndDatePeriod(rentalId, startDate, startDate.AddDays(nights - 1));
 
-        if (rental.Units <= currentBookings.Count())
+        if (rental.Units <= currentBookings.Length)
         {
             _logger.CreateBookingAvailableUnitsNotFound(rentalId, start, nights);
             return CreateBookingResult.Conflict("Not available");
         }
         
-        // TODO: don't forget about default
-        var booking = _bookingRepository.Create(rentalId, default, startDate, nights);
+        // In current implementation - ok, but better get available unit and create booking in one transaction
+        // TODO: Think about one transaction for that
+        var bookedUnits = currentBookings.Select(x => x.Unit);
+        var availableUnit = GetFirstAvailableUnit(bookedUnits, rental.Units);
+
+        var booking = _bookingRepository.Create(rentalId, availableUnit, startDate, nights);
 
         _logger.CreateBookingEnd(rentalId, start, nights);
         return CreateBookingResult.Successful(booking);
     }
+    
+    private static int GetFirstAvailableUnit(IEnumerable<int> bookedUnits, int unitsCount) 
+        => Enumerable.Range(1, unitsCount).Except(bookedUnits).Min();
 }
