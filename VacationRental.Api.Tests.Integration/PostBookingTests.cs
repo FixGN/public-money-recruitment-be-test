@@ -22,7 +22,7 @@ namespace VacationRental.Api.Tests.Integration
         [Fact]
         public async Task GivenCompleteRequest_WhenPostBooking_ThenAGetReturnsTheCreatedBooking()
         {
-            var postRentalRequest = new RentalBindingModel(4);
+            var postRentalRequest = new RentalBindingModel(4, 1);
 
             ResourceIdViewModel postRentalResult;
             using (var postRentalResponse = await _client.PostAsJsonAsync($"/api/v1/rentals", postRentalRequest))
@@ -54,7 +54,7 @@ namespace VacationRental.Api.Tests.Integration
         [Fact]
         public async Task GivenCompleteRequest_WhenPostBooking_ThenAPostReturnsErrorWhenThereIsOverbooking()
         {
-            var postRentalRequest = new RentalBindingModel(1);
+            var postRentalRequest = new RentalBindingModel(1, 1);
 
             ResourceIdViewModel postRentalResult;
             using (var postRentalResponse = await _client.PostAsJsonAsync($"/api/v1/rentals", postRentalRequest))

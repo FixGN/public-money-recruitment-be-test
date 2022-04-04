@@ -22,7 +22,7 @@ namespace VacationRental.Api.Tests.Integration
         [Fact]
         public async Task GivenCompleteRequest_WhenGetCalendar_ThenAGetReturnsTheCalculatedCalendar()
         {
-            var postRentalRequest = new RentalBindingModel(2);
+            var postRentalRequest = new RentalBindingModel(2, 1);
 
             ResourceIdViewModel postRentalResult;
             using (var postRentalResponse = await _client.PostAsJsonAsync($"/api/v1/rentals", postRentalRequest))
