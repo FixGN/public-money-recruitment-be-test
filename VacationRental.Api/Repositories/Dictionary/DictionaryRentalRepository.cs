@@ -21,11 +21,11 @@ public class DictionaryRentalRepository : IRentalRepository
         return rental;
     }
 
-    public Rental Create(int units)
+    public Rental Create(int units, int preparationTimeInDays)
     {
         lock (_lock)
         {
-            var rental = new Rental(_repository.Count + 1, units);
+            var rental = new Rental(_repository.Count + 1, units, preparationTimeInDays);
             _repository.Add(rental.Id, rental);
 
             return rental;
