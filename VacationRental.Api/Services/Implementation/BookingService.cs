@@ -42,10 +42,9 @@ public class BookingService : IBookingService
         }
         
         var startDate = start.Date;
-        
+
         var currentBookings = _bookingRepository
-            .GetByRentalIdAndDatePeriod(rentalId, startDate, startDate.AddDays(nights - 1))
-            .Where(x => IsBookingsOverlap(x.Start, x.Nights, startDate, nights));
+            .GetByRentalIdAndDatePeriod(rentalId, startDate, startDate.AddDays(nights - 1));
 
         if (rental.Units <= currentBookings.Count())
         {
@@ -57,14 +56,5 @@ public class BookingService : IBookingService
 
         _logger.CreateBookingEnd(rentalId, start, nights);
         return CreateBookingResult.Successful(booking);
-    }
-
-    private static bool IsBookingsOverlap(DateTime firstStartDate, int firstNights, DateTime secondStartDate, int secondNights)
-    {
-        var firstEndDate = firstStartDate.AddDays(firstNights);
-        var secondEndDate = secondStartDate.AddDays(secondNights);
-
-        return firstStartDate <= secondEndDate
-            && secondStartDate <= firstEndDate;
     }
 }
