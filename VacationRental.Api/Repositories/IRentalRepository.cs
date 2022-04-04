@@ -4,6 +4,6 @@ namespace VacationRental.Api.Repositories;
 
 public interface IRentalRepository
 {
-    Rental? GetOrDefault(int id);
-    Rental Create(int units);
+    public Rental? GetOrDefault(int id);
+    public Rental Create(int units);
 }
