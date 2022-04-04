@@ -22,11 +22,11 @@ namespace VacationRental.Api.Controllers
         [Route("{rentalId:int}")]
         public IActionResult Get(int rentalId)
         {
-            var rental = _rentalService.GetRental(rentalId);
+            var rental = _rentalService.GetRentalOrDefault(rentalId);
 
             return rental == null 
                 ? NotFound() 
-                : Ok(ViewModelMapper.MapRentalToRentalViewModel(rental));;
+                : Ok(ViewModelMapper.MapRentalToRentalViewModel(rental));
         }
 
         [HttpPost]

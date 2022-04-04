@@ -23,7 +23,7 @@ namespace VacationRental.Api.Controllers
         [Route("{bookingId:int}")]
         public IActionResult Get(int bookingId)
         {
-            var booking = _bookingService.GetBooking(bookingId);
+            var booking = _bookingService.GetBookingOrDefault(bookingId);
 
             return booking == null 
                 ? NotFound()

@@ -30,7 +30,7 @@ public class CalendarService : ICalendarService
             return GetCalendarDatesResult.Fail("Nights must be positive");
         }
         // TODO: It's a part of contract? Can I delete this? 
-        var rental = _rentalRepository.Get(rentalId);
+        var rental = _rentalRepository.GetOrDefault(rentalId);
         if (rental == null)
         {
             _logger.GetCalendarDatesRentalNotFound(rentalId, start, nights);

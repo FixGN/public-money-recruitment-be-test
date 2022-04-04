@@ -26,9 +26,9 @@ public class RentalServiceTests
     [Test]
     public void GetRental_ReturnsNull_WhenRentalNotExists()
     {
-        _rentalRepository.Get(DefaultRentalId).ReturnsNull();
+        _rentalRepository.GetOrDefault(DefaultRentalId).ReturnsNull();
 
-        var actualRental = _rentalService.GetRental(DefaultRentalId);
+        var actualRental = _rentalService.GetRentalOrDefault(DefaultRentalId);
         
         Assert.IsNull(actualRental);
     }
@@ -37,9 +37,9 @@ public class RentalServiceTests
     public void GetRental_ReturnsRental_WhenRentalExists()
     {
         var rental = Create.Rental().Please();
-        _rentalRepository.Get(DefaultRentalId).Returns(rental);
+        _rentalRepository.GetOrDefault(DefaultRentalId).Returns(rental);
 
-        var actualRental = _rentalService.GetRental(DefaultRentalId);
+        var actualRental = _rentalService.GetRentalOrDefault(DefaultRentalId);
         
         Assert.IsInstanceOf<Rental>(actualRental);
     }
@@ -48,9 +48,9 @@ public class RentalServiceTests
     public void GetRental_ReturnsCorrectRental_WhenRentalExists()
     {
         var expectedRental = Create.Rental().Please();
-        _rentalRepository.Get(DefaultRentalId).Returns(expectedRental);
+        _rentalRepository.GetOrDefault(DefaultRentalId).Returns(expectedRental);
 
-        var actualRental = _rentalService.GetRental(DefaultRentalId);
+        var actualRental = _rentalService.GetRentalOrDefault(DefaultRentalId);
         
         Assert.IsTrue(actualRental!.AreEqual(expectedRental));
     }

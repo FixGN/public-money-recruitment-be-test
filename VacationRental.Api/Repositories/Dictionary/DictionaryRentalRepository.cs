@@ -12,7 +12,7 @@ public class DictionaryRentalRepository : IRentalRepository
         _repository = repository;
     }
 
-    public Rental? Get(int id)
+    public Rental? GetOrDefault(int id)
     {
         _repository.TryGetValue(id, out var rental);
         return rental;

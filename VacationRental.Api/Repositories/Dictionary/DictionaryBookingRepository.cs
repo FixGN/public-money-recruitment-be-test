@@ -14,7 +14,7 @@ public class DictionaryBookingRepository : IBookingRepository
         _repository = repository;
     }
     
-    public Booking? Get(int id)
+    public Booking? GetOrDefault(int id)
     {
         _repository.TryGetValue(id, out var booking);
 
