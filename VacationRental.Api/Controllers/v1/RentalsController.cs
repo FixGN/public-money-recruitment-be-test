@@ -36,5 +36,11 @@ namespace VacationRental.Api.Controllers.v1
 
             return Ok(new ResourceIdViewModel(rental.Id));
         }
+
+        [HttpPut("{rentalId:int}")]
+        public IActionResult Put(int rentalId, RentalBindingModel model)
+        {
+            return Ok(new RentalViewModel(default, default, default));
+        }
     }
 }
