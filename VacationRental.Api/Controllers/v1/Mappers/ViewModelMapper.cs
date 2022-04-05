@@ -38,7 +38,7 @@ public static class ViewModelMapper
     {
         return new CalendarDateViewModel(
             calendarDate.Date,
-            calendarDate.Bookings.Select(x => new CalendarBookingViewModel(x.Id, default)).ToList(),
+            calendarDate.Bookings.Select(x => new CalendarBookingViewModel(x.Id, x.Unit)).ToList(),
             calendarDate.PreparationTimes.Select(x => new CalendarPreparationTimeViewModel(x.Unit)).ToList());
     }
 

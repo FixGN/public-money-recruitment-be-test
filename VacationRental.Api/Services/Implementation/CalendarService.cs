@@ -53,7 +53,7 @@ public class CalendarService : ICalendarService
                 .Where(x => x.Start <= date && x.Start.AddDays(x.Nights) > date)
                 .ToArray();
             var preparationTime = availableBookings
-                .Where(x => x.Start.AddDays(x.Nights) < date
+                .Where(x => x.Start.AddDays(x.Nights) <= date
                             && x.Start.AddDays(x.Nights + rental.PreparationTimeInDays) > date)
                 .Select(x => new CalendarPreparationTime(x.Unit))
                 .ToArray();
