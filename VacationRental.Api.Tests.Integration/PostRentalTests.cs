@@ -19,7 +19,7 @@ namespace VacationRental.Api.Tests.Integration
         [Fact]
         public async Task GivenCompleteRequest_WhenPostRental_ThenAGetReturnsTheCreatedRental()
         {
-            var request = new RentalBindingModel(25);
+            var request = new RentalBindingModel(25, 1);
 
             ResourceIdViewModel postResult;
             using (var postResponse = await _client.PostAsJsonAsync($"/api/v1/rentals", request))
@@ -34,6 +34,7 @@ namespace VacationRental.Api.Tests.Integration
 
                 var getResult = await getResponse.Content.ReadAsAsync<RentalViewModel>();
                 Assert.Equal(request.Units, getResult.Units);
+                Assert.Equal(request.PreparationTimeInDays, getResult.PreparationTimeInDays);
             }
         }
     }

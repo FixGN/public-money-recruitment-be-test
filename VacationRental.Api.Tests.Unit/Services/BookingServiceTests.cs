@@ -21,7 +21,7 @@ public class BookingServiceTests
 
     private const int DefaultBookingId = 1;
     private const int DefaultRentalId = 1;
-    private readonly DateTime _defaultStartDate = new DateTime(2022, 1, 1); 
+    private readonly DateTime _defaultStartDate = new(2022, 1, 1); 
     private const int DefaultNights = 2;
     
     public BookingServiceTests()
@@ -168,11 +168,15 @@ public class BookingServiceTests
                 defaultStartDate,
                 defaultStartDate.AddDays(DefaultNights - 1))
             .Returns(Array.Empty<Booking>());
-        _bookingRepository.Create(expectedBooking.RentalId, expectedBooking.Start, expectedBooking.Nights).Returns(expectedBooking);
+        _bookingRepository
+            .Create(expectedBooking.RentalId, expectedBooking.Unit, expectedBooking.Start, expectedBooking.Nights)
+            .Returns(expectedBooking);
         
         _bookingService.CreateBooking(expectedBooking.RentalId, expectedBooking.Start, expectedBooking.Nights);
 
-        _bookingRepository.Received(1).Create(expectedBooking.RentalId, expectedBooking.Start, expectedBooking.Nights);
+        _bookingRepository
+            .Received(1)
+            .Create(expectedBooking.RentalId, expectedBooking.Unit, expectedBooking.Start, expectedBooking.Nights);
     }
     
     [Test]
@@ -188,7 +192,9 @@ public class BookingServiceTests
                 defaultStartDate,
                 defaultStartDate.AddDays(DefaultNights - 1))
             .Returns(Array.Empty<Booking>());
-        _bookingRepository.Create(expectedBooking.RentalId, expectedBooking.Start, expectedBooking.Nights).Returns(expectedBooking);
+        _bookingRepository
+            .Create(expectedBooking.RentalId, expectedBooking.Unit, expectedBooking.Start, expectedBooking.Nights)
+            .Returns(expectedBooking);
         
         var actualBookingCreationResult = _bookingService.CreateBooking(
             expectedBooking.RentalId,
@@ -202,7 +208,7 @@ public class BookingServiceTests
     public void CreateBooking_ReturnsCorrectBooking_WhenUnitsInRentalIsAvailable()
     {
         var rental = Create.Rental().WithId(DefaultRentalId).WithUnits(1).Please();
-        var expectedBooking = Create.Booking().WithRentalId(DefaultRentalId).Please();
+        var expectedBooking = Create.Booking().WithRentalId(DefaultRentalId).WithUnit(1).Please();
         _rentalRepository.GetOrDefault(DefaultRentalId).Returns(rental);
         var defaultStartDate = _defaultStartDate.Date;
         _bookingRepository
@@ -211,7 +217,9 @@ public class BookingServiceTests
                 defaultStartDate,
                 defaultStartDate.AddDays(DefaultNights - 1))
             .Returns(Array.Empty<Booking>());
-        _bookingRepository.Create(expectedBooking.RentalId, expectedBooking.Start, expectedBooking.Nights).Returns(expectedBooking);
+        _bookingRepository
+            .Create(expectedBooking.RentalId, expectedBooking.Unit, expectedBooking.Start, expectedBooking.Nights)
+            .Returns(expectedBooking);
         
         var actualBookingCreationResult = _bookingService.CreateBooking(
             expectedBooking.RentalId,
@@ -219,5 +227,52 @@ public class BookingServiceTests
             expectedBooking.Nights);
 
         Assert.IsTrue(actualBookingCreationResult.CreatedBooking!.AreEqual(expectedBooking));
+    }
+    
+    [Test]
+    public void CreateBooking_ReturnsBookingWithFirstAvailableUnit_WhenUnitsInRentalIsAvailable()
+    {
+        var rental = Create.Rental().WithId(DefaultRentalId).WithUnits(4).Please();
+        
+        var bookingWithUnit1 = Create.Booking()
+            .WithRentalId(DefaultRentalId)
+            .WithStartDate(_defaultStartDate)
+            .WithNights(DefaultNights)
+            .WithUnit(1)
+            .Please();
+        var bookingWithUnit3 = Create.Booking()
+            .WithRentalId(DefaultRentalId)
+            .WithStartDate(_defaultStartDate)
+            .WithNights(DefaultNights)
+            .WithUnit(3)
+            .Please();
+        var bookingsInRepository = new[] {bookingWithUnit1, bookingWithUnit3};
+        
+        var expectedBooking = Create.Booking()
+            .WithRentalId(DefaultRentalId)
+            .WithStartDate(_defaultStartDate)
+            .WithNights(DefaultNights)
+            .WithUnit(2)
+            .Please();
+        
+        _rentalRepository.GetOrDefault(DefaultRentalId).Returns(rental);
+        _bookingRepository
+            .GetByRentalIdAndDatePeriod(
+                expectedBooking.RentalId,
+                expectedBooking.Start,
+                expectedBooking.Start.AddDays(DefaultNights - 1))
+            .Returns(bookingsInRepository);
+        _bookingRepository
+            .Create(expectedBooking.RentalId, expectedBooking.Unit, expectedBooking.Start, expectedBooking.Nights)
+            .Returns(expectedBooking);
+        
+        
+        var actualBookingCreationResult = _bookingService.CreateBooking(
+            expectedBooking.RentalId,
+            expectedBooking.Start,
+            expectedBooking.Nights);
+
+        
+        Assert.AreEqual(expectedBooking.Unit, actualBookingCreationResult.CreatedBooking!.Unit);
     }
 }

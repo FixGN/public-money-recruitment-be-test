@@ -17,8 +17,8 @@ public class RentalService : IRentalService
         return _rentalRepository.GetOrDefault(id);
     }
 
-    public Rental CreateRental(int units)
+    public Rental CreateRental(int units, int preparationTimeInDays)
     {
-        return _rentalRepository.Create(units);
+        return _rentalRepository.Create(units, preparationTimeInDays);
     }
 }

@@ -91,9 +91,10 @@ public class CalendarServiceTests
                 defaultStartDate,
                 defaultStartDate.AddDays(DefaultNights - 1))
             .Returns(Array.Empty<Booking>());
+        // TODO: Fix test after implementation of first task
         var expectedResult = GetCalendarDatesResult.Success(new CalendarDate[] {
-            new(_defaultStartDate, bookingArray),
-            new(_defaultStartDate.AddDays(1), bookingArray)
+            new(_defaultStartDate, bookingArray, Array.Empty<CalendarPreparationTime>()),
+            new(_defaultStartDate.AddDays(1), bookingArray, Array.Empty<CalendarPreparationTime>())
         });
 
         var actualResult = _calendarService.GetCalendarDates(DefaultRentalId, _defaultStartDate, DefaultNights);

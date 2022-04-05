@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using VacationRental.Api.Contracts.Booking;
 using VacationRental.Api.Contracts.Calendar;
@@ -16,10 +17,12 @@ public static class ViewModelMapper
             throw new ArgumentNullException(nameof(booking));
         }
             
-        return new BookingViewModel(booking.Id, booking.RentalId, booking.Start, booking.Nights);
+        return new BookingViewModel(booking.Id, booking.RentalId, booking.Unit, booking.Start, booking.Nights);
     }
     
-    public static CalendarViewModel MapRentalIdAndCalendarDatesToCalendarViewModel(int rentalId, CalendarDate[] calendarDates)
+    public static CalendarViewModel MapRentalIdAndCalendarDatesToCalendarViewModel(
+        int rentalId,
+        IEnumerable<CalendarDate> calendarDates)
     {
         return new CalendarViewModel(
             rentalId,
@@ -28,13 +31,14 @@ public static class ViewModelMapper
     
     public static RentalViewModel MapRentalToRentalViewModel(Rental rental)
     {
-        return new RentalViewModel(rental.Id, rental.Units);
+        return new RentalViewModel(rental.Id, rental.Units, rental.PreparationTimeInDays);
     }
         
     private static CalendarDateViewModel MapCalendarDatesToCalendarDatesViewModel(CalendarDate calendarDate)
     {
         return new CalendarDateViewModel(
             calendarDate.Date,
-            calendarDate.Bookings.Select(x => new CalendarBookingViewModel(x.Id)).ToList());
+            calendarDate.Bookings.Select(x => new CalendarBookingViewModel(x.Id, x.Unit)).ToList(),
+            calendarDate.PreparationTimes.Select(x => new CalendarPreparationTimeViewModel(x.Unit)).ToList());
     }
 }
