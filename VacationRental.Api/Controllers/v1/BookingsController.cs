@@ -38,8 +38,8 @@ namespace VacationRental.Api.Controllers.v1
             return bookingCreationResult switch
             {
                 {IsSuccess: true} => Ok(new ResourceIdViewModel(bookingCreationResult.CreatedBooking.Id)),
-                {Status: CreateBookingResultStatus.ValidationFailed} => BadRequest(new ErrorViewModel(bookingCreationResult.ErrorMessage)),
-                {Status: CreateBookingResultStatus.Conflict} => Conflict(new ErrorViewModel(bookingCreationResult.ErrorMessage)),
+                {ErrorStatus: CreateBookingResultErrorStatus.ValidationFailed} => BadRequest(new ErrorViewModel(bookingCreationResult.ErrorMessage)),
+                {ErrorStatus: CreateBookingResultErrorStatus.Conflict} => Conflict(new ErrorViewModel(bookingCreationResult.ErrorMessage)),
                 _ => throw new ApplicationException("Unknown error status")
             };
         }
