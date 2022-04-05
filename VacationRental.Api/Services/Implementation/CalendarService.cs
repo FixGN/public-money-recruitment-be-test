@@ -39,7 +39,11 @@ public class CalendarService : ICalendarService
 
         var calendarDates = new CalendarDate[nights];
         var startDate = start.Date;
-        var availableBookings = _bookingRepository.GetByRentalIdAndDatePeriod(rentalId, startDate, startDate.AddDays(nights - 1));
+        var availableBookings = _bookingRepository
+            .GetByRentalIdAndDatePeriod(
+                rentalId,
+                startDate,
+                startDate.AddDays(nights + rental.PreparationTimeInDays));
         _logger.GetCalendarDatesFoundBookings(rentalId, start, nights, availableBookings.Length);
         
         for (var i = 0; i < nights; i++)
@@ -48,8 +52,13 @@ public class CalendarService : ICalendarService
             var bookings = availableBookings
                 .Where(x => x.Start <= date && x.Start.AddDays(x.Nights) > date)
                 .ToArray();
+            var preparationTime = availableBookings
+                .Where(x => x.Start.AddDays(x.Nights) < date
+                            && x.Start.AddDays(x.Nights + rental.PreparationTimeInDays) > date)
+                .Select(x => new CalendarPreparationTime(x.Unit))
+                .ToArray();
 
-            calendarDates[i] = new CalendarDate(date, bookings);
+            calendarDates[i] = new CalendarDate(date, bookings, preparationTime);
         }
 
         _logger.GetCalendarDatesEnd(rentalId, start, nights);
