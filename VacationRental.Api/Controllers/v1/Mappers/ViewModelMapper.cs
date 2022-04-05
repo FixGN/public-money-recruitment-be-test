@@ -31,7 +31,7 @@ public static class ViewModelMapper
     
     public static RentalViewModel MapRentalToRentalViewModel(Rental rental)
     {
-        return new RentalViewModel(rental.Id, rental.Units);
+        return new RentalViewModel(rental.Id, rental.Units, rental.PreparationTimeInDays);
     }
         
     private static CalendarDateViewModel MapCalendarDatesToCalendarDatesViewModel(CalendarDate calendarDate)
