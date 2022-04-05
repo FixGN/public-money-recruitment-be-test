@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics.CodeAnalysis;
 using VacationRental.Api.Models;
 
@@ -29,6 +30,21 @@ public class DictionaryRentalRepository : IRentalRepository
             _repository.Add(rental.Id, rental);
 
             return rental;
+        }
+    }
+
+    public void Update(Rental rental)
+    {
+        lock (_lock)
+        {
+            if (_repository.TryGetValue(rental.Id, out _))
+            {
+                _repository[rental.Id] = rental;
+            }
+            else
+            {
+                throw new DBConcurrencyException($"Rental with Id {rental.Id} does not exist");
+            }
         }
     }
 }

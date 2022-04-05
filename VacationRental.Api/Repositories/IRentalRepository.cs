@@ -6,4 +6,5 @@ public interface IRentalRepository
 {
     public Rental? GetOrDefault(int id);
     public Rental Create(int units, int preparationTimeInDays);
+    public void Update(Rental rental);
 }
