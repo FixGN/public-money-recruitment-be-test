@@ -76,7 +76,7 @@ public class BookingServiceTests
     {
         var actualBookingCreationResult = _bookingService.CreateBooking(DefaultRentalId, _defaultStartDate, -1);
         
-        Assert.AreEqual(CreateBookingResultStatus.ValidationFailed, actualBookingCreationResult.Status);
+        Assert.AreEqual(CreateBookingResultErrorStatus.ValidationFailed, actualBookingCreationResult.ErrorStatus);
     }
     
     [Test]
@@ -92,7 +92,7 @@ public class BookingServiceTests
     {
         var actualBookingCreationResult = _bookingService.CreateBooking(DefaultRentalId, _defaultStartDate, 0);
         
-        Assert.AreEqual(CreateBookingResultStatus.ValidationFailed, actualBookingCreationResult.Status);
+        Assert.AreEqual(CreateBookingResultErrorStatus.ValidationFailed, actualBookingCreationResult.ErrorStatus);
     }
     
     [Test]
@@ -112,7 +112,7 @@ public class BookingServiceTests
         
         var actualBookingCreationResult = _bookingService.CreateBooking(DefaultRentalId, _defaultStartDate, DefaultNights);
         
-        Assert.AreEqual(CreateBookingResultStatus.ValidationFailed, actualBookingCreationResult.Status);
+        Assert.AreEqual(CreateBookingResultErrorStatus.ValidationFailed, actualBookingCreationResult.ErrorStatus);
     }
 
     [Test]
@@ -152,7 +152,7 @@ public class BookingServiceTests
         
         var actualBookingCreationResult = _bookingService.CreateBooking(DefaultRentalId, _defaultStartDate, DefaultNights);
         
-        Assert.AreEqual(CreateBookingResultStatus.Conflict, actualBookingCreationResult.Status);
+        Assert.AreEqual(CreateBookingResultErrorStatus.Conflict, actualBookingCreationResult.ErrorStatus);
     }
 
     [Test]
