@@ -23,6 +23,12 @@ internal class BookingBuilder
         return this;
     }
 
+    public BookingBuilder WithUnit(int unit)
+    {
+        _unit = unit;
+        return this;
+    }
+
     public BookingBuilder WithStartDate(DateTime startDate)
     {
         _startDate = startDate;
