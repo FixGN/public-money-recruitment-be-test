@@ -41,10 +41,4 @@ public static class ViewModelMapper
             calendarDate.Bookings.Select(x => new CalendarBookingViewModel(x.Id, x.Unit)).ToList(),
             calendarDate.PreparationTimes.Select(x => new CalendarPreparationTimeViewModel(x.Unit)).ToList());
     }
-
-    private static CalendarPreparationTimeViewModel MapCalendarPreparationTimeToCalendarPreparationTimeViewModel(
-        CalendarPreparationTime preparationTime)
-    {
-        return new CalendarPreparationTimeViewModel(preparationTime.Unit);
-    }
 }
