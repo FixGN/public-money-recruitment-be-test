@@ -17,7 +17,7 @@ public static class ViewModelMapper
             throw new ArgumentNullException(nameof(booking));
         }
             
-        return new BookingViewModel(booking.Id, booking.RentalId, booking.Start, booking.Nights);
+        return new BookingViewModel(booking.Id, booking.RentalId, booking.Unit, booking.Start, booking.Nights);
     }
     
     public static CalendarViewModel MapRentalIdAndCalendarDatesToCalendarViewModel(
