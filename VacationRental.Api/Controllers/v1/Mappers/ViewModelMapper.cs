@@ -22,13 +22,11 @@ public static class ViewModelMapper
     
     public static CalendarViewModel MapRentalIdAndCalendarDatesToCalendarViewModel(
         int rentalId,
-        IEnumerable<CalendarDate> calendarDates,
-        IEnumerable<CalendarPreparationTime> preparationTimes)
+        IEnumerable<CalendarDate> calendarDates)
     {
         return new CalendarViewModel(
             rentalId,
-            calendarDates.Select(MapCalendarDatesToCalendarDatesViewModel).ToList(),
-            preparationTimes.Select(MapCalendarPreparationTimeToCalendarPreparationTimeViewModel).ToList());
+            calendarDates.Select(MapCalendarDatesToCalendarDatesViewModel).ToList());
     }
     
     public static RentalViewModel MapRentalToRentalViewModel(Rental rental)
@@ -40,7 +38,8 @@ public static class ViewModelMapper
     {
         return new CalendarDateViewModel(
             calendarDate.Date,
-            calendarDate.Bookings.Select(x => new CalendarBookingViewModel(x.Id, default)).ToList());
+            calendarDate.Bookings.Select(x => new CalendarBookingViewModel(x.Id, default)).ToList(),
+            calendarDate.PreparationTimes.Select(x => new CalendarPreparationTimeViewModel(x.Unit)).ToList());
     }
 
     private static CalendarPreparationTimeViewModel MapCalendarPreparationTimeToCalendarPreparationTimeViewModel(

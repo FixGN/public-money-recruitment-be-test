@@ -2,15 +2,13 @@
 {
     public class CalendarViewModel
     {
-        public CalendarViewModel(int rentalId, List<CalendarDateViewModel> dates, List<CalendarPreparationTimeViewModel> preparationTimes)
+        public CalendarViewModel(int rentalId, List<CalendarDateViewModel> dates)
         {
             RentalId = rentalId;
             Dates = dates;
-            PreparationTimes = preparationTimes;
         }
         
         public int RentalId { get; }
         public List<CalendarDateViewModel> Dates { get; }
-        public List<CalendarPreparationTimeViewModel> PreparationTimes { get; }
     }
 }

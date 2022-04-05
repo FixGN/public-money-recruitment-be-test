@@ -32,13 +32,8 @@ namespace VacationRental.Api.Controllers.v1
             {
                 return NotFound();
             }
-            
-            return Ok(
-                ViewModelMapper
-                    .MapRentalIdAndCalendarDatesToCalendarViewModel(
-                        rentalId,
-                        calendarDatesResult.CalendarDates,
-                        Array.Empty<CalendarPreparationTime>()));
+
+            return Ok(ViewModelMapper.MapRentalIdAndCalendarDatesToCalendarViewModel(rentalId, calendarDatesResult.CalendarDates));
         }
     }
 }

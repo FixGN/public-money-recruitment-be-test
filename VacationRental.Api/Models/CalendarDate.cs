@@ -8,10 +8,10 @@ public class CalendarDate
     {
         Date = date;
         Bookings = bookings ?? throw new ArgumentNullException(nameof(bookings));
-        PreparationDates = preparationDates ?? throw new ArgumentNullException(nameof(preparationDates));
+        PreparationTimes = preparationDates ?? throw new ArgumentNullException(nameof(preparationDates));
     }
 
     public DateTime Date { get; }
     public Booking[] Bookings { get; }
-    public CalendarPreparationTime[] PreparationDates { get; }
+    public CalendarPreparationTime[] PreparationTimes { get; }
 }
