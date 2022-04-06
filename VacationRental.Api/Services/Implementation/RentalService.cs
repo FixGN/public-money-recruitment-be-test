@@ -52,25 +52,25 @@ public class RentalService : IRentalService
         var rentalBookings = _bookingRepository.GetByRentalId(id);
         var minRentalDate = rentalBookings.Select(x => x.Start).Min();
         var maxRentalDate = rentalBookings.Select(x => x.Start.AddDays(x.Nights + rental.PreparationTimeInDays - 1)).Max();
-        var currentBookingDaysCount = (maxRentalDate - minRentalDate).Days;
+        var currentBookingDaysCount = (maxRentalDate - minRentalDate).Days + 1;
 
         for(var i = 0; i < currentBookingDaysCount; i++)
         {
             var date = minRentalDate.AddDays(i);
             var bookingsWithNewPreparationTime = rentalBookings
                 .Where(x => x.Start <= date
-                            && x.Start.AddDays(x.Nights + preparationTimeInDays - 1) <= date)
+                            && date <= x.Start.AddDays(x.Nights + preparationTimeInDays - 1))
                 .ToList();
 
-            if (bookingsWithNewPreparationTime.Count != bookingsWithNewPreparationTime.Distinct().Count())
+            if (bookingsWithNewPreparationTime.Count != bookingsWithNewPreparationTime.Select(x => x.Unit).Distinct().Count())
             {
                 return UpdateRentalResult.Conflict(
-                    $"Preparation time in days '{preparationTimeInDays}' makes conflict with bookings on date '{date}'");
+                    $"Preparation time in days '{preparationTimeInDays}' makes conflict with bookings on date '{date:d}'");
             }
             if (units < bookingsWithNewPreparationTime.Count)
             {
                 return UpdateRentalResult.Conflict(
-                    $"Units count too small for current bookings (bookings count for day {date:d} is ${bookingsWithNewPreparationTime.Count})");
+                    $"Units count too small for current bookings (bookings count for day {date:d} is {bookingsWithNewPreparationTime.Count})");
             }
         }
 
