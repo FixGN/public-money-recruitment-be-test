@@ -4,6 +4,7 @@ using VacationRental.Api.Contracts.Common;
 using VacationRental.Api.Contracts.Rental;
 using VacationRental.Api.Controllers.v1.Mappers;
 using VacationRental.Api.Services;
+using VacationRental.Api.Services.Models;
 
 namespace VacationRental.Api.Controllers.v1
 {
@@ -40,7 +41,16 @@ namespace VacationRental.Api.Controllers.v1
         [HttpPut("{rentalId:int}")]
         public IActionResult Put(int rentalId, RentalBindingModel model)
         {
-            return Ok(new RentalViewModel(default, default, default));
+            var updateRentalResult = _rentalService.UpdateRental(rentalId, model.Units, model.PreparationTimeInDays);
+
+            return updateRentalResult switch
+            {
+                {IsSuccess: true} => Ok(new RentalViewModel(rentalId, model.Units, model.PreparationTimeInDays)),
+                {ErrorStatus: UpdateRentalErrorStatus.ValidationFailed} => BadRequest(new ErrorViewModel(updateRentalResult.ErrorMessage)),
+                {ErrorStatus: UpdateRentalErrorStatus.RentalNotFound} => NotFound(new ErrorViewModel(updateRentalResult.ErrorMessage)),
+                {ErrorStatus: UpdateRentalErrorStatus.Conflict} => Conflict(new ErrorViewModel(updateRentalResult.ErrorMessage)),
+                _ => throw new ApplicationException("Unknown error status")
+            };
         }
     }
 }
