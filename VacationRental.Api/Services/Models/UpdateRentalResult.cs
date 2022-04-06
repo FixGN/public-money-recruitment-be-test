@@ -18,7 +18,7 @@ public class UpdateRentalResult
     
     public static UpdateRentalResult ValidationFail(string message)
     {
-        return new UpdateRentalResult(false, UpdateRentalErrorStatus.ValidationError, message);
+        return new UpdateRentalResult(false, UpdateRentalErrorStatus.ValidationFailed, message);
     }
     
     public static UpdateRentalResult RentalNotFound(int id)
