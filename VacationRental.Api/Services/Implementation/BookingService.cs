@@ -44,8 +44,9 @@ public class BookingService : IBookingService
         
         var startDate = start.Date;
 
+        // TODO: Make test for preparationTimeInDays period (can't create booking, if unit in preparation)
         var currentBookings = _bookingRepository
-            .GetByRentalIdAndDatePeriod(rentalId, startDate, startDate.AddDays(nights - 1));
+            .GetByRentalIdAndDatePeriod(rentalId, startDate.AddDays(-rental.PreparationTimeInDays), startDate.AddDays(nights + rental.PreparationTimeInDays - 1));
 
         if (rental.Units <= currentBookings.Length)
         {
