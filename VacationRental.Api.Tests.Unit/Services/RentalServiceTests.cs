@@ -14,13 +14,15 @@ public class RentalServiceTests
 {
     private readonly IRentalRepository _rentalRepository;
     private readonly IRentalService _rentalService;
+    private readonly IBookingRepository _bookingRepository;
 
     private const int DefaultRentalId = 1;
 
     public RentalServiceTests()
     {
         _rentalRepository = Substitute.For<IRentalRepository>();
-        _rentalService = new RentalService(_rentalRepository);
+        _bookingRepository = Substitute.For<IBookingRepository>();
+        _rentalService = new RentalService(_rentalRepository, _bookingRepository);
     }
     
     [Test]
