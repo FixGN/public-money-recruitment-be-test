@@ -170,14 +170,14 @@ public class BookingServiceTests
                 defaultStartDate.AddDays(DefaultNights - 1))
             .Returns(Array.Empty<Booking>());
         _bookingRepository
-            .Create(expectedBooking.RentalId, expectedBooking.Unit, expectedBooking.Start, expectedBooking.Nights)
+            .CreateAsync(expectedBooking.RentalId, expectedBooking.Unit, expectedBooking.Start, expectedBooking.Nights)
             .Returns(expectedBooking);
         
         await _bookingService.CreateBookingAsync(expectedBooking.RentalId, expectedBooking.Start, expectedBooking.Nights);
 
-        _bookingRepository
+        await _bookingRepository
             .Received(1)
-            .Create(expectedBooking.RentalId, expectedBooking.Unit, expectedBooking.Start, expectedBooking.Nights);
+            .CreateAsync(expectedBooking.RentalId, expectedBooking.Unit, expectedBooking.Start, expectedBooking.Nights);
     }
     
     [Test]
@@ -194,7 +194,7 @@ public class BookingServiceTests
                 defaultStartDate.AddDays(DefaultNights - 1))
             .Returns(Array.Empty<Booking>());
         _bookingRepository
-            .Create(expectedBooking.RentalId, expectedBooking.Unit, expectedBooking.Start, expectedBooking.Nights)
+            .CreateAsync(expectedBooking.RentalId, expectedBooking.Unit, expectedBooking.Start, expectedBooking.Nights)
             .Returns(expectedBooking);
         
         var actualBookingCreationResult = await _bookingService.CreateBookingAsync(
@@ -219,7 +219,7 @@ public class BookingServiceTests
                 defaultStartDate.AddDays(DefaultNights - 1))
             .Returns(Array.Empty<Booking>());
         _bookingRepository
-            .Create(expectedBooking.RentalId, expectedBooking.Unit, expectedBooking.Start, expectedBooking.Nights)
+            .CreateAsync(expectedBooking.RentalId, expectedBooking.Unit, expectedBooking.Start, expectedBooking.Nights)
             .Returns(expectedBooking);
         
         var actualBookingCreationResult = await _bookingService.CreateBookingAsync(
@@ -264,7 +264,7 @@ public class BookingServiceTests
                 expectedBooking.Start.AddDays(DefaultNights + rental.PreparationTimeInDays - 1))
             .Returns(bookingsInRepository);
         _bookingRepository
-            .Create(expectedBooking.RentalId, expectedBooking.Unit, expectedBooking.Start, expectedBooking.Nights)
+            .CreateAsync(expectedBooking.RentalId, expectedBooking.Unit, expectedBooking.Start, expectedBooking.Nights)
             .Returns(expectedBooking);
         
         

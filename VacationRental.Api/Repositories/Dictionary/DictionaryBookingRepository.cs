@@ -51,14 +51,16 @@ public class DictionaryBookingRepository : IBookingRepository
             .ToArray());
     }
 
-    public Booking Create(int rentalId, int unit, DateTime start, int nights)
+    public Task<Booking> CreateAsync(int rentalId, int unit, DateTime start, int nights, CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+        
         lock (_lock)
         {
             var booking = new Booking(_repository.Count + 1, rentalId, unit, start, nights);
             _repository.Add(booking.Id, booking);
 
-            return booking;
+            return Task.FromResult(booking);
         }
     }
 }

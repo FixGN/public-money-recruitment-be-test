@@ -71,7 +71,7 @@ public class BookingService : IBookingService
         var bookedUnits = currentBookings.Select(x => x.Unit);
         var availableUnit = GetFirstAvailableUnit(bookedUnits, rental.Units);
 
-        var booking = _bookingRepository.Create(rentalId, availableUnit, startDate, nights);
+        var booking = await _bookingRepository.CreateAsync(rentalId, availableUnit, startDate, nights, cancellationToken);
 
         _logger.CreateBookingEnd(rentalId, start, nights);
         return CreateBookingResult.Successful(booking);
