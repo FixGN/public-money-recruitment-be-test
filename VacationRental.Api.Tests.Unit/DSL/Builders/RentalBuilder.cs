@@ -20,6 +20,12 @@ internal class RentalBuilder
         return this;
     }
     
+    public RentalBuilder WithPreparationTimeInDays(int preparationTimeInDays)
+    {
+        _preparationTimeInDays = preparationTimeInDays;
+        return this;
+    }
+    
     public Rental Please()
     {
         return new(_id, _units, _preparationTimeInDays);
