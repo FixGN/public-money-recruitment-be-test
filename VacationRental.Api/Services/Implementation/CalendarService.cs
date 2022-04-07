@@ -39,7 +39,6 @@ public class CalendarService : ICalendarService
 
         var calendarDates = new CalendarDate[nights];
         var startDate = start.Date;
-        // TODO: Make test for preparationTimeInDays period (show preparationTime after booking, if unit was booked, but show days after booking)
         var availableBookings = _bookingRepository
             .GetByRentalIdAndDatePeriod(
                 rentalId,
