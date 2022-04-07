@@ -126,8 +126,8 @@ public class BookingServiceTests
         _bookingRepository
             .GetByRentalIdAndDatePeriod(
                 DefaultRentalId,
-                defaultStartDate,
-                defaultStartDate.AddDays(DefaultNights - 1))
+                defaultStartDate.AddDays(-rental.PreparationTimeInDays),
+                defaultStartDate.AddDays(DefaultNights + rental.PreparationTimeInDays - 1))
             .Returns(bookingArray);
         
         var actualBookingCreationResult = _bookingService.CreateBooking(DefaultRentalId, _defaultStartDate, DefaultNights);
@@ -146,7 +146,7 @@ public class BookingServiceTests
         _bookingRepository
             .GetByRentalIdAndDatePeriod(
                 DefaultRentalId,
-                defaultStartDate,
+                defaultStartDate.AddDays(-rental.PreparationTimeInDays),
                 defaultStartDate.AddDays(DefaultNights - 1))
             .Returns(bookingArray);
         
@@ -259,8 +259,8 @@ public class BookingServiceTests
         _bookingRepository
             .GetByRentalIdAndDatePeriod(
                 expectedBooking.RentalId,
-                expectedBooking.Start,
-                expectedBooking.Start.AddDays(DefaultNights - 1))
+                expectedBooking.Start.AddDays(-rental.PreparationTimeInDays),
+                expectedBooking.Start.AddDays(DefaultNights + rental.PreparationTimeInDays - 1))
             .Returns(bookingsInRepository);
         _bookingRepository
             .Create(expectedBooking.RentalId, expectedBooking.Unit, expectedBooking.Start, expectedBooking.Nights)
