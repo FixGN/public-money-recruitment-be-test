@@ -49,7 +49,6 @@ public class RentalService : IRentalService
             return UpdateRentalResult.Successful();
         }
         
-        // TODO write test: if rentalBookings is empty array - all works properly;
         var rentalBookings = _bookingRepository.GetByRentalId(id);
         if (rentalBookings.Length != 0)
         {

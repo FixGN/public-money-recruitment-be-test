@@ -153,6 +153,17 @@ public class RentalServiceTests
         
         Assert.AreEqual(true, actualResult.IsSuccess);
     }
+    
+    [Test]
+    public void UpdateRental_ReturnsIsSuccessTrue_WhenExistingRentalHasNotAnyBookingsAndAllParamsIsCorrect()
+    {
+        var existingRental = Create.Rental().Please();
+        _rentalRepository.GetOrDefault(existingRental.Id).Returns(existingRental);
+        
+        var actualResult = _rentalService.UpdateRental(existingRental.Id, existingRental.Units + 1, existingRental.PreparationTimeInDays);
+        
+        Assert.AreEqual(true, actualResult.IsSuccess);
+    }
 
     [Test]
     public void UpdateRental_ReturnsIsSuccessFalse_WhenPreparationTimeMakesConflictBetweenCreatedBookings()
