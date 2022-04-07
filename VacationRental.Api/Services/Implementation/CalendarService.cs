@@ -29,7 +29,6 @@ public class CalendarService : ICalendarService
             _logger.GetCalendarDatesNightsIsNegativeOrZero(rentalId, start, nights);
             return GetCalendarDatesResult.Fail("Nights must be positive");
         }
-        // TODO: It's a part of contract? Can I delete this? 
         var rental = _rentalRepository.GetOrDefault(rentalId);
         if (rental == null)
         {
@@ -39,11 +38,14 @@ public class CalendarService : ICalendarService
 
         var calendarDates = new CalendarDate[nights];
         var startDate = start.Date;
+        // TODO: Make async
         var availableBookings = _bookingRepository
-            .GetByRentalIdAndDatePeriod(
+            .GetByRentalIdAndDatePeriodAsync(
                 rentalId,
                 startDate.AddDays(-rental.PreparationTimeInDays),
-                startDate.AddDays(nights + rental.PreparationTimeInDays - 1));
+                startDate.AddDays(nights + rental.PreparationTimeInDays - 1))
+            .GetAwaiter()
+            .GetResult();
         _logger.GetCalendarDatesFoundBookings(rentalId, start, nights, availableBookings.Length);
         
         for (var i = 0; i < nights; i++)

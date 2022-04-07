@@ -49,7 +49,8 @@ public class RentalService : IRentalService
             return UpdateRentalResult.Successful();
         }
         
-        var rentalBookings = _bookingRepository.GetByRentalId(id);
+        // TODO: Rewrite to async
+        var rentalBookings = _bookingRepository.GetByRentalIdAsync(id).GetAwaiter().GetResult();
         if (rentalBookings.Length != 0)
         {
             var minRentalDate = rentalBookings.Select(x => x.Start).Min();

@@ -1,12 +1,18 @@
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 using VacationRental.Api.Models;
 
 namespace VacationRental.Api.Repositories;
 
 public interface IBookingRepository
 {
-    public Booking? GetOrDefault(int id);
-    public Booking[] GetByRentalId(int rentalId);
-    public Booking[] GetByRentalIdAndDatePeriod(int rentalId, DateTime startDate, DateTime endDate);
+    public Task<Booking?> GetOrDefaultAsync(int id, CancellationToken cancellationToken = default);
+    public Task<Booking[]> GetByRentalIdAsync(int rentalId, CancellationToken cancellationToken = default);
+    public Task<Booking[]> GetByRentalIdAndDatePeriodAsync(
+        int rentalId,
+        DateTime startDate,
+        DateTime endDate,
+        CancellationToken cancellationToken = default);
     public Booking Create(int rentalId, int unit, DateTime start, int nights);
 }

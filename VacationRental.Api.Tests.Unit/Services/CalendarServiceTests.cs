@@ -63,7 +63,7 @@ public class CalendarServiceTests
         _rentalRepository.GetOrDefault(DefaultRentalId).Returns(rental);
         var defaultStartDate = _defaultStartDate.Date;
         _bookingRepository
-            .GetByRentalIdAndDatePeriod(
+            .GetByRentalIdAndDatePeriodAsync(
                 DefaultRentalId,
                 defaultStartDate,
                 defaultStartDate.AddDays(DefaultNights - 1))
@@ -86,7 +86,7 @@ public class CalendarServiceTests
         _rentalRepository.GetOrDefault(DefaultRentalId).Returns(rental);
         var defaultStartDate = _defaultStartDate.Date;
         _bookingRepository
-            .GetByRentalIdAndDatePeriod(
+            .GetByRentalIdAndDatePeriodAsync(
                 DefaultRentalId,
                 defaultStartDate,
                 defaultStartDate.AddDays(DefaultNights - 1))

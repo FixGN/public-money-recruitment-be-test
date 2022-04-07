@@ -183,7 +183,7 @@ public class RentalServiceTests
             .WithNights(1)
             .Please();
         var existingBookings = new[] {booking1, booking2};
-        _bookingRepository.GetByRentalId(existingRental.Id).Returns(existingBookings);
+        _bookingRepository.GetByRentalIdAsync(existingRental.Id).Returns(existingBookings);
 
         var actualResult = _rentalService.UpdateRental(
             existingRental.Id,
@@ -211,7 +211,7 @@ public class RentalServiceTests
             .WithNights(1)
             .Please();
         var existingBookings = new[] {booking1, booking2};
-        _bookingRepository.GetByRentalId(existingRental.Id).Returns(existingBookings);
+        _bookingRepository.GetByRentalIdAsync(existingRental.Id).Returns(existingBookings);
 
         var actualResult = _rentalService.UpdateRental(
             existingRental.Id,
@@ -245,7 +245,7 @@ public class RentalServiceTests
             .WithNights(2)
             .Please();
         var existingBookings = new[] {booking1, booking2, booking3};
-        _bookingRepository.GetByRentalId(existingRental.Id).Returns(existingBookings);
+        _bookingRepository.GetByRentalIdAsync(existingRental.Id).Returns(existingBookings);
 
         var actualResult = _rentalService.UpdateRental(
             existingRental.Id,
@@ -279,7 +279,7 @@ public class RentalServiceTests
             .WithNights(2)
             .Please();
         var existingBookings = new[] {booking1, booking2, booking3};
-        _bookingRepository.GetByRentalId(existingRental.Id).Returns(existingBookings);
+        _bookingRepository.GetByRentalIdAsync(existingRental.Id).Returns(existingBookings);
 
         var actualResult = _rentalService.UpdateRental(
             existingRental.Id,
@@ -307,7 +307,7 @@ public class RentalServiceTests
             .WithNights(2)
             .Please();
         var existingBookings = new[] {booking1, booking2};
-        _bookingRepository.GetByRentalId(existingRental.Id).Returns(existingBookings);
+        _bookingRepository.GetByRentalIdAsync(existingRental.Id).Returns(existingBookings);
 
         _rentalService.UpdateRental(
             existingRental.Id,
@@ -335,7 +335,7 @@ public class RentalServiceTests
             .WithNights(2)
             .Please();
         var existingBookings = new[] {booking1, booking2};
-        _bookingRepository.GetByRentalId(existingRental.Id).Returns(existingBookings);
+        _bookingRepository.GetByRentalIdAsync(existingRental.Id).Returns(existingBookings);
         var expectedRentalToUpdate = Create.Rental()
             .WithId(existingRental.Id)
             .WithUnits(existingRental.Units - 1)
@@ -373,7 +373,7 @@ public class RentalServiceTests
             .WithNights(2)
             .Please();
         var existingBookings = new[] {booking1, booking2};
-        _bookingRepository.GetByRentalId(existingRental.Id).Returns(existingBookings);
+        _bookingRepository.GetByRentalIdAsync(existingRental.Id).Returns(existingBookings);
 
         var actualResult = _rentalService.UpdateRental(
             existingRental.Id,

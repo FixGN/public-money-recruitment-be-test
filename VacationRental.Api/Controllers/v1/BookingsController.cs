@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using VacationRental.Api.Contracts.Booking;
 using VacationRental.Api.Contracts.Common;
@@ -21,9 +23,11 @@ namespace VacationRental.Api.Controllers.v1
 
         [HttpGet]
         [Route("{bookingId:int}")]
-        public IActionResult Get(int bookingId)
+        public async Task<IActionResult> Get(int bookingId, CancellationToken cancellationToken)
         {
-            var booking = _bookingService.GetBookingOrDefault(bookingId);
+            cancellationToken.ThrowIfCancellationRequested();
+            
+            var booking = await _bookingService.GetBookingOrDefaultAsync(bookingId, cancellationToken);
 
             return booking == null 
                 ? NotFound()
@@ -31,15 +35,24 @@ namespace VacationRental.Api.Controllers.v1
         }
 
         [HttpPost]
-        public IActionResult Post(BookingBindingModel model)
+        public async Task<IActionResult> Post(BookingBindingModel model, CancellationToken cancellationToken)
         {
-            var bookingCreationResult = _bookingService.CreateBooking(model.RentalId, model.Start, model.Nights);
+            cancellationToken.ThrowIfCancellationRequested();
+            
+            var bookingCreationResult = await _bookingService.CreateBookingAsync(
+                model.RentalId,
+                model.Start,
+                model.Nights,
+                cancellationToken);
 
             return bookingCreationResult switch
             {
-                {IsSuccess: true} => Ok(new ResourceIdViewModel(bookingCreationResult.CreatedBooking.Id)),
-                {ErrorStatus: CreateBookingResultErrorStatus.ValidationFailed} => BadRequest(new ErrorViewModel(bookingCreationResult.ErrorMessage)),
-                {ErrorStatus: CreateBookingResultErrorStatus.Conflict} => Conflict(new ErrorViewModel(bookingCreationResult.ErrorMessage)),
+                {IsSuccess: true} 
+                    => Ok(new ResourceIdViewModel(bookingCreationResult.CreatedBooking.Id)),
+                {ErrorStatus: CreateBookingResultErrorStatus.ValidationFailed} 
+                    => BadRequest(new ErrorViewModel(bookingCreationResult.ErrorMessage)),
+                {ErrorStatus: CreateBookingResultErrorStatus.Conflict} 
+                    => Conflict(new ErrorViewModel(bookingCreationResult.ErrorMessage)),
                 _ => throw new ApplicationException("Unknown error status")
             };
         }

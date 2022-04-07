@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using VacationRental.Api.Logging.Extensions.Services;
 using VacationRental.Api.Models;
@@ -22,13 +24,21 @@ public class BookingService : IBookingService
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
-    public Booking? GetBookingOrDefault(int id)
+    public async Task<Booking?> GetBookingOrDefaultAsync(int id, CancellationToken cancellationToken = default)
     {
-        return _bookingRepository.GetOrDefault(id);
+        cancellationToken.ThrowIfCancellationRequested();
+        
+        return await _bookingRepository.GetOrDefaultAsync(id, cancellationToken);
     }
 
-    public CreateBookingResult CreateBooking(int rentalId, DateTime start, int nights)
+    public async Task<CreateBookingResult> CreateBookingAsync(
+        int rentalId,
+        DateTime start,
+        int nights,
+        CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         _logger.CreateBookingStart(rentalId, start, nights);
         if (nights <= 0)
         {
@@ -44,8 +54,11 @@ public class BookingService : IBookingService
         
         var startDate = start.Date;
 
-        var currentBookings = _bookingRepository
-            .GetByRentalIdAndDatePeriod(rentalId, startDate.AddDays(-rental.PreparationTimeInDays), startDate.AddDays(nights + rental.PreparationTimeInDays - 1));
+        var currentBookings = await _bookingRepository.GetByRentalIdAndDatePeriodAsync(
+            rentalId,
+            startDate.AddDays(-rental.PreparationTimeInDays),
+            startDate.AddDays(nights + rental.PreparationTimeInDays - 1),
+            cancellationToken);
 
         if (rental.Units <= currentBookings.Length)
         {

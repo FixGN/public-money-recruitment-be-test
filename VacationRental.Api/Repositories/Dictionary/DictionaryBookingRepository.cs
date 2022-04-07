@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using VacationRental.Api.Models;
 
 namespace VacationRental.Api.Repositories.Dictionary;
@@ -15,21 +17,30 @@ public class DictionaryBookingRepository : IBookingRepository
         _repository = repository;
     }
     
-    public Booking? GetOrDefault(int id)
+    public Task<Booking?> GetOrDefaultAsync(int id, CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
         _repository.TryGetValue(id, out var booking);
 
-        return booking;
+        return Task.FromResult(booking);
     }
 
-    public Booking[] GetByRentalId(int rentalId)
+    public Task<Booking[]> GetByRentalIdAsync(int rentalId, CancellationToken cancellationToken = default)
     {
-        return _repository.Values.Where(x => x.RentalId == rentalId).ToArray();
+        cancellationToken.ThrowIfCancellationRequested();
+        
+        return Task.FromResult(_repository.Values.Where(x => x.RentalId == rentalId).ToArray());
     }
 
-    public Booking[] GetByRentalIdAndDatePeriod(int rentalId, DateTime startDate, DateTime endDate)
+    public Task<Booking[]> GetByRentalIdAndDatePeriodAsync(
+        int rentalId,
+        DateTime startDate,
+        DateTime endDate,
+        CancellationToken cancellationToken = default)
     {
-        return _repository.Values
+        cancellationToken.ThrowIfCancellationRequested();
+        
+        return Task.FromResult(_repository.Values
             .Where(x =>
             {
                 var currentEndDate = x.Start.AddDays(x.Nights - 1);
@@ -37,7 +48,7 @@ public class DictionaryBookingRepository : IBookingRepository
                        && x.Start <= endDate.Date
                        && startDate.Date <= currentEndDate;
             })
-            .ToArray();
+            .ToArray());
     }
 
     public Booking Create(int rentalId, int unit, DateTime start, int nights)
