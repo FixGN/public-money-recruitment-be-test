@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading;
+using System.Threading.Tasks;
 using VacationRental.Api.Models;
 
 namespace VacationRental.Api.Repositories.Dictionary;
@@ -16,35 +18,43 @@ public class DictionaryRentalRepository : IRentalRepository
     }
 
     [SuppressMessage("ReSharper", "InconsistentlySynchronizedField")]
-    public Rental? GetOrDefault(int id)
+    public Task<Rental?> GetOrDefaultAsync(int id, CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+        
         _repository.TryGetValue(id, out var rental);
-        return rental;
+        return Task.FromResult(rental);
     }
 
-    public Rental Create(int units, int preparationTimeInDays)
+    public Task<Rental> CreateAsync(int units, int preparationTimeInDays, CancellationToken cancellationToken = default)
     {
-        lock (_lock)
-        {
-            var rental = new Rental(_repository.Count + 1, units, preparationTimeInDays);
-            _repository.Add(rental.Id, rental);
+       cancellationToken.ThrowIfCancellationRequested();
+       
+       lock (_lock)
+       {
+           var rental = new Rental(_repository.Count + 1, units, preparationTimeInDays);
+           _repository.Add(rental.Id, rental);
 
-            return rental;
-        }
+           return Task.FromResult(rental);
+       }
     }
 
-    public void Update(Rental rental)
+    public Task UpdateAsync(Rental rental, CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+        
         lock (_lock)
         {
             if (_repository.TryGetValue(rental.Id, out _))
             {
-                _repository[rental.Id] = rental;
+                Task.FromResult(_repository[rental.Id] = rental);
             }
             else
             {
                 throw new DBConcurrencyException($"Rental with Id {rental.Id} does not exist");
             }
         }
+
+        return Task.CompletedTask;
     }
 }

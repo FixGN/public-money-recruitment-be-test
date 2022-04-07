@@ -29,7 +29,9 @@ public class CalendarService : ICalendarService
             _logger.GetCalendarDatesNightsIsNegativeOrZero(rentalId, start, nights);
             return GetCalendarDatesResult.Fail("Nights must be positive");
         }
-        var rental = _rentalRepository.GetOrDefault(rentalId);
+        
+        // TODO: Make async
+        var rental = _rentalRepository.GetOrDefaultAsync(rentalId).GetAwaiter().GetResult();
         if (rental == null)
         {
             _logger.GetCalendarDatesRentalNotFound(rentalId, start, nights);

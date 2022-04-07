@@ -49,7 +49,7 @@ public class CalendarServiceTests
     [Test]
     public void GetCalendarDates_ReturnsIsSuccessFalse_WhenRentalNotFound()
     {
-        _rentalRepository.GetOrDefault(DefaultRentalId).ReturnsNull();
+        _rentalRepository.GetOrDefaultAsync(DefaultRentalId).ReturnsNull();
         
         var actualResult = _calendarService.GetCalendarDates(DefaultRentalId, _defaultStartDate, DefaultNights);
 
@@ -60,7 +60,7 @@ public class CalendarServiceTests
     public void GetCalendarDates_ReturnsIsSuccessTrue_WhenNightsIsPositiveAndRentalWasFound()
     {
         var rental = Create.Rental().WithId(DefaultRentalId).Please();
-        _rentalRepository.GetOrDefault(DefaultRentalId).Returns(rental);
+        _rentalRepository.GetOrDefaultAsync(DefaultRentalId).Returns(rental);
         var defaultStartDate = _defaultStartDate.Date;
         _bookingRepository
             .GetByRentalIdAndDatePeriodAsync(
@@ -83,7 +83,7 @@ public class CalendarServiceTests
             .WithNights(DefaultNights)
             .Please();
         var bookingArray = new[] {booking};
-        _rentalRepository.GetOrDefault(DefaultRentalId).Returns(rental);
+        _rentalRepository.GetOrDefaultAsync(DefaultRentalId).Returns(rental);
         var defaultStartDate = _defaultStartDate.Date;
         _bookingRepository
             .GetByRentalIdAndDatePeriodAsync(

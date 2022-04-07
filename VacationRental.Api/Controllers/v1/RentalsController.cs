@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using VacationRental.Api.Contracts.Common;
 using VacationRental.Api.Contracts.Rental;
@@ -21,9 +23,9 @@ namespace VacationRental.Api.Controllers.v1
 
         [HttpGet]
         [Route("{rentalId:int}")]
-        public IActionResult Get(int rentalId)
+        public async Task<IActionResult> Get(int rentalId, CancellationToken cancellationToken)
         {
-            var rental = _rentalService.GetRentalOrDefault(rentalId);
+            var rental = await _rentalService.GetRentalOrDefaultAsync(rentalId, cancellationToken);
 
             return rental == null 
                 ? NotFound() 
@@ -31,17 +33,17 @@ namespace VacationRental.Api.Controllers.v1
         }
 
         [HttpPost]
-        public IActionResult Post(RentalBindingModel model)
+        public async Task<IActionResult> Post(RentalBindingModel model, CancellationToken cancellationToken)
         {
-            var rental = _rentalService.CreateRental(model.Units, model.PreparationTimeInDays);
+            var rental = await _rentalService.CreateRentalAsync(model.Units, model.PreparationTimeInDays, cancellationToken);
 
             return Ok(new ResourceIdViewModel(rental.Id));
         }
 
         [HttpPut("{rentalId:int}")]
-        public IActionResult Put(int rentalId, RentalBindingModel model)
+        public async Task<IActionResult> Put(int rentalId, RentalBindingModel model)
         {
-            var updateRentalResult = _rentalService.UpdateRental(rentalId, model.Units, model.PreparationTimeInDays);
+            var updateRentalResult = await _rentalService.UpdateRentalAsync(rentalId, model.Units, model.PreparationTimeInDays);
 
             return updateRentalResult switch
             {

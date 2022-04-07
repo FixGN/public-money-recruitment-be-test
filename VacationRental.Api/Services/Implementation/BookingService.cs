@@ -45,7 +45,7 @@ public class BookingService : IBookingService
             _logger.CreateBookingNightsIsNegativeOrZero(rentalId, start, nights);
             return CreateBookingResult.ValidationFail("Nights must be positive");
         }
-        var rental = _rentalRepository.GetOrDefault(rentalId);
+        var rental = await _rentalRepository.GetOrDefaultAsync(rentalId, cancellationToken);
         if (rental == null)
         {
             _logger.CreateBookingRentalNotFound(rentalId, start, nights);

@@ -1,10 +1,12 @@
+using System.Threading;
+using System.Threading.Tasks;
 using VacationRental.Api.Models;
 
 namespace VacationRental.Api.Repositories;
 
 public interface IRentalRepository
 {
-    public Rental? GetOrDefault(int id);
-    public Rental Create(int units, int preparationTimeInDays);
-    public void Update(Rental rental);
+    public Task<Rental?> GetOrDefaultAsync(int id, CancellationToken cancellationToken = default);
+    public Task<Rental> CreateAsync(int units, int preparationTimeInDays, CancellationToken cancellationToken = default);
+    public Task UpdateAsync(Rental rental, CancellationToken cancellationToken = default);
 }

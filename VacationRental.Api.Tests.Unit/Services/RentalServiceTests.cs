@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;
 using NUnit.Framework;
@@ -38,138 +39,138 @@ public class RentalServiceTests
     }
     
     [Test]
-    public void GetRental_ReturnsNull_WhenRentalNotExists()
+    public async Task GetRental_ReturnsNull_WhenRentalNotExists()
     {
-        _rentalRepository.GetOrDefault(DefaultRentalId).ReturnsNull();
+        _rentalRepository.GetOrDefaultAsync(DefaultRentalId).ReturnsNull();
 
-        var actualRental = _rentalService.GetRentalOrDefault(DefaultRentalId);
+        var actualRental = await _rentalService.GetRentalOrDefaultAsync(DefaultRentalId);
         
         Assert.IsNull(actualRental);
     }
     
     [Test]
-    public void GetRental_ReturnsRental_WhenRentalExists()
+    public async Task GetRental_ReturnsRental_WhenRentalExists()
     {
         var rental = Create.Rental().Please();
-        _rentalRepository.GetOrDefault(DefaultRentalId).Returns(rental);
+        _rentalRepository.GetOrDefaultAsync(DefaultRentalId).Returns(rental);
 
-        var actualRental = _rentalService.GetRentalOrDefault(DefaultRentalId);
+        var actualRental = await _rentalService.GetRentalOrDefaultAsync(DefaultRentalId);
         
         Assert.IsInstanceOf<Rental>(actualRental);
     }
     
     [Test]
-    public void GetRental_ReturnsCorrectRental_WhenRentalExists()
+    public async Task GetRental_ReturnsCorrectRental_WhenRentalExists()
     {
         var expectedRental = Create.Rental().Please();
-        _rentalRepository.GetOrDefault(DefaultRentalId).Returns(expectedRental);
+        _rentalRepository.GetOrDefaultAsync(DefaultRentalId).Returns(expectedRental);
 
-        var actualRental = _rentalService.GetRentalOrDefault(DefaultRentalId);
+        var actualRental = await _rentalService.GetRentalOrDefaultAsync(DefaultRentalId);
         
         Assert.IsTrue(actualRental!.AreEqual(expectedRental));
     }
 
     [Test]
-    public void CreateRental_CreatesRental()
+    public async Task CreateRental_CreatesRental()
     {
         var expectedRental = Create.Rental().Please();
-        _rentalRepository.Create(expectedRental.Units, expectedRental.PreparationTimeInDays).Returns(expectedRental);
+        _rentalRepository.CreateAsync(expectedRental.Units, expectedRental.PreparationTimeInDays).Returns(expectedRental);
 
-        _rentalService.CreateRental(expectedRental.Units, expectedRental.PreparationTimeInDays);
+        await _rentalService.CreateRentalAsync(expectedRental.Units, expectedRental.PreparationTimeInDays);
 
-        _rentalRepository.Received(1).Create(expectedRental.Units, expectedRental.PreparationTimeInDays);
+        await _rentalRepository.Received(1).CreateAsync(expectedRental.Units, expectedRental.PreparationTimeInDays);
     }
     
     [Test]
-    public void CreateRental_ReturnsCreatedRental()
+    public async Task CreateRental_ReturnsCreatedRental()
     {
         var expectedRental = Create.Rental().Please();
-        _rentalRepository.Create(expectedRental.Units, expectedRental.PreparationTimeInDays).Returns(expectedRental);
+        _rentalRepository.CreateAsync(expectedRental.Units, expectedRental.PreparationTimeInDays).Returns(expectedRental);
 
-        var actualRental = _rentalService.CreateRental(expectedRental.Units, expectedRental.PreparationTimeInDays);
+        var actualRental = await _rentalService.CreateRentalAsync(expectedRental.Units, expectedRental.PreparationTimeInDays);
         
         Assert.IsTrue(actualRental.AreEqual(expectedRental));
     }
     
     [Test]
-    public void UpdateRental_ReturnsIsSuccessFalse_WhenUnitsIsNegativeNumber()
+    public async Task UpdateRental_ReturnsIsSuccessFalse_WhenUnitsIsNegativeNumber()
     {
-        var actualResult = _rentalService.UpdateRental(DefaultRentalId, -1, DefaultPreparationTimeInDays);
+        var actualResult = await _rentalService.UpdateRentalAsync(DefaultRentalId, -1, DefaultPreparationTimeInDays);
         
         Assert.AreEqual(false, actualResult.IsSuccess);
     }
     
     [Test]
-    public void UpdateRental_ReturnsErrorStatusValidationFailed_WhenUnitsIsNegativeNumber()
+    public async Task UpdateRental_ReturnsErrorStatusValidationFailed_WhenUnitsIsNegativeNumber()
     {
-        var actualResult = _rentalService.UpdateRental(DefaultRentalId, -1, DefaultPreparationTimeInDays);
+        var actualResult = await _rentalService.UpdateRentalAsync(DefaultRentalId, -1, DefaultPreparationTimeInDays);
         
         Assert.AreEqual(UpdateRentalErrorStatus.ValidationFailed, actualResult.ErrorStatus);
     }
     
     [Test]
-    public void UpdateRental_ReturnsIsSuccessFalse_WhenPreparationTimeInDaysIsNegativeNumber()
+    public async Task UpdateRental_ReturnsIsSuccessFalse_WhenPreparationTimeInDaysIsNegativeNumber()
     {
-        var actualResult = _rentalService.UpdateRental(DefaultRentalId, DefaultUnits, -1);
+        var actualResult = await _rentalService.UpdateRentalAsync(DefaultRentalId, DefaultUnits, -1);
         
         Assert.AreEqual(false, actualResult.IsSuccess);
     }
     
     [Test]
-    public void UpdateRental_ReturnsErrorStatusValidationFailed_WhenPreparationTimeInDaysIsNegativeNumber()
+    public async Task UpdateRental_ReturnsErrorStatusValidationFailed_WhenPreparationTimeInDaysIsNegativeNumber()
     {
-        var actualResult = _rentalService.UpdateRental(DefaultRentalId, DefaultUnits, -1);
+        var actualResult = await _rentalService.UpdateRentalAsync(DefaultRentalId, DefaultUnits, -1);
         
         Assert.AreEqual(UpdateRentalErrorStatus.ValidationFailed, actualResult.ErrorStatus);
     }
     
     [Test]
-    public void UpdateRental_ReturnsIsSuccessFalse_WhenRentalNotExists()
+    public async Task UpdateRental_ReturnsIsSuccessFalse_WhenRentalNotExists()
     {
-        _rentalRepository.GetOrDefault(DefaultRentalId).ReturnsNull();
+        _rentalRepository.GetOrDefaultAsync(DefaultRentalId).ReturnsNull();
         
-        var actualResult = _rentalService.UpdateRental(DefaultRentalId, DefaultUnits, DefaultPreparationTimeInDays);
+        var actualResult = await _rentalService.UpdateRentalAsync(DefaultRentalId, DefaultUnits, DefaultPreparationTimeInDays);
         
         Assert.AreEqual(false, actualResult.IsSuccess);
     }
     
     [Test]
-    public void UpdateRental_ReturnsErrorStatusRentalNotFound_WhenRentalNotExists()
+    public async Task UpdateRental_ReturnsErrorStatusRentalNotFound_WhenRentalNotExists()
     {
-        _rentalRepository.GetOrDefault(DefaultRentalId).ReturnsNull();
+        _rentalRepository.GetOrDefaultAsync(DefaultRentalId).ReturnsNull();
         
-        var actualResult = _rentalService.UpdateRental(DefaultRentalId, DefaultUnits, DefaultPreparationTimeInDays);
+        var actualResult = await _rentalService.UpdateRentalAsync(DefaultRentalId, DefaultUnits, DefaultPreparationTimeInDays);
         
         Assert.AreEqual(UpdateRentalErrorStatus.RentalNotFound, actualResult.ErrorStatus);
     }
 
     [Test]
-    public void UpdateRental_ReturnsIsSuccessTrue_WhenExistingRentalHasSameUnitsAndPreparationTimeInDaysValues()
+    public async Task UpdateRental_ReturnsIsSuccessTrue_WhenExistingRentalHasSameUnitsAndPreparationTimeInDaysValues()
     {
         var existingRental = Create.Rental().Please();
-        _rentalRepository.GetOrDefault(existingRental.Id).Returns(existingRental);
+        _rentalRepository.GetOrDefaultAsync(existingRental.Id).Returns(existingRental);
         
-        var actualResult = _rentalService.UpdateRental(existingRental.Id, existingRental.Units, existingRental.PreparationTimeInDays);
+        var actualResult = await _rentalService.UpdateRentalAsync(existingRental.Id, existingRental.Units, existingRental.PreparationTimeInDays);
         
         Assert.AreEqual(true, actualResult.IsSuccess);
     }
     
     [Test]
-    public void UpdateRental_ReturnsIsSuccessTrue_WhenExistingRentalHasNotAnyBookingsAndAllParamsIsCorrect()
+    public async Task UpdateRental_ReturnsIsSuccessTrue_WhenExistingRentalHasNotAnyBookingsAndAllParamsIsCorrect()
     {
         var existingRental = Create.Rental().Please();
-        _rentalRepository.GetOrDefault(existingRental.Id).Returns(existingRental);
+        _rentalRepository.GetOrDefaultAsync(existingRental.Id).Returns(existingRental);
         
-        var actualResult = _rentalService.UpdateRental(existingRental.Id, existingRental.Units + 1, existingRental.PreparationTimeInDays);
+        var actualResult = await _rentalService.UpdateRentalAsync(existingRental.Id, existingRental.Units + 1, existingRental.PreparationTimeInDays);
         
         Assert.AreEqual(true, actualResult.IsSuccess);
     }
 
     [Test]
-    public void UpdateRental_ReturnsIsSuccessFalse_WhenPreparationTimeMakesConflictBetweenCreatedBookings()
+    public async Task UpdateRental_ReturnsIsSuccessFalse_WhenPreparationTimeMakesConflictBetweenCreatedBookings()
     {
         var existingRental = Create.Rental().WithUnits(1).WithPreparationTimeInDays(2).Please();
-        _rentalRepository.GetOrDefault(existingRental.Id).Returns(existingRental);
+        _rentalRepository.GetOrDefaultAsync(existingRental.Id).Returns(existingRental);
         var booking1 = Create.Booking()
             .WithRentalId(existingRental.Id)
             .WithUnit(1)
@@ -185,7 +186,7 @@ public class RentalServiceTests
         var existingBookings = new[] {booking1, booking2};
         _bookingRepository.GetByRentalIdAsync(existingRental.Id).Returns(existingBookings);
 
-        var actualResult = _rentalService.UpdateRental(
+        var actualResult = await _rentalService.UpdateRentalAsync(
             existingRental.Id,
             existingRental.Units, 
             existingRental.PreparationTimeInDays + 1);
@@ -194,10 +195,10 @@ public class RentalServiceTests
     }
     
     [Test]
-    public void UpdateRental_ReturnsErrorStatusConflict_WhenPreparationTimeMakesConflictBetweenCreatedBookings()
+    public async Task UpdateRental_ReturnsErrorStatusConflict_WhenPreparationTimeMakesConflictBetweenCreatedBookings()
     {
         var existingRental = Create.Rental().WithUnits(1).WithPreparationTimeInDays(2).Please();
-        _rentalRepository.GetOrDefault(existingRental.Id).Returns(existingRental);
+        _rentalRepository.GetOrDefaultAsync(existingRental.Id).Returns(existingRental);
         var booking1 = Create.Booking()
             .WithRentalId(existingRental.Id)
             .WithUnit(1)
@@ -213,7 +214,7 @@ public class RentalServiceTests
         var existingBookings = new[] {booking1, booking2};
         _bookingRepository.GetByRentalIdAsync(existingRental.Id).Returns(existingBookings);
 
-        var actualResult = _rentalService.UpdateRental(
+        var actualResult = await _rentalService.UpdateRentalAsync(
             existingRental.Id,
             existingRental.Units,
             existingRental.PreparationTimeInDays + 1);
@@ -222,10 +223,10 @@ public class RentalServiceTests
     }
     
     [Test]
-    public void UpdateRental_ReturnsIsSuccessFalse_WhenPreparationTimeMakesConflictBetweenCurrentBookingsCountAndNewUnitsCount()
+    public async Task UpdateRental_ReturnsIsSuccessFalse_WhenPreparationTimeMakesConflictBetweenCurrentBookingsCountAndNewUnitsCount()
     {
         var existingRental = Create.Rental().WithUnits(3).WithPreparationTimeInDays(2).Please();
-        _rentalRepository.GetOrDefault(existingRental.Id).Returns(existingRental);
+        _rentalRepository.GetOrDefaultAsync(existingRental.Id).Returns(existingRental);
         var booking1 = Create.Booking()
             .WithRentalId(existingRental.Id)
             .WithUnit(1)
@@ -247,7 +248,7 @@ public class RentalServiceTests
         var existingBookings = new[] {booking1, booking2, booking3};
         _bookingRepository.GetByRentalIdAsync(existingRental.Id).Returns(existingBookings);
 
-        var actualResult = _rentalService.UpdateRental(
+        var actualResult = await _rentalService.UpdateRentalAsync(
             existingRental.Id,
             existingRental.Units - 1,
             existingRental.PreparationTimeInDays);
@@ -256,10 +257,10 @@ public class RentalServiceTests
     }
     
     [Test]
-    public void UpdateRental_ReturnsErrorStatusConflict_WhenPreparationTimeMakesConflictBetweenCurrentBookingsCountAndNewUnitsCount()
+    public async Task UpdateRental_ReturnsErrorStatusConflict_WhenPreparationTimeMakesConflictBetweenCurrentBookingsCountAndNewUnitsCount()
     {
         var existingRental = Create.Rental().WithUnits(3).WithPreparationTimeInDays(2).Please();
-        _rentalRepository.GetOrDefault(existingRental.Id).Returns(existingRental);
+        _rentalRepository.GetOrDefaultAsync(existingRental.Id).Returns(existingRental);
         var booking1 = Create.Booking()
             .WithRentalId(existingRental.Id)
             .WithUnit(1)
@@ -281,7 +282,7 @@ public class RentalServiceTests
         var existingBookings = new[] {booking1, booking2, booking3};
         _bookingRepository.GetByRentalIdAsync(existingRental.Id).Returns(existingBookings);
 
-        var actualResult = _rentalService.UpdateRental(
+        var actualResult = await _rentalService.UpdateRentalAsync(
             existingRental.Id,
             existingRental.Units - 1,
             existingRental.PreparationTimeInDays);
@@ -290,10 +291,10 @@ public class RentalServiceTests
     }
     
     [Test]
-    public void UpdateRental_UpdatesRentalUnitsValueInRepository_WhenAllParamsIsCorrectAndConflictsNotFound()
+    public async Task UpdateRental_UpdatesRentalUnitsValueInRepository_WhenAllParamsIsCorrectAndConflictsNotFound()
     {
         var existingRental = Create.Rental().WithUnits(3).WithPreparationTimeInDays(2).Please();
-        _rentalRepository.GetOrDefault(existingRental.Id).Returns(existingRental);
+        _rentalRepository.GetOrDefaultAsync(existingRental.Id).Returns(existingRental);
         var booking1 = Create.Booking()
             .WithRentalId(existingRental.Id)
             .WithUnit(1)
@@ -309,19 +310,19 @@ public class RentalServiceTests
         var existingBookings = new[] {booking1, booking2};
         _bookingRepository.GetByRentalIdAsync(existingRental.Id).Returns(existingBookings);
 
-        _rentalService.UpdateRental(
+        await _rentalService.UpdateRentalAsync(
             existingRental.Id,
             existingRental.Units - 1,
             existingRental.PreparationTimeInDays + 1);
         
-        _rentalRepository.Received(1).Update(Arg.Any<Rental>());
+        await _rentalRepository.Received(1).UpdateAsync(Arg.Any<Rental>());
     }
     
     [Test]
-    public void UpdateRental_UpdatesRentalUnitsValueInRepositoryWithNewUnitsAndPreparationTimeInDaysValues_WhenAllParamsIsCorrectAndConflictsNotFound()
+    public async Task UpdateRental_UpdatesRentalUnitsValueInRepositoryWithNewUnitsAndPreparationTimeInDaysValues_WhenAllParamsIsCorrectAndConflictsNotFound()
     {
         var existingRental = Create.Rental().WithUnits(3).WithPreparationTimeInDays(2).Please();
-        _rentalRepository.GetOrDefault(existingRental.Id).Returns(existingRental);
+        _rentalRepository.GetOrDefaultAsync(existingRental.Id).Returns(existingRental);
         var booking1 = Create.Booking()
             .WithRentalId(existingRental.Id)
             .WithUnit(1)
@@ -342,24 +343,24 @@ public class RentalServiceTests
             .WithPreparationTimeInDays(existingRental.PreparationTimeInDays + 1)
             .Please();
 
-        _rentalService.UpdateRental(
+        await _rentalService.UpdateRentalAsync(
             existingRental.Id,
             expectedRentalToUpdate.Units,
             expectedRentalToUpdate.PreparationTimeInDays);
         
-        _rentalRepository
+        await _rentalRepository
             .Received(1)
-            .Update(Arg.Is<Rental>(x => 
+            .UpdateAsync(Arg.Is<Rental>(x => 
                 x.Id == expectedRentalToUpdate.Id 
                 && x.Units == expectedRentalToUpdate.Units
                 && x.PreparationTimeInDays == expectedRentalToUpdate.PreparationTimeInDays));
     }
     
     [Test]
-    public void UpdateRental_ReturnsIsSuccessTrue_WhenAllParamsIsCorrectAndConflictsNotFound()
+    public async Task UpdateRental_ReturnsIsSuccessTrue_WhenAllParamsIsCorrectAndConflictsNotFound()
     {
         var existingRental = Create.Rental().WithUnits(3).WithPreparationTimeInDays(2).Please();
-        _rentalRepository.GetOrDefault(existingRental.Id).Returns(existingRental);
+        _rentalRepository.GetOrDefaultAsync(existingRental.Id).Returns(existingRental);
         var booking1 = Create.Booking()
             .WithRentalId(existingRental.Id)
             .WithUnit(1)
@@ -375,7 +376,7 @@ public class RentalServiceTests
         var existingBookings = new[] {booking1, booking2};
         _bookingRepository.GetByRentalIdAsync(existingRental.Id).Returns(existingBookings);
 
-        var actualResult = _rentalService.UpdateRental(
+        var actualResult = await _rentalService.UpdateRentalAsync(
             existingRental.Id,
             existingRental.Units - 1,
             existingRental.PreparationTimeInDays + 1);

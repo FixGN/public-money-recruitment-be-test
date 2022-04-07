@@ -1,4 +1,6 @@
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using VacationRental.Api.Models;
 using VacationRental.Api.Repositories;
 using VacationRental.Api.Services.Models;
@@ -16,18 +18,28 @@ public class RentalService : IRentalService
         _bookingRepository = bookingRepository;
     }
     
-    public Rental? GetRentalOrDefault(int id)
+    public async Task<Rental?> GetRentalOrDefaultAsync(int id, CancellationToken cancellationToken = default)
     {
-        return _rentalRepository.GetOrDefault(id);
+        cancellationToken.ThrowIfCancellationRequested();
+        
+        return await _rentalRepository.GetOrDefaultAsync(id, cancellationToken);
     }
 
-    public Rental CreateRental(int units, int preparationTimeInDays)
+    public async Task<Rental> CreateRentalAsync(int units, int preparationTimeInDays, CancellationToken cancellationToken = default)
     {
-        return _rentalRepository.Create(units, preparationTimeInDays);
+        cancellationToken.ThrowIfCancellationRequested();        
+
+        return await _rentalRepository.CreateAsync(units, preparationTimeInDays, cancellationToken);
     }
 
-    public UpdateRentalResult UpdateRental(int id, int units, int preparationTimeInDays)
+    public async Task<UpdateRentalResult> UpdateRentalAsync(
+        int id,
+        int units,
+        int preparationTimeInDays,
+        CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+        
         if (units < 0)
         {
             return UpdateRentalResult.ValidationFail("Units count must be positive number");
@@ -38,7 +50,7 @@ public class RentalService : IRentalService
             return UpdateRentalResult.ValidationFail("PreparationTime must be positive number");
         }
 
-        var rental = _rentalRepository.GetOrDefault(id);
+        var rental = await _rentalRepository.GetOrDefaultAsync(id, cancellationToken);
         if (rental == null)
         {
             return UpdateRentalResult.RentalNotFound(id);
@@ -49,8 +61,7 @@ public class RentalService : IRentalService
             return UpdateRentalResult.Successful();
         }
         
-        // TODO: Rewrite to async
-        var rentalBookings = _bookingRepository.GetByRentalIdAsync(id).GetAwaiter().GetResult();
+        var rentalBookings = await _bookingRepository.GetByRentalIdAsync(id, cancellationToken);
         if (rentalBookings.Length != 0)
         {
             var minRentalDate = rentalBookings.Select(x => x.Start).Min();
@@ -78,7 +89,7 @@ public class RentalService : IRentalService
             }
         }
 
-        _rentalRepository.Update(new Rental(rental.Id, units, preparationTimeInDays));
+        await _rentalRepository.UpdateAsync(new Rental(rental.Id, units, preparationTimeInDays), cancellationToken);
         return UpdateRentalResult.Successful();
     }
 }

@@ -25,8 +25,6 @@ namespace VacationRental.Api.Controllers.v1
         [Route("{bookingId:int}")]
         public async Task<IActionResult> Get(int bookingId, CancellationToken cancellationToken)
         {
-            cancellationToken.ThrowIfCancellationRequested();
-            
             var booking = await _bookingService.GetBookingOrDefaultAsync(bookingId, cancellationToken);
 
             return booking == null 
@@ -37,8 +35,6 @@ namespace VacationRental.Api.Controllers.v1
         [HttpPost]
         public async Task<IActionResult> Post(BookingBindingModel model, CancellationToken cancellationToken)
         {
-            cancellationToken.ThrowIfCancellationRequested();
-            
             var bookingCreationResult = await _bookingService.CreateBookingAsync(
                 model.RentalId,
                 model.Start,
