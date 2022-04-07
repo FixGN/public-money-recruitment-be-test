@@ -22,6 +22,11 @@ public class DictionaryBookingRepository : IBookingRepository
         return booking;
     }
 
+    public Booking[] GetByRentalId(int rentalId)
+    {
+        return _repository.Values.Where(x => x.RentalId == rentalId).ToArray();
+    }
+
     public Booking[] GetByRentalIdAndDatePeriod(int rentalId, DateTime startDate, DateTime endDate)
     {
         return _repository.Values

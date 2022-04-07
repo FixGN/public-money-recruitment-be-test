@@ -20,6 +20,40 @@ namespace VacationRental.Api.Tests.Integration
         }
 
         [Fact]
+        public async Task GivenCompleteRequest_WhenPostBooking_ThenAPostReturnsErrorWhenThereIsOnPreparation()
+        {
+            var postRentalRequest = new RentalBindingModel(2, 2);
+
+            ResourceIdViewModel postRentalResult;
+            using (var postRentalResponse = await _client.PostAsJsonAsync($"/api/v1/rentals", postRentalRequest))
+            {
+                Assert.True(postRentalResponse.IsSuccessStatusCode);
+                postRentalResult = await postRentalResponse.Content.ReadAsAsync<ResourceIdViewModel>();
+            }
+            
+            var postBooking1Request = new BookingBindingModel(postRentalResult.Id, new DateTime(2001, 01, 01), 1);
+
+            using (var postBooking1Response = await _client.PostAsJsonAsync($"/api/v1/bookings", postBooking1Request))
+            {
+                Assert.True(postBooking1Response.IsSuccessStatusCode);
+            }
+            
+            var postBooking2Request = new BookingBindingModel(postRentalResult.Id, new DateTime(2001, 01, 02), 1);
+
+            using (var postBooking2Response = await _client.PostAsJsonAsync($"/api/v1/bookings", postBooking2Request))
+            {
+                Assert.True(postBooking2Response.IsSuccessStatusCode);
+            }
+            
+            var postBooking3Request = new BookingBindingModel(postRentalResult.Id, new DateTime(2001, 01, 03), 1);
+
+            using (var postBooking3Response = await _client.PostAsJsonAsync($"/api/v1/bookings", postBooking3Request))
+            {
+                Assert.Equal(HttpStatusCode.Conflict, postBooking3Response.StatusCode);
+            }
+        }
+        
+        [Fact]
         public async Task GivenCompleteRequest_WhenPostBooking_ThenAGetReturnsTheCreatedBooking()
         {
             var postRentalRequest = new RentalBindingModel(4, 1);

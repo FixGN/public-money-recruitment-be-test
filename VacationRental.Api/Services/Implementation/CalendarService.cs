@@ -42,8 +42,8 @@ public class CalendarService : ICalendarService
         var availableBookings = _bookingRepository
             .GetByRentalIdAndDatePeriod(
                 rentalId,
-                startDate,
-                startDate.AddDays(nights + rental.PreparationTimeInDays));
+                startDate.AddDays(-rental.PreparationTimeInDays),
+                startDate.AddDays(nights + rental.PreparationTimeInDays - 1));
         _logger.GetCalendarDatesFoundBookings(rentalId, start, nights, availableBookings.Length);
         
         for (var i = 0; i < nights; i++)
