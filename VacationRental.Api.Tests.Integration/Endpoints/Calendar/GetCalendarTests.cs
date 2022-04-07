@@ -5,9 +5,10 @@ using VacationRental.Api.Contracts.Booking;
 using VacationRental.Api.Contracts.Calendar;
 using VacationRental.Api.Contracts.Common;
 using VacationRental.Api.Contracts.Rental;
+using VacationRental.Api.Tests.Integration.Infrastructure;
 using Xunit;
 
-namespace VacationRental.Api.Tests.Integration
+namespace VacationRental.Api.Tests.Integration.Endpoints.Calendar
 {
     [Collection("Integration")]
     public class GetCalendarTests
