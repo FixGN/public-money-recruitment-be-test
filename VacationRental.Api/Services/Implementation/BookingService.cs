@@ -37,9 +37,9 @@ public class BookingService : IBookingService
         int nights,
         CancellationToken cancellationToken = default)
     {
+        _logger.CreateBookingStart(rentalId, start, nights);
         cancellationToken.ThrowIfCancellationRequested();
 
-        _logger.CreateBookingStart(rentalId, start, nights);
         if (nights <= 0)
         {
             _logger.CreateBookingNightsIsNegativeOrZero(rentalId, start, nights);

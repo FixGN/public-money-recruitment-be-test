@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using VacationRental.Api.Contracts.Common;
 using VacationRental.Api.Controllers.v1.Mappers;
@@ -19,9 +21,9 @@ namespace VacationRental.Api.Controllers.v1
         }
 
         [HttpGet]
-        public IActionResult Get(int rentalId, DateTime start, int nights)
+        public async Task<IActionResult> Get(int rentalId, DateTime start, int nights, CancellationToken cancellationToken)
         {
-            var calendarDatesResult = _calendarService.GetCalendarDates(rentalId, start, nights);
+            var calendarDatesResult = await _calendarService.GetCalendarDatesAsync(rentalId, start, nights, cancellationToken);
 
             if (!calendarDatesResult.IsSuccess)
             {
