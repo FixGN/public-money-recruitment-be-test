@@ -49,28 +49,32 @@ public class RentalService : IRentalService
             return UpdateRentalResult.Successful();
         }
         
+        // TODO write test: if rentalBookings is empty array - all works properly;
         var rentalBookings = _bookingRepository.GetByRentalId(id);
-        var minRentalDate = rentalBookings.Select(x => x.Start).Min();
-        var maxRentalDate = rentalBookings.Select(x => x.Start.AddDays(x.Nights + rental.PreparationTimeInDays - 1)).Max();
-        var currentBookingDaysCount = (maxRentalDate - minRentalDate).Days + 1;
-
-        for(var i = 0; i < currentBookingDaysCount; i++)
+        if (rentalBookings.Length != 0)
         {
-            var date = minRentalDate.AddDays(i);
-            var bookingsWithNewPreparationTime = rentalBookings
-                .Where(x => x.Start <= date
-                            && date <= x.Start.AddDays(x.Nights + preparationTimeInDays - 1))
-                .ToList();
+            var minRentalDate = rentalBookings.Select(x => x.Start).Min();
+            var maxRentalDate = rentalBookings.Select(x => x.Start.AddDays(x.Nights + rental.PreparationTimeInDays - 1)).Max();
+            var currentBookingDaysCount = (maxRentalDate - minRentalDate).Days + 1;
 
-            if (bookingsWithNewPreparationTime.Count != bookingsWithNewPreparationTime.Select(x => x.Unit).Distinct().Count())
+            for(var i = 0; i < currentBookingDaysCount; i++)
             {
-                return UpdateRentalResult.Conflict(
-                    $"Preparation time in days '{preparationTimeInDays}' makes conflict with bookings on date '{date:d}'");
-            }
-            if (units < bookingsWithNewPreparationTime.Count)
-            {
-                return UpdateRentalResult.Conflict(
-                    $"Units count too small for current bookings (bookings count for day {date:d} is {bookingsWithNewPreparationTime.Count})");
+                var date = minRentalDate.AddDays(i);
+                var bookingsWithNewPreparationTime = rentalBookings
+                    .Where(x => x.Start <= date
+                                && date <= x.Start.AddDays(x.Nights + preparationTimeInDays - 1))
+                    .ToList();
+
+                if (bookingsWithNewPreparationTime.Count != bookingsWithNewPreparationTime.Select(x => x.Unit).Distinct().Count())
+                {
+                    return UpdateRentalResult.Conflict(
+                        $"Preparation time in days '{preparationTimeInDays}' makes conflict with bookings on date '{date:d}'");
+                }
+                if (units < bookingsWithNewPreparationTime.Count)
+                {
+                    return UpdateRentalResult.Conflict(
+                        $"Units count too small for current bookings (bookings count for day {date:d} is {bookingsWithNewPreparationTime.Count})");
+                }
             }
         }
 
