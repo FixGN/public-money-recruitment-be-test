@@ -6,7 +6,7 @@ using VacationRental.Api.Tests.Integration.Clients.Models;
 
 namespace VacationRental.Api.Tests.Integration.Clients;
 
-public class CalendarClient
+public class CalendarClient : IDisposable
 {
     private readonly HttpClient _httpClient;
 
@@ -26,5 +26,11 @@ public class CalendarClient
             responseMessage = await response.Content.ReadAsAsync<CalendarViewModel>();
         }
         return new ClientResponseModel<CalendarViewModel>(response.IsSuccessStatusCode, response.StatusCode, responseMessage);
+    }
+
+    public void Dispose()
+    {
+        _httpClient.Dispose();
+        GC.SuppressFinalize(this);
     }
 }

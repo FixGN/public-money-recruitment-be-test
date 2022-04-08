@@ -1,3 +1,4 @@
+using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using VacationRental.Api.Contracts.Common;
@@ -6,7 +7,7 @@ using VacationRental.Api.Tests.Integration.Clients.Models;
 
 namespace VacationRental.Api.Tests.Integration.Clients;
 
-public class RentalsClient
+public class RentalsClient : IDisposable
 {
     private readonly HttpClient _httpClient;
 
@@ -46,5 +47,11 @@ public class RentalsClient
             responseMessage = await response.Content.ReadAsAsync<RentalViewModel>();
         }
         return new ClientResponseModel<RentalViewModel>(response.IsSuccessStatusCode, response.StatusCode, responseMessage);
+    }
+
+    public void Dispose()
+    {
+        _httpClient.Dispose();
+        GC.SuppressFinalize(this);
     }
 }
