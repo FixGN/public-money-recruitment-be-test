@@ -1,9 +1,7 @@
 using System;
 using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using VacationRental.Api.Contracts.Booking;
-using VacationRental.Api.Contracts.Common;
 using VacationRental.Api.Contracts.Rental;
 using VacationRental.Api.Tests.Integration.Clients;
 using VacationRental.Api.Tests.Integration.Infrastructure;
@@ -14,7 +12,6 @@ namespace VacationRental.Api.Tests.Integration.Endpoints.Rentals;
 [Collection("Integration")]
 public class PutRentalTests
 {
-    private readonly HttpClient _client;
     private readonly RentalsClient _rentalsClient;
     private readonly BookingsClient _bookingsClient;
 
@@ -26,7 +23,6 @@ public class PutRentalTests
 
     public PutRentalTests(IntegrationFixture fixture)
     {
-        _client = fixture.Client;
         _rentalsClient = fixture.RentalsClient;
         _bookingsClient = fixture.BookingsClient;
     }

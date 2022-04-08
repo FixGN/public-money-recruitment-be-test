@@ -12,7 +12,6 @@ namespace VacationRental.Api.Tests.Integration.Infrastructure
     {
         private readonly TestServer _server;
 
-        public HttpClient Client { get; }
         public BookingsClient BookingsClient { get; }
         public RentalsClient RentalsClient { get; }
         public CalendarClient CalendarClient { get; }
@@ -21,7 +20,6 @@ namespace VacationRental.Api.Tests.Integration.Infrastructure
         {
             _server = new TestServer(new WebHostBuilder().UseStartup<Startup>());
 
-            Client = _server.CreateClient();
             BookingsClient = new BookingsClient(_server.CreateClient());
             RentalsClient = new RentalsClient(_server.CreateClient());
             CalendarClient = new CalendarClient(_server.CreateClient());
@@ -29,8 +27,10 @@ namespace VacationRental.Api.Tests.Integration.Infrastructure
 
         public void Dispose()
         {
-            Client.Dispose();
             _server.Dispose();
+            BookingsClient.Dispose();
+            RentalsClient.Dispose();
+            CalendarClient.Dispose();
         }
     }
 }
