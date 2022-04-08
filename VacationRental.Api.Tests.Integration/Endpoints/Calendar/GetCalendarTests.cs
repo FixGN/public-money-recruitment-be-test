@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using VacationRental.Api.Contracts.Booking;
 using VacationRental.Api.Contracts.Rental;
 using VacationRental.Api.Tests.Integration.Clients;
+using VacationRental.Api.Tests.Integration.Clients.v1;
 using VacationRental.Api.Tests.Integration.Infrastructure;
 using Xunit;
 
@@ -11,55 +12,55 @@ namespace VacationRental.Api.Tests.Integration.Endpoints.Calendar
     [Collection("Integration")]
     public class GetCalendarTests
     {
-        private readonly BookingsClient _bookingsClient;
-        private readonly RentalsClient _rentalsClient;
-        private readonly CalendarClient _calendarClient;
+        private readonly BookingsV1Client _bookingsV1Client;
+        private readonly RentalsV1Client _rentalsV1Client;
+        private readonly CalendarV1Client _calendarV1Client;
 
         public GetCalendarTests(IntegrationFixture fixture)
         {
-            _bookingsClient = fixture.BookingsClient;
-            _rentalsClient = fixture.RentalsClient;
-            _calendarClient = fixture.CalendarClient;
+            _bookingsV1Client = fixture.BookingsV1Client;
+            _rentalsV1Client = fixture.RentalsV1Client;
+            _calendarV1Client = fixture.CalendarV1Client;
         }
 
         [Fact]
         public async Task GivenCompleteRequest_WhenGetCalendar_ThenAGetReturnsTheCalculatedCalendarWithPreparationTimesInFirstDays()
         {
             var createRentalRequest = new RentalBindingModel(2, 2);
-            var createRentalResponse = await _rentalsClient.CreateRentalAsync(createRentalRequest);
+            var createRentalResponse = await _rentalsV1Client.CreateRentalAsync(createRentalRequest);
             Assert.True(createRentalResponse.IsSuccessStatusCode);
 
             var createBooking1Request = new BookingBindingModel(
                 createRentalResponse.Message!.Id,
                 new DateTime(2000, 01, 01),
                 1);
-            var createBooking1Response = await _bookingsClient.CreateBookingAsync(createBooking1Request);
+            var createBooking1Response = await _bookingsV1Client.CreateBookingAsync(createBooking1Request);
             Assert.True(createBooking1Response.IsSuccessStatusCode);
 
-            var getBooking1Response = await _bookingsClient.GetBookingAsync(createBooking1Response.Message!.Id);
+            var getBooking1Response = await _bookingsV1Client.GetBookingAsync(createBooking1Response.Message!.Id);
             Assert.True(getBooking1Response.IsSuccessStatusCode);
             
             var createBooking2Request = new BookingBindingModel(
                 createRentalResponse.Message!.Id,
                 new DateTime(2000, 01, 02),
                 1);
-            var createBooking2Response = await _bookingsClient.CreateBookingAsync(createBooking2Request);
+            var createBooking2Response = await _bookingsV1Client.CreateBookingAsync(createBooking2Request);
             Assert.True(createBooking2Response.IsSuccessStatusCode);
             
-            var getBooking2Response = await _bookingsClient.GetBookingAsync(createBooking2Response.Message!.Id);
+            var getBooking2Response = await _bookingsV1Client.GetBookingAsync(createBooking2Response.Message!.Id);
             Assert.True(getBooking2Response.IsSuccessStatusCode);
 
             var createBooking3Request = new BookingBindingModel(
                 createRentalResponse.Message!.Id,
                 new DateTime(2000, 01, 04),
                 2);
-            var createBooking3Response = await _bookingsClient.CreateBookingAsync(createBooking3Request);
+            var createBooking3Response = await _bookingsV1Client.CreateBookingAsync(createBooking3Request);
             Assert.True(createBooking3Response.IsSuccessStatusCode);
             
-            var getBooking3Response = await _bookingsClient.GetBookingAsync(createBooking3Response.Message!.Id);
+            var getBooking3Response = await _bookingsV1Client.GetBookingAsync(createBooking3Response.Message!.Id);
             Assert.True(getBooking3Response.IsSuccessStatusCode);
 
-            var getCalendarResponse = await _calendarClient.GetCalendarAsync(
+            var getCalendarResponse = await _calendarV1Client.GetCalendarAsync(
                 createRentalResponse.Message!.Id,
                 new DateTime(2000, 01, 03),
                 2);
@@ -97,30 +98,30 @@ namespace VacationRental.Api.Tests.Integration.Endpoints.Calendar
         public async Task GivenCompleteRequest_WhenGetCalendar_ThenAGetReturnsTheCalculatedCalendar()
         {
             var createRentalRequest = new RentalBindingModel(2, 1);
-            var createRentalResponse = await _rentalsClient.CreateRentalAsync(createRentalRequest);
+            var createRentalResponse = await _rentalsV1Client.CreateRentalAsync(createRentalRequest);
             Assert.True(createRentalResponse.IsSuccessStatusCode);
             
             var createBooking1Request = new BookingBindingModel(
                 createRentalResponse.Message!.Id,
                 new DateTime(2000, 01, 02),
                 2);
-            var createBooking1Response = await _bookingsClient.CreateBookingAsync(createBooking1Request);
+            var createBooking1Response = await _bookingsV1Client.CreateBookingAsync(createBooking1Request);
             Assert.True(createBooking1Response.IsSuccessStatusCode);
 
-            var getBooking1Response = await _bookingsClient.GetBookingAsync(createBooking1Response.Message!.Id);
+            var getBooking1Response = await _bookingsV1Client.GetBookingAsync(createBooking1Response.Message!.Id);
             Assert.True(getBooking1Response.IsSuccessStatusCode);
 
             var createBooking2Request = new BookingBindingModel(
                 createRentalResponse.Message!.Id,
                 new DateTime(2000, 01, 03),
                 2);
-            var createBooking2Response = await _bookingsClient.CreateBookingAsync(createBooking2Request);
+            var createBooking2Response = await _bookingsV1Client.CreateBookingAsync(createBooking2Request);
             Assert.True(createBooking2Response.IsSuccessStatusCode);
             
-            var getBooking2Response = await _bookingsClient.GetBookingAsync(createBooking2Response.Message!.Id);
+            var getBooking2Response = await _bookingsV1Client.GetBookingAsync(createBooking2Response.Message!.Id);
             Assert.True(getBooking2Response.IsSuccessStatusCode);
             
-            var getCalendarResponse = await _calendarClient.GetCalendarAsync(
+            var getCalendarResponse = await _calendarV1Client.GetCalendarAsync(
                 createRentalResponse.Message!.Id,
                 new DateTime(2000, 01, 01),
                 6);

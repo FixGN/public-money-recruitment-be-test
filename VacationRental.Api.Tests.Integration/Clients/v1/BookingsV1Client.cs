@@ -5,13 +5,13 @@ using VacationRental.Api.Contracts.Booking;
 using VacationRental.Api.Contracts.Common;
 using VacationRental.Api.Tests.Integration.Clients.Models;
 
-namespace VacationRental.Api.Tests.Integration.Clients;
+namespace VacationRental.Api.Tests.Integration.Clients.v1;
 
-public class BookingsClient : IDisposable
+public class BookingsV1Client : IDisposable
 {
     private readonly HttpClient _httpClient;
 
-    public BookingsClient(HttpClient httpClient)
+    public BookingsV1Client(HttpClient httpClient)
     {
         _httpClient = httpClient;
     }

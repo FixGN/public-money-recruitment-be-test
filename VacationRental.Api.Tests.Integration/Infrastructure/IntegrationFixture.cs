@@ -3,6 +3,7 @@ using System.Net.Http;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using VacationRental.Api.Tests.Integration.Clients;
+using VacationRental.Api.Tests.Integration.Clients.v1;
 using Xunit;
 
 namespace VacationRental.Api.Tests.Integration.Infrastructure
@@ -12,25 +13,25 @@ namespace VacationRental.Api.Tests.Integration.Infrastructure
     {
         private readonly TestServer _server;
 
-        public BookingsClient BookingsClient { get; }
-        public RentalsClient RentalsClient { get; }
-        public CalendarClient CalendarClient { get; }
+        public BookingsV1Client BookingsV1Client { get; }
+        public RentalsV1Client RentalsV1Client { get; }
+        public CalendarV1Client CalendarV1Client { get; }
 
         public IntegrationFixture()
         {
             _server = new TestServer(new WebHostBuilder().UseStartup<Startup>());
 
-            BookingsClient = new BookingsClient(_server.CreateClient());
-            RentalsClient = new RentalsClient(_server.CreateClient());
-            CalendarClient = new CalendarClient(_server.CreateClient());
+            BookingsV1Client = new BookingsV1Client(_server.CreateClient());
+            RentalsV1Client = new RentalsV1Client(_server.CreateClient());
+            CalendarV1Client = new CalendarV1Client(_server.CreateClient());
         }
 
         public void Dispose()
         {
             _server.Dispose();
-            BookingsClient.Dispose();
-            RentalsClient.Dispose();
-            CalendarClient.Dispose();
+            BookingsV1Client.Dispose();
+            RentalsV1Client.Dispose();
+            CalendarV1Client.Dispose();
         }
     }
 }

@@ -4,13 +4,13 @@ using System.Threading.Tasks;
 using VacationRental.Api.Contracts.Calendar;
 using VacationRental.Api.Tests.Integration.Clients.Models;
 
-namespace VacationRental.Api.Tests.Integration.Clients;
+namespace VacationRental.Api.Tests.Integration.Clients.v1;
 
-public class CalendarClient : IDisposable
+public class CalendarV1Client : IDisposable
 {
     private readonly HttpClient _httpClient;
 
-    public CalendarClient(HttpClient httpClient)
+    public CalendarV1Client(HttpClient httpClient)
     {
         _httpClient = httpClient;
     }
