@@ -1,11 +1,10 @@
 ﻿using System.Threading.Tasks;
 using VacationRental.Api.Contracts.Rental;
-using VacationRental.Api.Tests.Integration.Clients;
 using VacationRental.Api.Tests.Integration.Clients.v1;
 using VacationRental.Api.Tests.Integration.Infrastructure;
 using Xunit;
 
-namespace VacationRental.Api.Tests.Integration.Endpoints.Rentals
+namespace VacationRental.Api.Tests.Integration.Endpoints.v1.Rentals
 {
     [Collection("Integration")]
     public class PostRentalTests

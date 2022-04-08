@@ -3,20 +3,19 @@ using System.Net;
 using System.Threading.Tasks;
 using VacationRental.Api.Contracts.Booking;
 using VacationRental.Api.Contracts.Rental;
-using VacationRental.Api.Tests.Integration.Clients;
 using VacationRental.Api.Tests.Integration.Clients.v1;
 using VacationRental.Api.Tests.Integration.Infrastructure;
 using Xunit;
 
-namespace VacationRental.Api.Tests.Integration.Endpoints.Bookings
+namespace VacationRental.Api.Tests.Integration.Endpoints.v1.Bookings
 {
     [Collection("Integration")]
-    public class PostBookingTests
+    public class PostBookingV1Tests
     {
         private readonly BookingsV1Client _bookingsV1Client;
         private readonly RentalsV1Client _rentalsV1Client;
 
-        public PostBookingTests(IntegrationFixture fixture)
+        public PostBookingV1Tests(IntegrationFixture fixture)
         {
             _bookingsV1Client = fixture.BookingsV1Client;
             _rentalsV1Client = fixture.RentalsV1Client;
