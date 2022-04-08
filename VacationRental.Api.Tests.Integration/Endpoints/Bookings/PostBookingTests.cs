@@ -26,15 +26,15 @@ namespace VacationRental.Api.Tests.Integration.Endpoints.Bookings
         {
             var createRentalRequest = new RentalBindingModel(2, 2);
             var createRentalResult = await _rentalsClient.CreateRentalAsync(createRentalRequest);
-            Assert.True(createRentalResult.IsSuccess);
+            Assert.True(createRentalResult.IsSuccessStatusCode);
 
             var createBooking1Request = new BookingBindingModel(createRentalResult.Message!.Id, new DateTime(2001, 01, 01), 1);
             var createBooking1Result = await _bookingsClient.CreateBookingAsync(createBooking1Request);
-            Assert.True(createBooking1Result.IsSuccess);
+            Assert.True(createBooking1Result.IsSuccessStatusCode);
             
             var createBooking2Request = new BookingBindingModel(createRentalResult.Message!.Id, new DateTime(2001, 01, 02), 1);
             var createBooking2Result = await _bookingsClient.CreateBookingAsync(createBooking2Request);
-            Assert.True(createBooking2Result.IsSuccess);
+            Assert.True(createBooking2Result.IsSuccessStatusCode);
             
             var createBooking3Request = new BookingBindingModel(createRentalResult.Message!.Id, new DateTime(2001, 01, 03), 1);
             var createBooking3Result = await _bookingsClient.CreateBookingAsync(createBooking3Request);
@@ -46,15 +46,15 @@ namespace VacationRental.Api.Tests.Integration.Endpoints.Bookings
         {
             var createRentalRequest = new RentalBindingModel(4, 1);
             var createRentalResult = await _rentalsClient.CreateRentalAsync(createRentalRequest);
-            Assert.True(createRentalResult.IsSuccess);
+            Assert.True(createRentalResult.IsSuccessStatusCode);
 
             var createBookingRequest = new BookingBindingModel(createRentalResult.Message!.Id, new DateTime(2001, 01, 01), 3);
 
             var createBookingResponse = await _bookingsClient.CreateBookingAsync(createBookingRequest);
-            Assert.True(createBookingResponse.IsSuccess);
+            Assert.True(createBookingResponse.IsSuccessStatusCode);
 
             var getBookingResponse = await _bookingsClient.GetBookingAsync(createBookingResponse.Message!.Id);
-            Assert.True(getBookingResponse.IsSuccess);
+            Assert.True(getBookingResponse.IsSuccessStatusCode);
 
             Assert.Equal(createBookingRequest.RentalId, getBookingResponse.Message!.RentalId);
             Assert.Equal(createBookingRequest.Nights, getBookingResponse.Message!.Nights);
@@ -67,11 +67,11 @@ namespace VacationRental.Api.Tests.Integration.Endpoints.Bookings
         {
             var createRentalRequest = new RentalBindingModel(1, 1);
             var createRentalResponse = await _rentalsClient.CreateRentalAsync(createRentalRequest);
-            Assert.True(createRentalResponse.IsSuccess);
+            Assert.True(createRentalResponse.IsSuccessStatusCode);
 
             var createBooking1Request = new BookingBindingModel(createRentalResponse.Message!.Id, new DateTime(2002, 01, 01), 3);
             var createBooking1Response = await _bookingsClient.CreateBookingAsync(createBooking1Request);
-            Assert.True(createBooking1Response.IsSuccess);
+            Assert.True(createBooking1Response.IsSuccessStatusCode);
 
             var createBooking2Request = new BookingBindingModel(createRentalResponse.Message!.Id, new DateTime(2002, 01, 02), 1);
             var createBooking2Response = await _bookingsClient.CreateBookingAsync(createBooking2Request);

@@ -5,15 +5,15 @@ namespace VacationRental.Api.Tests.Integration.Clients.Models;
 
 public class ClientResponseModel<T> where T : class
 {
-    public ClientResponseModel(bool isSuccess, HttpStatusCode statusCode, T? message)
+    public ClientResponseModel(bool isSuccessStatusCode, HttpStatusCode statusCode, T? message)
     {
-        IsSuccess = isSuccess;
+        IsSuccessStatusCode = isSuccessStatusCode;
         StatusCode = statusCode;
         Message = message;
     }
 
     [MemberNotNullWhen(true, nameof(Message))]
-    public bool IsSuccess { get; }
+    public bool IsSuccessStatusCode { get; }
     public HttpStatusCode StatusCode { get; }
     public T? Message { get; }
 }

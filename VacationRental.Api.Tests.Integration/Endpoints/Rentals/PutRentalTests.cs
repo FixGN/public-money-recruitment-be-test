@@ -36,11 +36,11 @@ public class PutRentalTests
     {
         var createRequest = new RentalBindingModel(DefaultUnits, DefaultPreparationTimeInDays);
         var createResponse = await _rentalsClient.CreateRentalAsync(createRequest);
-        Assert.True(createResponse.IsSuccess);
+        Assert.True(createResponse.IsSuccessStatusCode);
 
         var updateRequest = new RentalBindingModel(DefaultUnits + 1, DefaultPreparationTimeInDays + 2);
         var updateResponse = await _rentalsClient.UpdateRentalAsync(createResponse.Message!.Id, updateRequest);
-        Assert.True(updateResponse.IsSuccess);
+        Assert.True(updateResponse.IsSuccessStatusCode);
             
         Assert.Equal(createResponse.Message!.Id, updateResponse.Message!.Id);
         Assert.Equal(updateRequest.Units, updateResponse.Message!.Units);
@@ -52,7 +52,7 @@ public class PutRentalTests
     {
         var createRequest = new RentalBindingModel(DefaultUnits, DefaultPreparationTimeInDays);
         var createResponse = await _rentalsClient.CreateRentalAsync(createRequest);
-        Assert.True(createResponse.IsSuccess);
+        Assert.True(createResponse.IsSuccessStatusCode);
 
         var updateRequest = new RentalBindingModel{Units = -1, PreparationTimeInDays = DefaultPreparationTimeInDays};
         var updateResponse = await _rentalsClient.UpdateRentalAsync(createResponse.Message!.Id, updateRequest);
@@ -65,7 +65,7 @@ public class PutRentalTests
     {
         var createRequest = new RentalBindingModel(DefaultUnits, DefaultPreparationTimeInDays);
         var createResponse = await _rentalsClient.CreateRentalAsync(createRequest);
-        Assert.True(createResponse.IsSuccess);
+        Assert.True(createResponse.IsSuccessStatusCode);
         
         var updateRequest = new RentalBindingModel{Units = DefaultUnits, PreparationTimeInDays = -1};
         var updateResponse = await _rentalsClient.UpdateRentalAsync(createResponse.Message!.Id, updateRequest);
@@ -87,15 +87,15 @@ public class PutRentalTests
     {
         var createRentalRequest = new RentalBindingModel(2, DefaultPreparationTimeInDays);
         var createRentalResponse = await _rentalsClient.CreateRentalAsync(createRentalRequest);
-        Assert.True(createRentalResponse.IsSuccess);
+        Assert.True(createRentalResponse.IsSuccessStatusCode);
 
         var createBooking1Request = new BookingBindingModel(createRentalResponse.Message!.Id, _defaultStartDate, DefaultNights);
         var createBooking1Response = await _bookingsClient.CreateBookingAsync(createBooking1Request);
-        Assert.True(createBooking1Response.IsSuccess);
+        Assert.True(createBooking1Response.IsSuccessStatusCode);
         
         var createBooking2Request = new BookingBindingModel(createRentalResponse.Message!.Id, _defaultStartDate, DefaultNights);
         var createBooking2Response = await _bookingsClient.CreateBookingAsync(createBooking2Request);
-        Assert.True(createBooking2Response.IsSuccess);
+        Assert.True(createBooking2Response.IsSuccessStatusCode);
 
         var updateRentalRequest = new RentalBindingModel(1, DefaultPreparationTimeInDays);
         var updateRentalResponse = await _rentalsClient.UpdateRentalAsync(createRentalResponse.Message!.Id, updateRentalRequest);
@@ -107,18 +107,18 @@ public class PutRentalTests
     {
         var createRentalRequest = new RentalBindingModel(DefaultUnits, 1);
         var createRentalResponse = await _rentalsClient.CreateRentalAsync(createRentalRequest);
-        Assert.True(createRentalResponse.IsSuccess);
+        Assert.True(createRentalResponse.IsSuccessStatusCode);
 
         var createBooking1Request = new BookingBindingModel(createRentalResponse.Message!.Id, _defaultStartDate, DefaultNights);
         var createBooking1Response = await _bookingsClient.CreateBookingAsync(createBooking1Request);
-        Assert.True(createBooking1Response.IsSuccess);
+        Assert.True(createBooking1Response.IsSuccessStatusCode);
         
         var createBooking2Request = new BookingBindingModel(
             createRentalResponse.Message!.Id,
             _defaultStartDate.AddDays(DefaultNights + 1),
             DefaultNights);
         var createBooking2Response = await _bookingsClient.CreateBookingAsync(createBooking2Request);
-        Assert.True(createBooking2Response.IsSuccess);
+        Assert.True(createBooking2Response.IsSuccessStatusCode);
         
         var updateRentalRequest = new RentalBindingModel(DefaultUnits, 3);
         var updateRentalResponse = await _rentalsClient.UpdateRentalAsync(createRentalResponse.Message!.Id, updateRentalRequest);
