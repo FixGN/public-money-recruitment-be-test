@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using VacationRental.Api.Contracts.Booking;
-using VacationRental.Api.Contracts.Calendar;
-using VacationRental.Api.Contracts.Rental;
+using VacationRental.Api.Contracts.v1.Booking;
+using VacationRental.Api.Contracts.v1.Calendar;
+using VacationRental.Api.Contracts.v1.Rental;
 using VacationRental.Api.Models;
 
 namespace VacationRental.Api.Controllers.v1.Mappers;

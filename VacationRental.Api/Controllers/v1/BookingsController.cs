@@ -2,8 +2,8 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using VacationRental.Api.Contracts.Booking;
-using VacationRental.Api.Contracts.Common;
+using VacationRental.Api.Contracts.v1.Booking;
+using VacationRental.Api.Contracts.v1.Common;
 using VacationRental.Api.Controllers.v1.Mappers;
 using VacationRental.Api.Services;
 using VacationRental.Api.Services.Models;

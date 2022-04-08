@@ -1,4 +1,4 @@
-namespace VacationRental.Api.Contracts.Common;
+namespace VacationRental.Api.Contracts.v1.Common;
 
 public class ErrorViewModel
 {

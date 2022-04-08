@@ -1,7 +1,7 @@
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
-using VacationRental.Api.Contracts.Calendar;
+using VacationRental.Api.Contracts.v1.Calendar;
 using VacationRental.Api.Tests.Integration.Clients.Models;
 
 namespace VacationRental.Api.Tests.Integration.Clients.v1;

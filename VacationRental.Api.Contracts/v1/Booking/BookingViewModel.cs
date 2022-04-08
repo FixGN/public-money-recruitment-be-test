@@ -1,4 +1,4 @@
-﻿namespace VacationRental.Api.Contracts.Booking
+﻿namespace VacationRental.Api.Contracts.v1.Booking
 {
     public class BookingViewModel
     {

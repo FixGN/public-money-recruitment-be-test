@@ -1,8 +1,8 @@
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
-using VacationRental.Api.Contracts.Booking;
-using VacationRental.Api.Contracts.Common;
+using VacationRental.Api.Contracts.v1.Booking;
+using VacationRental.Api.Contracts.v1.Common;
 using VacationRental.Api.Tests.Integration.Clients.Models;
 
 namespace VacationRental.Api.Tests.Integration.Clients.v1;

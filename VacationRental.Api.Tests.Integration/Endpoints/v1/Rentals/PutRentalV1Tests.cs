@@ -1,8 +1,8 @@
 using System;
 using System.Net;
 using System.Threading.Tasks;
-using VacationRental.Api.Contracts.Booking;
-using VacationRental.Api.Contracts.Rental;
+using VacationRental.Api.Contracts.v1.Booking;
+using VacationRental.Api.Contracts.v1.Rental;
 using VacationRental.Api.Tests.Integration.Clients.v1;
 using VacationRental.Api.Tests.Integration.Infrastructure;
 using Xunit;
