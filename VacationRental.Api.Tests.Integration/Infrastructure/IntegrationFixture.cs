@@ -15,6 +15,7 @@ namespace VacationRental.Api.Tests.Integration.Infrastructure
         public HttpClient Client { get; }
         public BookingsClient BookingsClient { get; }
         public RentalsClient RentalsClient { get; }
+        public CalendarClient CalendarClient { get; }
 
         public IntegrationFixture()
         {
@@ -23,6 +24,7 @@ namespace VacationRental.Api.Tests.Integration.Infrastructure
             Client = _server.CreateClient();
             BookingsClient = new BookingsClient(_server.CreateClient());
             RentalsClient = new RentalsClient(_server.CreateClient());
+            CalendarClient = new CalendarClient(_server.CreateClient());
         }
 
         public void Dispose()
