@@ -10,6 +10,7 @@ using VacationRental.Api.Repositories;
 using VacationRental.Api.Repositories.Dictionary;
 using VacationRental.Api.Services;
 using VacationRental.Api.Services.Implementation;
+using VacationRental.Api.Services.Interfaces;
 
 namespace VacationRental.Api
 {

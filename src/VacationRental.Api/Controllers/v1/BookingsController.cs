@@ -6,6 +6,7 @@ using VacationRental.Api.Contracts.v1.Booking;
 using VacationRental.Api.Contracts.v1.Common;
 using VacationRental.Api.Controllers.v1.Mappers;
 using VacationRental.Api.Services;
+using VacationRental.Api.Services.Interfaces;
 using VacationRental.Api.Services.Models;
 using VacationRental.Api.Services.Models.Booking;
 

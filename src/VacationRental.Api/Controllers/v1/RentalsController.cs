@@ -6,6 +6,7 @@ using VacationRental.Api.Contracts.v1.Common;
 using VacationRental.Api.Contracts.v1.Rental;
 using VacationRental.Api.Controllers.v1.Mappers;
 using VacationRental.Api.Services;
+using VacationRental.Api.Services.Interfaces;
 using VacationRental.Api.Services.Models.Rental;
 
 namespace VacationRental.Api.Controllers.v1

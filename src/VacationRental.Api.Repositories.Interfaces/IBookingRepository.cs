@@ -1,6 +1,3 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 using VacationRental.Api.Models;
 
 namespace VacationRental.Api.Repositories;

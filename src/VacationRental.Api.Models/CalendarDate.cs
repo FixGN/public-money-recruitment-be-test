@@ -1,5 +1,3 @@
-using System;
-
 namespace VacationRental.Api.Models;
 
 public class CalendarDate

@@ -1,10 +1,6 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-using VacationRental.Api.Services.Models;
 using VacationRental.Api.Services.Models.Calendar;
 
-namespace VacationRental.Api.Services;
+namespace VacationRental.Api.Services.Interfaces;
 
 public interface ICalendarService
 {

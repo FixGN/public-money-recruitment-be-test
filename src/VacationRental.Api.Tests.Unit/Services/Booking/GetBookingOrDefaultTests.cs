@@ -1,12 +1,10 @@
-using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;
 using VacationRental.Api.Repositories;
-using VacationRental.Api.Services;
 using VacationRental.Api.Services.Implementation;
-using VacationRental.Api.Services.Models.Booking;
+using VacationRental.Api.Services.Interfaces;
 using VacationRental.Api.Tests.Unit.DSL;
 using VacationRental.Api.Tests.Unit.Extensions;
 using Xunit;
@@ -18,15 +16,14 @@ public class GetBookingOrDefaultTests
 {
     private readonly IBookingService _bookingService;
     private readonly IBookingRepository _bookingRepository;
-    private readonly IRentalRepository _rentalRepository;
 
     private const int DefaultBookingId = 1;
 
     public GetBookingOrDefaultTests()
     {
         _bookingRepository = Substitute.For<IBookingRepository>();
-        _rentalRepository = Substitute.For<IRentalRepository>();
-        _bookingService = new BookingService(_bookingRepository, _rentalRepository, new NullLogger<BookingService>());
+        var postRentalRepository = Substitute.For<IRentalRepository>();
+        _bookingService = new BookingService(_bookingRepository, postRentalRepository, new NullLogger<BookingService>());
     }
     
     [Fact]

@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
 using NSubstitute;
 using VacationRental.Api.Repositories;
-using VacationRental.Api.Services;
 using VacationRental.Api.Services.Implementation;
+using VacationRental.Api.Services.Interfaces;
 using VacationRental.Api.Services.Models.Rental;
 using VacationRental.Api.Tests.Unit.DSL;
 using VacationRental.Api.Tests.Unit.Extensions;

@@ -14,6 +14,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\VacationRental.Api.Repositories.Dictionary\VacationRental.Api.Repositories.Dictionary.csproj" />
+    <ProjectReference Include="..\VacationRental.Api.Services.Implementation\VacationRental.Api.Services.Implementation.csproj" />
     <ProjectReference Include="..\VacationRental.Api.Contracts\VacationRental.Api.Contracts.csproj" />
   </ItemGroup>
 

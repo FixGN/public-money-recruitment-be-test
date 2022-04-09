@@ -1,10 +1,6 @@
-using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using VacationRental.Api.Models;
 using VacationRental.Api.Repositories;
-using VacationRental.Api.Services.Models;
+using VacationRental.Api.Services.Interfaces;
 using VacationRental.Api.Services.Models.Rental;
 
 namespace VacationRental.Api.Services.Implementation;
