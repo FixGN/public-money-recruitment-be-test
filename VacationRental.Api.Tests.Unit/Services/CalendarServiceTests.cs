@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -104,6 +105,28 @@ public class CalendarServiceTests
 
         var actualResult = await _calendarService.GetCalendarDatesAsync(DefaultRentalId, _defaultStartDate, getCalendarNightsCount);
         
-        Assert.IsTrue(expectedResult.CalendarDates.AreEqual(actualResult.CalendarDates));
+        Assert.Multiple(() =>
+        {
+            foreach (var actualCalendarDate in actualResult.CalendarDates)
+            {
+                var expectedCalendarDate = expectedResult.CalendarDates.FirstOrDefault(x => x.Date == actualCalendarDate.Date);
+                Assert.NotNull(expectedCalendarDate, $"Date '{actualCalendarDate.Date}' is not found in expected result");
+                Assert.AreEqual(
+                    expectedCalendarDate!.Bookings.Length,
+                    actualCalendarDate.Bookings.Length,
+                    $"Bookings count not equal in date '{expectedCalendarDate.Date}'");
+                Assert.AreEqual(
+                    expectedCalendarDate!.PreparationTimes.Length,
+                    actualCalendarDate.PreparationTimes.Length,
+                    $"PreparationTimes count not equal in date '{expectedCalendarDate.Date}'");
+                    Assert.IsTrue(
+                        expectedCalendarDate.Bookings.All(x => actualCalendarDate.Bookings.Any(x.AreEqual)),
+                        $"Bookings values not equal in date '{expectedCalendarDate.Date}'");
+                Assert.IsTrue(expectedCalendarDate.PreparationTimes
+                    .All(ept => 
+                        actualCalendarDate.PreparationTimes.Any(apt => ept.Unit == apt.Unit)),
+                    $"PreparationTimes values not equal in date '{expectedCalendarDate.Date}'");
+            }
+        });
     }
 }
