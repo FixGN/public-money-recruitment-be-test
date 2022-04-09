@@ -14,10 +14,10 @@ using VacationRental.Api.Tests.Unit.DSL;
 using VacationRental.Api.Tests.Unit.Extensions;
 using Xunit;
 
-namespace VacationRental.Api.Tests.Unit.Services;
+namespace VacationRental.Api.Tests.Unit.Services.Calendar;
 
 [Collection("Unit")]
-public class CalendarServiceTests
+public class GetCalendarDatesTests
 {
     private readonly ICalendarService _calendarService;
     private readonly IRentalRepository _rentalRepository;
@@ -27,7 +27,7 @@ public class CalendarServiceTests
     private readonly DateTime _defaultStartDate = new(2022, 1, 1);
     private const int DefaultNights = 2;
 
-    public CalendarServiceTests()
+    public GetCalendarDatesTests()
     {
         _bookingRepository = Substitute.For<IBookingRepository>();
         _rentalRepository = Substitute.For<IRentalRepository>();
@@ -35,7 +35,7 @@ public class CalendarServiceTests
     }
 
     [Fact]
-    public async Task GetCalendarDates_ReturnsIsSuccessFalse_WhenNightsIsNegative()
+    public async Task GivenNoBooking_WhenNightsIsNegative_ThenReturnsIsSuccessFalse()
     {
         var actualResult = await _calendarService.GetCalendarDatesAsync(DefaultRentalId, _defaultStartDate, -1);
         
@@ -43,7 +43,7 @@ public class CalendarServiceTests
     }
 
     [Fact]
-    public async Task GetCalendarDates_ReturnsIsSuccessFalse_WhenNightsIsZero()
+    public async Task GivenNoBooking_WhenNightsIsZero_ThenReturnsIsSuccessFalse()
     {
         var actualResult = await _calendarService.GetCalendarDatesAsync(DefaultRentalId, _defaultStartDate, 0);
         
@@ -51,7 +51,7 @@ public class CalendarServiceTests
     }
     
     [Fact]
-    public async Task GetCalendarDates_ReturnsIsSuccessFalse_WhenRentalNotFound()
+    public async Task GivenNoRentalExists_WhenRentalNotFound_ThenReturnsIsSuccessFalse()
     {
         _rentalRepository.GetOrDefaultAsync(DefaultRentalId).ReturnsNull();
         
@@ -61,7 +61,7 @@ public class CalendarServiceTests
     }
 
     [Fact]
-    public async Task GetCalendarDates_ReturnsIsSuccessTrue_WhenNightsIsPositiveAndRentalWasFound()
+    public async Task GivenRentalExistsAndNoBookingExists_WhenNightsIsPositiveAndRentalWasFound_ThenReturnsIsSuccessTrue()
     {
         var rental = Create.Rental().WithId(DefaultRentalId).Please();
         _rentalRepository.GetOrDefaultAsync(DefaultRentalId).Returns(rental);
@@ -71,14 +71,14 @@ public class CalendarServiceTests
                 DefaultRentalId,
                 defaultStartDate,
                 defaultStartDate.AddDays(DefaultNights - 1))
-            .Returns(Array.Empty<Booking>());        
+            .Returns(Array.Empty<Models.Booking>());        
         var actualResult = await _calendarService.GetCalendarDatesAsync(DefaultRentalId, _defaultStartDate, DefaultNights);
 
         Assert.True(actualResult.IsSuccess);
     }
 
     [Fact]
-    public async Task GetCalendarDates_ReturnsCorrectCalendarDates_WhenArgumentsAreCorrectAndBookingIsCreated()
+    public async Task GivenRentalExistsAndBookingExists_WhenNightsIsPositiveAndRentalWasFound_ThenReturnsIsSuccessTrue()
     {
         const int getCalendarNightsCount = 4;
         var rental = Create.Rental().WithId(DefaultRentalId).WithPreparationTimeInDays(1).Please();
@@ -100,8 +100,8 @@ public class CalendarServiceTests
         var expectedResult = GetCalendarDatesResult.Success(new CalendarDate[] {
             new(_defaultStartDate, bookingArray, Array.Empty<CalendarPreparationTime>()),
             new(_defaultStartDate.AddDays(1), bookingArray, Array.Empty<CalendarPreparationTime>()),
-            new(_defaultStartDate.AddDays(2), Array.Empty<Booking>(), new[] {new CalendarPreparationTime(booking.Unit)}),
-            new(_defaultStartDate.AddDays(3), Array.Empty<Booking>(), Array.Empty<CalendarPreparationTime>())
+            new(_defaultStartDate.AddDays(2), Array.Empty<Models.Booking>(), new[] {new CalendarPreparationTime(booking.Unit)}),
+            new(_defaultStartDate.AddDays(3), Array.Empty<Models.Booking>(), Array.Empty<CalendarPreparationTime>())
         });
 
         var actualResult = await _calendarService.GetCalendarDatesAsync(DefaultRentalId, _defaultStartDate, getCalendarNightsCount);
