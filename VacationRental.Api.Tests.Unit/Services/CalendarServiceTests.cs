@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute;
@@ -77,29 +78,33 @@ public class CalendarServiceTests
     [Test]
     public async Task GetCalendarDates_ReturnsCorrectCalendarDates_WhenArgumentsAreCorrectAndBookingIsCreated()
     {
-        var rental = Create.Rental().WithId(DefaultRentalId).Please();
+        const int getCalendarNightsCount = 4;
+        var rental = Create.Rental().WithId(DefaultRentalId).WithPreparationTimeInDays(1).Please();
+        _rentalRepository.GetOrDefaultAsync(DefaultRentalId).Returns(rental);
+
         var booking = Create.Booking()
             .WithRentalId(DefaultRentalId)
             .WithStartDate(_defaultStartDate)
-            .WithNights(DefaultNights)
+            .WithNights(2)
             .Please();
         var bookingArray = new[] {booking};
-        _rentalRepository.GetOrDefaultAsync(DefaultRentalId).Returns(rental);
-        var defaultStartDate = _defaultStartDate.Date;
-        _bookingRepository
-            .GetByRentalIdAndDatePeriodAsync(
-                DefaultRentalId,
-                defaultStartDate,
-                defaultStartDate.AddDays(DefaultNights - 1))
-            .Returns(Array.Empty<Booking>());
+        _bookingRepository.GetByRentalIdAndDatePeriodAsync(
+            rental.Id,
+            booking.Start.AddDays(-rental.PreparationTimeInDays),
+            booking.Start.AddDays(getCalendarNightsCount + rental.PreparationTimeInDays - 1),
+            Arg.Any<CancellationToken>())
+            .Returns(bookingArray);
+        
         // TODO: Fix test after implementation of first task
         var expectedResult = GetCalendarDatesResult.Success(new CalendarDate[] {
             new(_defaultStartDate, bookingArray, Array.Empty<CalendarPreparationTime>()),
-            new(_defaultStartDate.AddDays(1), bookingArray, Array.Empty<CalendarPreparationTime>())
+            new(_defaultStartDate.AddDays(1), bookingArray, Array.Empty<CalendarPreparationTime>()),
+            new(_defaultStartDate.AddDays(2), Array.Empty<Booking>(), new[] {new CalendarPreparationTime(booking.Unit)}),
+            new(_defaultStartDate.AddDays(3), Array.Empty<Booking>(), Array.Empty<CalendarPreparationTime>())
         });
 
-        var actualResult = await _calendarService.GetCalendarDatesAsync(DefaultRentalId, _defaultStartDate, DefaultNights);
+        var actualResult = await _calendarService.GetCalendarDatesAsync(DefaultRentalId, _defaultStartDate, getCalendarNightsCount);
         
-        Assert.IsTrue(expectedResult.AreEqual(actualResult));
+        Assert.IsTrue(expectedResult.CalendarDates.AreEqual(actualResult.CalendarDates));
     }
 }
