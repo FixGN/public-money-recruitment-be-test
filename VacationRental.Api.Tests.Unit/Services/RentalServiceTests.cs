@@ -49,6 +49,14 @@ public class RentalServiceTests
     }
     
     [Test]
+    public async Task GetRental_ReturnsNull_WhenRentalIdIsNegative()
+    {
+        var actualRental = await _rentalService.GetRentalOrDefaultAsync(-1);
+        
+        Assert.IsNull(actualRental);
+    }
+    
+    [Test]
     public async Task GetRental_ReturnsRental_WhenRentalExists()
     {
         var rental = Create.Rental().Please();
@@ -71,27 +79,59 @@ public class RentalServiceTests
     }
 
     [Test]
-    public async Task CreateRental_CreatesRental()
+    public async Task CreateRental_ReturnsIsSuccessFalse_WhenUnitsIsNegativeNumber()
     {
-        var expectedRental = Create.Rental().Please();
-        _rentalRepository.CreateAsync(expectedRental.Units, expectedRental.PreparationTimeInDays).Returns(expectedRental);
+        var actualRentalResult = await _rentalService.CreateRentalAsync(-1, DefaultPreparationTimeInDays);
+        
+        Assert.IsFalse(actualRentalResult.IsSuccess);
+    }
 
-        await _rentalService.CreateRentalAsync(expectedRental.Units, expectedRental.PreparationTimeInDays);
-
-        await _rentalRepository.Received(1).CreateAsync(expectedRental.Units, expectedRental.PreparationTimeInDays);
+    [Test]
+    public async Task CreateRental_ReturnsErrorStatusValidationFail_WhenUnitsIsNegativeNumber()
+    {
+        var actualRentalResult = await _rentalService.CreateRentalAsync(-1, DefaultPreparationTimeInDays);
+        
+        Assert.AreEqual(CreateRentalResultErrorStatus.ValidationFail, actualRentalResult.ErrorStatus);
     }
     
     [Test]
-    public async Task CreateRental_ReturnsCreatedRental()
+    public async Task CreateRental_ReturnsIsSuccessFalse_WhenPreparationTimeInDaysIsNegativeNumber()
+    {
+        var actualRentalResult = await _rentalService.CreateRentalAsync(DefaultUnits, -1);
+        
+        Assert.IsFalse(actualRentalResult.IsSuccess);
+    }
+
+    [Test]
+    public async Task CreateRental_ReturnsErrorStatusValidationFail_WhenPreparationTimeInDaysIsNegativeNumber()
+    {
+        var actualRentalResult = await _rentalService.CreateRentalAsync(DefaultUnits, -1);
+        
+        Assert.AreEqual(CreateRentalResultErrorStatus.ValidationFail, actualRentalResult.ErrorStatus);
+    }
+    
+    [Test]
+    public async Task CreateRental_ReturnsIsSuccessTrue_WhenAllParametersIsCorrect()
     {
         var expectedRental = Create.Rental().Please();
         _rentalRepository.CreateAsync(expectedRental.Units, expectedRental.PreparationTimeInDays).Returns(expectedRental);
 
-        var actualRental = await _rentalService.CreateRentalAsync(expectedRental.Units, expectedRental.PreparationTimeInDays);
+        var actualRentalResult = await _rentalService.CreateRentalAsync(expectedRental.Units, expectedRental.PreparationTimeInDays);
         
-        Assert.IsTrue(actualRental.AreEqual(expectedRental));
+        Assert.IsTrue(actualRentalResult.IsSuccess);
     }
     
+    [Test]
+    public async Task CreateRental_ReturnsCorrectRental_WhenAllParametersIsCorrect()
+    {
+        var expectedRental = Create.Rental().Please();
+        _rentalRepository.CreateAsync(expectedRental.Units, expectedRental.PreparationTimeInDays).Returns(expectedRental);
+
+        var actualRentalResult = await _rentalService.CreateRentalAsync(expectedRental.Units, expectedRental.PreparationTimeInDays);
+        
+        Assert.IsTrue(actualRentalResult.Rental!.AreEqual(expectedRental));
+    }
+
     [Test]
     public async Task UpdateRental_ReturnsIsSuccessFalse_WhenUnitsIsNegativeNumber()
     {
