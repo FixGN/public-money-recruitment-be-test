@@ -6,6 +6,6 @@ public class CalendarPreparationTime
     {
         Unit = unit;
     }
-    
+
     public int Unit { get; }
 }

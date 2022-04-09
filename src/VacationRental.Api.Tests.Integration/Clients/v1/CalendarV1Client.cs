@@ -14,7 +14,13 @@ public class CalendarV1Client : IDisposable
     {
         _httpClient = httpClient;
     }
-    
+
+    public void Dispose()
+    {
+        _httpClient.Dispose();
+        GC.SuppressFinalize(this);
+    }
+
     public async Task<ClientResponseModel<CalendarViewModel>> GetCalendarAsync(int rentalId, DateTime start, int nights)
     {
         using var response = await _httpClient
@@ -26,11 +32,5 @@ public class CalendarV1Client : IDisposable
             responseMessage = await response.Content.ReadAsAsync<CalendarViewModel>();
         }
         return new ClientResponseModel<CalendarViewModel>(response.IsSuccessStatusCode, response.StatusCode, responseMessage);
-    }
-
-    public void Dispose()
-    {
-        _httpClient.Dispose();
-        GC.SuppressFinalize(this);
     }
 }

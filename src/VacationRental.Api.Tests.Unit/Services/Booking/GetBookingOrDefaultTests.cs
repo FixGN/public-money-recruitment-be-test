@@ -14,10 +14,10 @@ namespace VacationRental.Api.Tests.Unit.Services.Booking;
 [Collection("Unit")]
 public class GetBookingOrDefaultTests
 {
-    private readonly IBookingService _bookingService;
-    private readonly IBookingRepository _bookingRepository;
-
     private const int DefaultBookingId = 1;
+
+    private readonly IBookingRepository _bookingRepository;
+    private readonly IBookingService _bookingService;
 
     public GetBookingOrDefaultTests()
     {
@@ -25,7 +25,7 @@ public class GetBookingOrDefaultTests
         var postRentalRepository = Substitute.For<IRentalRepository>();
         _bookingService = new BookingService(_bookingRepository, postRentalRepository, new NullLogger<BookingService>());
     }
-    
+
     [Fact]
     public async Task GivenCreatedBooking_WhenBookingExists_ThenReturnsBooking()
     {
@@ -33,10 +33,10 @@ public class GetBookingOrDefaultTests
         _bookingRepository.GetOrDefaultAsync(DefaultBookingId).Returns(expectedBooking);
 
         var actualBooking = await _bookingService.GetBookingOrDefaultAsync(DefaultBookingId);
-        
+
         Assert.NotNull(actualBooking);
     }
-    
+
     [Fact]
     public async Task GivenCreatedBooking_WhenBookingExists_ThenReturnsCorrectBooking()
     {
@@ -44,17 +44,17 @@ public class GetBookingOrDefaultTests
         _bookingRepository.GetOrDefaultAsync(DefaultBookingId).Returns(expectedBooking);
 
         var actualBooking = await _bookingService.GetBookingOrDefaultAsync(DefaultBookingId);
-        
+
         Assert.True(actualBooking!.AreEqual(expectedBooking), "Bookings are not equal");
     }
-    
+
     [Fact]
     public async Task GivenNoBookings_WhenBookingNotExists_ThenReturnsNull()
     {
         _bookingRepository.GetOrDefaultAsync(DefaultBookingId).ReturnsNull();
 
         var actualBooking = await _bookingService.GetBookingOrDefaultAsync(DefaultBookingId);
-        
+
         Assert.Null(actualBooking);
     }
 }

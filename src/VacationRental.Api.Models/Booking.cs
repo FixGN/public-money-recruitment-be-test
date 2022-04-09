@@ -10,7 +10,7 @@ public class Booking
         Start = start;
         Nights = nights;
     }
-    
+
     public int Id { get; }
     public int RentalId { get; }
     public int Unit { get; }

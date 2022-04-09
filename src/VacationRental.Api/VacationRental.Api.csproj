@@ -1,22 +1,22 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
-    <LangVersion>10</LangVersion>
-    <Nullable>enable</Nullable>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+        <LangVersion>10</LangVersion>
+        <Nullable>enable</Nullable>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.3.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.3.0" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.3.0"/>
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.3.0"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\VacationRental.Api.Repositories.Dictionary\VacationRental.Api.Repositories.Dictionary.csproj" />
-    <ProjectReference Include="..\VacationRental.Api.Services.Implementation\VacationRental.Api.Services.Implementation.csproj" />
-    <ProjectReference Include="..\VacationRental.Api.Contracts\VacationRental.Api.Contracts.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\VacationRental.Api.Repositories.Dictionary\VacationRental.Api.Repositories.Dictionary.csproj"/>
+        <ProjectReference Include="..\VacationRental.Api.Services.Implementation\VacationRental.Api.Services.Implementation.csproj"/>
+        <ProjectReference Include="..\VacationRental.Api.Contracts\VacationRental.Api.Contracts.csproj"/>
+    </ItemGroup>
 
 </Project>

@@ -16,9 +16,15 @@ public class RentalsV1Client : IDisposable
         _httpClient = httpClient;
     }
 
+    public void Dispose()
+    {
+        _httpClient.Dispose();
+        GC.SuppressFinalize(this);
+    }
+
     public async Task<ClientResponseModel<ResourceIdViewModel>> CreateRentalAsync(RentalBindingModel request)
     {
-        using var response = await _httpClient.PostAsJsonAsync($"/api/v1/rentals", request);
+        using var response = await _httpClient.PostAsJsonAsync("/api/v1/rentals", request);
         ResourceIdViewModel? responseMessage = null;
         if (response.IsSuccessStatusCode)
         {
@@ -47,11 +53,5 @@ public class RentalsV1Client : IDisposable
             responseMessage = await response.Content.ReadAsAsync<RentalViewModel>();
         }
         return new ClientResponseModel<RentalViewModel>(response.IsSuccessStatusCode, response.StatusCode, responseMessage);
-    }
-
-    public void Dispose()
-    {
-        _httpClient.Dispose();
-        GC.SuppressFinalize(this);
     }
 }

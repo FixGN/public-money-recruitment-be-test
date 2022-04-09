@@ -8,7 +8,7 @@ public class ErrorViewModel
         {
             throw new ArgumentException("Message cannot be null, empty or whitespace.", nameof(message));
         }
-        
+
         Message = message;
     }
 

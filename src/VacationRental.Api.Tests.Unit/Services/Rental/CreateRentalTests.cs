@@ -14,11 +14,11 @@ namespace VacationRental.Api.Tests.Unit.Services.Rental;
 [Collection("Unit")]
 public class CreateRentalTests
 {
-    private readonly IRentalRepository _rentalRepository;
-    private readonly IRentalService _rentalService;
-
     private const int DefaultUnits = 1;
     private const int DefaultPreparationTimeInDays = 1;
+
+    private readonly IRentalRepository _rentalRepository;
+    private readonly IRentalService _rentalService;
 
     public CreateRentalTests()
     {
@@ -31,7 +31,7 @@ public class CreateRentalTests
     public async Task GivenNoRental_WhenUnitsIsNegativeNumber_ThenReturnsIsSuccessFalse()
     {
         var actualRentalResult = await _rentalService.CreateRentalAsync(-1, DefaultPreparationTimeInDays);
-        
+
         Assert.False(actualRentalResult.IsSuccess);
     }
 
@@ -39,15 +39,15 @@ public class CreateRentalTests
     public async Task GivenNoRental_WhenUnitsIsNegativeNumber_ThenReturnsErrorStatusValidationFail()
     {
         var actualRentalResult = await _rentalService.CreateRentalAsync(-1, DefaultPreparationTimeInDays);
-        
+
         Assert.Equal(CreateRentalResultErrorStatus.ValidationFailed, actualRentalResult.ErrorStatus);
     }
-    
+
     [Fact]
     public async Task GivenNoRental_WhenPreparationTimeInDaysIsNegativeNumber_ThenReturnsIsSuccessFalse()
     {
         var actualRentalResult = await _rentalService.CreateRentalAsync(DefaultUnits, -1);
-        
+
         Assert.False(actualRentalResult.IsSuccess);
     }
 
@@ -55,10 +55,10 @@ public class CreateRentalTests
     public async Task GivenNoRental_WhenPreparationTimeInDaysIsNegativeNumber_ThenReturnsErrorStatusValidationFail()
     {
         var actualRentalResult = await _rentalService.CreateRentalAsync(DefaultUnits, -1);
-        
+
         Assert.Equal(CreateRentalResultErrorStatus.ValidationFailed, actualRentalResult.ErrorStatus);
     }
-    
+
     [Fact]
     public async Task GivenNoRental_WhenAllParametersIsCorrect_ThenReturnsIsSuccessTrue()
     {
@@ -66,10 +66,10 @@ public class CreateRentalTests
         _rentalRepository.CreateAsync(expectedRental.Units, expectedRental.PreparationTimeInDays).Returns(expectedRental);
 
         var actualRentalResult = await _rentalService.CreateRentalAsync(expectedRental.Units, expectedRental.PreparationTimeInDays);
-        
+
         Assert.True(actualRentalResult.IsSuccess);
     }
-    
+
     [Fact]
     public async Task GivenNoRental_WhenAllParametersIsCorrect_ThenReturnsCorrectRental()
     {
@@ -77,7 +77,7 @@ public class CreateRentalTests
         _rentalRepository.CreateAsync(expectedRental.Units, expectedRental.PreparationTimeInDays).Returns(expectedRental);
 
         var actualRentalResult = await _rentalService.CreateRentalAsync(expectedRental.Units, expectedRental.PreparationTimeInDays);
-        
+
         Assert.True(actualRentalResult.Rental!.AreEqual(expectedRental));
     }
 }

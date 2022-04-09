@@ -14,10 +14,10 @@ namespace VacationRental.Api.Tests.Unit.Services.Rental;
 [Collection("Unit")]
 public class GetRentalOrDefaultTests
 {
+    private const int DefaultRentalId = 1;
+
     private readonly IRentalRepository _rentalRepository;
     private readonly IRentalService _rentalService;
-
-    private const int DefaultRentalId = 1;
 
     public GetRentalOrDefaultTests()
     {
@@ -32,7 +32,7 @@ public class GetRentalOrDefaultTests
         _rentalRepository.GetOrDefaultAsync(DefaultRentalId).ReturnsNull();
 
         var actualRental = await _rentalService.GetRentalOrDefaultAsync(DefaultRentalId);
-        
+
         Assert.Null(actualRental);
     }
 
@@ -43,10 +43,10 @@ public class GetRentalOrDefaultTests
         _rentalRepository.GetOrDefaultAsync(DefaultRentalId).Returns(rental);
 
         var actualRental = await _rentalService.GetRentalOrDefaultAsync(DefaultRentalId);
-        
+
         Assert.IsType<Models.Rental>(actualRental);
     }
-    
+
     [Fact]
     public async Task GivenRental_WhenRentalExists_ThenReturnsCorrectRental()
     {
@@ -54,7 +54,7 @@ public class GetRentalOrDefaultTests
         _rentalRepository.GetOrDefaultAsync(DefaultRentalId).Returns(expectedRental);
 
         var actualRental = await _rentalService.GetRentalOrDefaultAsync(DefaultRentalId);
-        
+
         Assert.True(actualRental!.AreEqual(expectedRental));
     }
 }

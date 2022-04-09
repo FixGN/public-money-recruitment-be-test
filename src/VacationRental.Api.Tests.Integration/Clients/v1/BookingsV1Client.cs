@@ -16,9 +16,15 @@ public class BookingsV1Client : IDisposable
         _httpClient = httpClient;
     }
 
+    public void Dispose()
+    {
+        _httpClient.Dispose();
+        GC.SuppressFinalize(this);
+    }
+
     public async Task<ClientResponseModel<ResourceIdViewModel>> CreateBookingAsync(BookingBindingModel request)
     {
-        using var response = await _httpClient.PostAsJsonAsync($"/api/v1/bookings", request);
+        using var response = await _httpClient.PostAsJsonAsync("/api/v1/bookings", request);
         ResourceIdViewModel? responseMessage = null;
         if (response.IsSuccessStatusCode)
         {
@@ -36,11 +42,5 @@ public class BookingsV1Client : IDisposable
             responseMessage = await response.Content.ReadAsAsync<BookingViewModel>();
         }
         return new ClientResponseModel<BookingViewModel>(response.IsSuccessStatusCode, response.StatusCode, responseMessage);
-    }
-
-    public void Dispose()
-    {
-        _httpClient.Dispose();
-        GC.SuppressFinalize(this);
     }
 }

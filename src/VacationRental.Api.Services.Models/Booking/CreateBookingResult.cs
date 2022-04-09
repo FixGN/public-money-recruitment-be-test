@@ -15,10 +15,11 @@ public class CreateBookingResult
         ErrorMessage = errorMessage;
         CreatedBooking = createdBooking;
     }
-    
+
     [MemberNotNullWhen(true, nameof(CreatedBooking))]
     [MemberNotNullWhen(false, nameof(ErrorMessage))]
     public bool IsSuccess { get; }
+
     public CreateBookingResultErrorStatus ErrorStatus { get; }
     public string? ErrorMessage { get; }
     public Api.Models.Booking? CreatedBooking { get; }

@@ -9,8 +9,8 @@ namespace VacationRental.Api.Services.Implementation;
 
 public class RentalService : IRentalService
 {
-    private readonly IRentalRepository _rentalRepository;
     private readonly IBookingRepository _bookingRepository;
+    private readonly IRentalRepository _rentalRepository;
     private readonly ILogger<RentalService> _logger;
 
     public RentalService(IRentalRepository rentalRepository, IBookingRepository bookingRepository, ILogger<RentalService> logger)
@@ -19,7 +19,7 @@ public class RentalService : IRentalService
         _bookingRepository = bookingRepository ?? throw new ArgumentNullException(nameof(bookingRepository));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
-    
+
     public async Task<Rental?> GetRentalOrDefaultAsync(int id, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
@@ -32,12 +32,13 @@ public class RentalService : IRentalService
         int preparationTimeInDays,
         CancellationToken cancellationToken = default)
     {
-        cancellationToken.ThrowIfCancellationRequested();   
+        cancellationToken.ThrowIfCancellationRequested();
 
         if (units < 0)
         {
             return CreateRentalResult.ValidationFailed("Units must be positive number");
         }
+
         if (preparationTimeInDays < 0)
         {
             return CreateRentalResult.ValidationFailed("Preparation time must be positive number");
@@ -81,7 +82,7 @@ public class RentalService : IRentalService
             _logger.UpdateRentalAsyncNothingToChange(id, units, preparationTimeInDays);
             return UpdateRentalResult.Successful(rental);
         }
-        
+
         var rentalBookings = await _bookingRepository.GetByRentalIdAsync(id, cancellationToken);
         if (rentalBookings.Length != 0)
         {
@@ -89,7 +90,7 @@ public class RentalService : IRentalService
             var maxRentalDate = rentalBookings.Select(x => x.Start.AddDays(x.Nights + rental.PreparationTimeInDays - 1)).Max();
             var currentBookingDaysCount = (maxRentalDate - minRentalDate).Days + 1;
 
-            for(var i = 0; i < currentBookingDaysCount; i++)
+            for (var i = 0; i < currentBookingDaysCount; i++)
             {
                 var date = minRentalDate.AddDays(i);
                 var bookingsWithNewPreparationTime = rentalBookings
@@ -103,6 +104,7 @@ public class RentalService : IRentalService
                     return UpdateRentalResult.Conflict(
                         $"Preparation time in days '{preparationTimeInDays}' makes conflict with bookings on date '{date:d}'");
                 }
+
                 if (units < bookingsWithNewPreparationTime.Count)
                 {
                     _logger.UpdateRentalAsyncNumberOfPreparationTimeInDaysConflict(

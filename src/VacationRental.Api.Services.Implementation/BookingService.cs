@@ -10,8 +10,8 @@ namespace VacationRental.Api.Services.Implementation;
 public class BookingService : IBookingService
 {
     private readonly IBookingRepository _bookingRepository;
-    private readonly IRentalRepository _rentalRepository;
     private readonly ILogger<BookingService> _logger;
+    private readonly IRentalRepository _rentalRepository;
 
     public BookingService(IBookingRepository bookingRepository, IRentalRepository rentalRepository, ILogger<BookingService> logger)
     {
@@ -23,7 +23,7 @@ public class BookingService : IBookingService
     public async Task<Booking?> GetBookingOrDefaultAsync(int id, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
-        
+
         return await _bookingRepository.GetOrDefaultAsync(id, cancellationToken);
     }
 
@@ -41,13 +41,14 @@ public class BookingService : IBookingService
             _logger.CreateBookingAsyncNightsIsNegativeOrZero(rentalId, start, nights);
             return CreateBookingResult.ValidationFailed("Nights must be positive");
         }
+
         var rental = await _rentalRepository.GetOrDefaultAsync(rentalId, cancellationToken);
         if (rental == null)
         {
             _logger.CreateBookingAsyncRentalNotFound(rentalId, start, nights);
             return CreateBookingResult.ValidationFailed("Rental not found");
         }
-        
+
         var startDate = start.Date;
 
         var currentBookings = await _bookingRepository.GetByRentalIdAndDatePeriodAsync(

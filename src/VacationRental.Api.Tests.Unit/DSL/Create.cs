@@ -6,11 +6,11 @@ internal static class Create
 {
     public static BookingBuilder Booking()
     {
-        return new();
+        return new BookingBuilder();
     }
 
     public static RentalBuilder Rental()
     {
-        return new();
+        return new RentalBuilder();
     }
 }

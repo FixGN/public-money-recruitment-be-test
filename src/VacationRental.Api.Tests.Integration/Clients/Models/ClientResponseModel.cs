@@ -14,6 +14,7 @@ public class ClientResponseModel<T> where T : class
 
     [MemberNotNullWhen(true, nameof(Message))]
     public bool IsSuccessStatusCode { get; }
+
     public HttpStatusCode StatusCode { get; }
     public T? Message { get; }
 }

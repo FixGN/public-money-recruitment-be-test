@@ -16,7 +16,7 @@ public class GetCalendarDatesResult
     public bool IsSuccess { get; }
     public string? ErrorMessage { get; }
     public CalendarDate[] CalendarDates { get; }
-    
+
     public static GetCalendarDatesResult Success(CalendarDate[] calendarDates)
     {
         return new GetCalendarDatesResult(true, null, calendarDates);

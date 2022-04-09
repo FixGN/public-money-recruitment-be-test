@@ -6,5 +6,6 @@ public class CalendarPreparationTimeViewModel
     {
         Unit = unit;
     }
+
     public int Unit { get; }
 }

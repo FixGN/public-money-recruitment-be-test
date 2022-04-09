@@ -7,12 +7,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\VacationRental.Api.Repositories.Interfaces\VacationRental.Api.Repositories.Interfaces.csproj" />
-      <ProjectReference Include="..\VacationRental.Api.Services.Interfaces\VacationRental.Api.Services.Interfaces.csproj" />
+        <ProjectReference Include="..\VacationRental.Api.Repositories.Interfaces\VacationRental.Api.Repositories.Interfaces.csproj"/>
+        <ProjectReference Include="..\VacationRental.Api.Services.Interfaces\VacationRental.Api.Services.Interfaces.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.1" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.1"/>
     </ItemGroup>
 
 </Project>

@@ -16,10 +16,10 @@ public static class ViewModelMapper
         {
             throw new ArgumentNullException(nameof(booking));
         }
-            
+
         return new BookingViewModel(booking.Id, booking.RentalId, booking.Unit, booking.Start, booking.Nights);
     }
-    
+
     public static CalendarViewModel MapRentalIdAndCalendarDatesToCalendarViewModel(
         int rentalId,
         IEnumerable<CalendarDate> calendarDates)
@@ -28,12 +28,12 @@ public static class ViewModelMapper
             rentalId,
             calendarDates.Select(MapCalendarDatesToCalendarDatesViewModel).ToList());
     }
-    
+
     public static RentalViewModel MapRentalToRentalViewModel(Rental rental)
     {
         return new RentalViewModel(rental.Id, rental.Units, rental.PreparationTimeInDays);
     }
-        
+
     private static CalendarDateViewModel MapCalendarDatesToCalendarDatesViewModel(CalendarDate calendarDate)
     {
         return new CalendarDateViewModel(

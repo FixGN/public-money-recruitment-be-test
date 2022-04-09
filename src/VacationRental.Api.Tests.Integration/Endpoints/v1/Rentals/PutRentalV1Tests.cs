@@ -12,14 +12,13 @@ namespace VacationRental.Api.Tests.Integration.Endpoints.v1.Rentals;
 [Collection("Integration")]
 public class PutRentalTests
 {
-    private readonly RentalsV1Client _rentalsV1Client;
-    private readonly BookingsV1Client _bookingsV1Client;
-
     private const int DefaultUnits = 25;
     private const int DefaultPreparationTimeInDays = 3;
-
-    private readonly DateTime _defaultStartDate = new(2022, 1, 1);
     private const int DefaultNights = 2;
+    private readonly DateTime _defaultStartDate = new(2022, 1, 1);
+
+    private readonly BookingsV1Client _bookingsV1Client;
+    private readonly RentalsV1Client _rentalsV1Client;
 
     public PutRentalTests(IntegrationFixture fixture)
     {
@@ -37,12 +36,12 @@ public class PutRentalTests
         var updateRequest = new RentalBindingModel(DefaultUnits + 1, DefaultPreparationTimeInDays + 2);
         var updateResponse = await _rentalsV1Client.UpdateRentalAsync(createResponse.Message!.Id, updateRequest);
         Assert.True(updateResponse.IsSuccessStatusCode);
-            
+
         Assert.Equal(createResponse.Message!.Id, updateResponse.Message!.Id);
         Assert.Equal(updateRequest.Units, updateResponse.Message!.Units);
         Assert.Equal(updateRequest.PreparationTimeInDays, updateResponse.Message!.PreparationTimeInDays);
     }
-    
+
     [Fact]
     public async Task GivenCompleteRequest_WhenPutRental_ThenReturnsBadRequestIfUnitsIsNegative()
     {
@@ -50,25 +49,25 @@ public class PutRentalTests
         var createResponse = await _rentalsV1Client.CreateRentalAsync(createRequest);
         Assert.True(createResponse.IsSuccessStatusCode);
 
-        var updateRequest = new RentalBindingModel{Units = -1, PreparationTimeInDays = DefaultPreparationTimeInDays};
+        var updateRequest = new RentalBindingModel {Units = -1, PreparationTimeInDays = DefaultPreparationTimeInDays};
         var updateResponse = await _rentalsV1Client.UpdateRentalAsync(createResponse.Message!.Id, updateRequest);
 
         Assert.Equal(HttpStatusCode.BadRequest, updateResponse.StatusCode);
     }
-    
+
     [Fact]
     public async Task GivenCompleteRequest_WhenPutRental_ThenReturnsBadRequestIfPreparationTimeInDaysIsNegative()
     {
         var createRequest = new RentalBindingModel(DefaultUnits, DefaultPreparationTimeInDays);
         var createResponse = await _rentalsV1Client.CreateRentalAsync(createRequest);
         Assert.True(createResponse.IsSuccessStatusCode);
-        
-        var updateRequest = new RentalBindingModel{Units = DefaultUnits, PreparationTimeInDays = -1};
+
+        var updateRequest = new RentalBindingModel {Units = DefaultUnits, PreparationTimeInDays = -1};
         var updateResponse = await _rentalsV1Client.UpdateRentalAsync(createResponse.Message!.Id, updateRequest);
 
         Assert.Equal(HttpStatusCode.BadRequest, updateResponse.StatusCode);
     }
-    
+
     [Fact]
     public async Task GivenCompleteRequest_WhenPutRental_ThenReturnsNotFoundIfRentalNotExists()
     {
@@ -77,7 +76,7 @@ public class PutRentalTests
 
         Assert.Equal(HttpStatusCode.NotFound, updateResponse.StatusCode);
     }
-    
+
     [Fact]
     public async Task GivenCompleteRequest_WhenPutRental_ThenReturnsConflictIfNewUnitsValueConflictsWithCreatedBookings()
     {
@@ -88,7 +87,7 @@ public class PutRentalTests
         var createBooking1Request = new BookingBindingModel(createRentalResponse.Message!.Id, _defaultStartDate, DefaultNights);
         var createBooking1Response = await _bookingsV1Client.CreateBookingAsync(createBooking1Request);
         Assert.True(createBooking1Response.IsSuccessStatusCode);
-        
+
         var createBooking2Request = new BookingBindingModel(createRentalResponse.Message!.Id, _defaultStartDate, DefaultNights);
         var createBooking2Response = await _bookingsV1Client.CreateBookingAsync(createBooking2Request);
         Assert.True(createBooking2Response.IsSuccessStatusCode);
@@ -97,7 +96,7 @@ public class PutRentalTests
         var updateRentalResponse = await _rentalsV1Client.UpdateRentalAsync(createRentalResponse.Message!.Id, updateRentalRequest);
         Assert.Equal(HttpStatusCode.Conflict, updateRentalResponse.StatusCode);
     }
-    
+
     [Fact]
     public async Task GivenCompleteRequest_WhenPutRental_ThenReturnsConflictIfNewPreparationTimeInDaysValueConflictsWithCreatedBookings()
     {
@@ -108,14 +107,14 @@ public class PutRentalTests
         var createBooking1Request = new BookingBindingModel(createRentalResponse.Message!.Id, _defaultStartDate, DefaultNights);
         var createBooking1Response = await _bookingsV1Client.CreateBookingAsync(createBooking1Request);
         Assert.True(createBooking1Response.IsSuccessStatusCode);
-        
+
         var createBooking2Request = new BookingBindingModel(
             createRentalResponse.Message!.Id,
             _defaultStartDate.AddDays(DefaultNights + 1),
             DefaultNights);
         var createBooking2Response = await _bookingsV1Client.CreateBookingAsync(createBooking2Request);
         Assert.True(createBooking2Response.IsSuccessStatusCode);
-        
+
         var updateRentalRequest = new RentalBindingModel(DefaultUnits, 3);
         var updateRentalResponse = await _rentalsV1Client.UpdateRentalAsync(createRentalResponse.Message!.Id, updateRentalRequest);
         Assert.Equal(HttpStatusCode.Conflict, updateRentalResponse.StatusCode);

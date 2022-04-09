@@ -15,6 +15,7 @@ public class CreateRentalResult
     [MemberNotNullWhen(false, nameof(ErrorMessage))]
     [MemberNotNullWhen(true, nameof(Rental))]
     public bool IsSuccess { get; }
+
     public CreateRentalResultErrorStatus ErrorStatus { get; }
     public string? ErrorMessage { get; }
     public Api.Models.Rental? Rental { get; }

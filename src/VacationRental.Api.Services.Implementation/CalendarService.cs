@@ -10,8 +10,8 @@ namespace VacationRental.Api.Services.Implementation;
 public class CalendarService : ICalendarService
 {
     private readonly IBookingRepository _bookingRepository;
-    private readonly IRentalRepository _rentalRepository;
     private readonly ILogger<CalendarService> _logger;
+    private readonly IRentalRepository _rentalRepository;
 
     public CalendarService(IBookingRepository bookingRepository, IRentalRepository rentalRepository, ILogger<CalendarService> logger)
     {
@@ -28,13 +28,13 @@ public class CalendarService : ICalendarService
     {
         _logger.GetCalendarDatesAsyncStart(rentalId, start, nights);
         cancellationToken.ThrowIfCancellationRequested();
-        
+
         if (nights <= 0)
         {
             _logger.GetCalendarDatesAsyncNightsIsNegativeOrZero(rentalId, start, nights);
             return GetCalendarDatesResult.Fail("Nights must be positive");
         }
-        
+
         var rental = await _rentalRepository.GetOrDefaultAsync(rentalId, cancellationToken);
         if (rental == null)
         {
@@ -48,10 +48,10 @@ public class CalendarService : ICalendarService
             .GetByRentalIdAndDatePeriodAsync(
                 rentalId,
                 startDate.AddDays(-rental.PreparationTimeInDays),
-                startDate.AddDays(nights + rental.PreparationTimeInDays - 1), 
+                startDate.AddDays(nights + rental.PreparationTimeInDays - 1),
                 cancellationToken);
         _logger.GetCalendarDatesAsyncFoundBookings(rentalId, start, nights, availableBookings.Length);
-        
+
         for (var i = 0; i < nights; i++)
         {
             var date = start.Date.AddDays(i);

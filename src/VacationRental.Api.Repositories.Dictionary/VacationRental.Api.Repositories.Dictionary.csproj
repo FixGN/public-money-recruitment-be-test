@@ -7,7 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\VacationRental.Api.Repositories.Interfaces\VacationRental.Api.Repositories.Interfaces.csproj" />
+        <ProjectReference Include="..\VacationRental.Api.Repositories.Interfaces\VacationRental.Api.Repositories.Interfaces.csproj"/>
     </ItemGroup>
 
 </Project>

@@ -19,28 +19,28 @@ public class DictionaryRentalRepository : IRentalRepository
     public Task<Rental?> GetOrDefaultAsync(int id, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
-        
+
         _repository.TryGetValue(id, out var rental);
         return Task.FromResult(rental);
     }
 
     public Task<Rental> CreateAsync(int units, int preparationTimeInDays, CancellationToken cancellationToken = default)
     {
-       cancellationToken.ThrowIfCancellationRequested();
-       
-       lock (_addLock)
-       {
-           var rental = new Rental(_repository.Count + 1, units, preparationTimeInDays);
-           _repository.Add(rental.Id, rental);
+        cancellationToken.ThrowIfCancellationRequested();
 
-           return Task.FromResult(rental);
-       }
+        lock (_addLock)
+        {
+            var rental = new Rental(_repository.Count + 1, units, preparationTimeInDays);
+            _repository.Add(rental.Id, rental);
+
+            return Task.FromResult(rental);
+        }
     }
 
     public Task<Rental> UpdateAsync(Rental rental, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
-        
+
         lock (_updateLock)
         {
             if (!_repository.ContainsKey(rental.Id))

@@ -7,7 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\VacationRental.Api.Services.Models\VacationRental.Api.Services.Models.csproj" />
+        <ProjectReference Include="..\VacationRental.Api.Services.Models\VacationRental.Api.Services.Models.csproj"/>
     </ItemGroup>
 
 </Project>
