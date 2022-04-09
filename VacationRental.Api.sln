@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28803.352
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VacationRental.Api", "VacationRental.Api\VacationRental.Api.csproj", "{478C6CBF-6F84-4604-8E31-DEDFDFE10DBC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VacationRental.Api", "src\VacationRental.Api\VacationRental.Api.csproj", "{478C6CBF-6F84-4604-8E31-DEDFDFE10DBC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VacationRental.Api.Tests.Integration", "VacationRental.Api.Tests.Integration\VacationRental.Api.Tests.Integration.csproj", "{57FE6E13-7144-459F-BCA8-431087D3DAEE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VacationRental.Api.Tests.Integration", "src\VacationRental.Api.Tests.Integration\VacationRental.Api.Tests.Integration.csproj", "{57FE6E13-7144-459F-BCA8-431087D3DAEE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VacationRental.Api.Contracts", "VacationRental.Api.Contracts\VacationRental.Api.Contracts.csproj", "{8ED6D3C6-47DD-4B29-AD6D-985603EA459C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VacationRental.Api.Contracts", "src\VacationRental.Api.Contracts\VacationRental.Api.Contracts.csproj", "{8ED6D3C6-47DD-4B29-AD6D-985603EA459C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{585D969E-7408-40CC-B1D1-0316CD2E0F00}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VacationRental.Api.Tests.Unit", "VacationRental.Api.Tests.Unit\VacationRental.Api.Tests.Unit.csproj", "{0B1F3576-EBB5-4574-B434-004230A41337}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VacationRental.Api.Tests.Unit", "src\VacationRental.Api.Tests.Unit\VacationRental.Api.Tests.Unit.csproj", "{0B1F3576-EBB5-4574-B434-004230A41337}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

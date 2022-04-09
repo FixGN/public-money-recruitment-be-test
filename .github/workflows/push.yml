@@ -13,20 +13,6 @@ jobs:
         uses: actions/checkout@v2
         with:
           ref: ${{ github.sha }}
-      - name: Get branch name
-        id: branch_name
-        shell: bash
-        run: |
-          BRANCH_NAME="$(echo "$GITHUB_REF" | tr "[:upper:]" "[:lower:]" | sed -r 's#refs/[^\/]*/##;s/[~\^]+//g;s/[^a-zA-Z0-9.]+/-/g;s/^-+\|-+$//g;s/^-*//;s/-*$//' | cut -c1-63)"
-          echo "Branch name: ${BRANCH_NAME}"
-          echo "::set-output name=branch_name::$BRANCH_NAME"
-      - name: Get short SHA hash
-        id: short_sha
-        shell: bash
-        run: |
-          SHORT_SHA="$(echo ${GITHUB_SHA} | cut -c1-8)"
-          echo "Short SHA hash: ${SHORT_SHA}"
-          echo "::set-output name=short_sha::$SHORT_SHA"
       - name: Setup .NET Core SDK 6.0.201
         uses: actions/setup-dotnet@v1
         with:
@@ -39,8 +25,8 @@ jobs:
       - name: Run unit tests
         shell: bash
         run: |
-          dotnet test ./VacationRental.Api.Tests.Unit/VacationRental.Api.Tests.Unit.csproj -c Release --no-build --no-restore
+          dotnet test ./src/VacationRental.Api.Tests.Unit/VacationRental.Api.Tests.Unit.csproj -c Release --no-build --no-restore
       - name: Run integration tests
         shell: bash
         run: |
-          dotnet test ./VacationRental.Api.Tests.Integration/VacationRental.Api.Tests.Integration.csproj -c Release --no-build --no-restore
+          dotnet test ./src/VacationRental.Api.Tests.Integration/VacationRental.Api.Tests.Integration.csproj -c Release --no-build --no-restore
