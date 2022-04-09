@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;
-using NUnit.Framework;
 using VacationRental.Api.Models;
 using VacationRental.Api.Repositories;
 using VacationRental.Api.Services;
@@ -13,9 +12,11 @@ using VacationRental.Api.Services.Implementation;
 using VacationRental.Api.Services.Models.Calendar;
 using VacationRental.Api.Tests.Unit.DSL;
 using VacationRental.Api.Tests.Unit.Extensions;
+using Xunit;
 
 namespace VacationRental.Api.Tests.Unit.Services;
 
+[Collection("Unit")]
 public class CalendarServiceTests
 {
     private readonly ICalendarService _calendarService;
@@ -33,33 +34,33 @@ public class CalendarServiceTests
         _calendarService = new CalendarService(_bookingRepository, _rentalRepository, new NullLogger<CalendarService>());
     }
 
-    [Test]
+    [Fact]
     public async Task GetCalendarDates_ReturnsIsSuccessFalse_WhenNightsIsNegative()
     {
         var actualResult = await _calendarService.GetCalendarDatesAsync(DefaultRentalId, _defaultStartDate, -1);
         
-        Assert.IsFalse(actualResult.IsSuccess);
+        Assert.False(actualResult.IsSuccess);
     }
 
-    [Test]
+    [Fact]
     public async Task GetCalendarDates_ReturnsIsSuccessFalse_WhenNightsIsZero()
     {
         var actualResult = await _calendarService.GetCalendarDatesAsync(DefaultRentalId, _defaultStartDate, 0);
         
-        Assert.IsFalse(actualResult.IsSuccess);
+        Assert.False(actualResult.IsSuccess);
     }
     
-    [Test]
+    [Fact]
     public async Task GetCalendarDates_ReturnsIsSuccessFalse_WhenRentalNotFound()
     {
         _rentalRepository.GetOrDefaultAsync(DefaultRentalId).ReturnsNull();
         
         var actualResult = await _calendarService.GetCalendarDatesAsync(DefaultRentalId, _defaultStartDate, DefaultNights);
 
-        Assert.IsFalse(actualResult.IsSuccess);
+        Assert.False(actualResult.IsSuccess);
     }
 
-    [Test]
+    [Fact]
     public async Task GetCalendarDates_ReturnsIsSuccessTrue_WhenNightsIsPositiveAndRentalWasFound()
     {
         var rental = Create.Rental().WithId(DefaultRentalId).Please();
@@ -73,10 +74,10 @@ public class CalendarServiceTests
             .Returns(Array.Empty<Booking>());        
         var actualResult = await _calendarService.GetCalendarDatesAsync(DefaultRentalId, _defaultStartDate, DefaultNights);
 
-        Assert.IsTrue(actualResult.IsSuccess);
+        Assert.True(actualResult.IsSuccess);
     }
 
-    [Test]
+    [Fact]
     public async Task GetCalendarDates_ReturnsCorrectCalendarDates_WhenArgumentsAreCorrectAndBookingIsCreated()
     {
         const int getCalendarNightsCount = 4;
@@ -105,28 +106,17 @@ public class CalendarServiceTests
 
         var actualResult = await _calendarService.GetCalendarDatesAsync(DefaultRentalId, _defaultStartDate, getCalendarNightsCount);
         
-        Assert.Multiple(() =>
+        // Assert
+        // Due to I can't create message for Assert and I can't do multiply asserts, NUnit looks better
+        foreach (var actualCalendarDate in actualResult.CalendarDates)
         {
-            foreach (var actualCalendarDate in actualResult.CalendarDates)
-            {
-                var expectedCalendarDate = expectedResult.CalendarDates.FirstOrDefault(x => x.Date == actualCalendarDate.Date);
-                Assert.NotNull(expectedCalendarDate, $"Date '{actualCalendarDate.Date}' is not found in expected result");
-                Assert.AreEqual(
-                    expectedCalendarDate!.Bookings.Length,
-                    actualCalendarDate.Bookings.Length,
-                    $"Bookings count not equal in date '{expectedCalendarDate.Date}'");
-                Assert.AreEqual(
-                    expectedCalendarDate!.PreparationTimes.Length,
-                    actualCalendarDate.PreparationTimes.Length,
-                    $"PreparationTimes count not equal in date '{expectedCalendarDate.Date}'");
-                    Assert.IsTrue(
-                        expectedCalendarDate.Bookings.All(x => actualCalendarDate.Bookings.Any(x.AreEqual)),
-                        $"Bookings values not equal in date '{expectedCalendarDate.Date}'");
-                Assert.IsTrue(expectedCalendarDate.PreparationTimes
-                    .All(ept => 
-                        actualCalendarDate.PreparationTimes.Any(apt => ept.Unit == apt.Unit)),
-                    $"PreparationTimes values not equal in date '{expectedCalendarDate.Date}'");
-            }
-        });
+            var expectedCalendarDate = expectedResult.CalendarDates.FirstOrDefault(x => x.Date == actualCalendarDate.Date);
+            Assert.NotNull(expectedCalendarDate);
+            Assert.Equal(expectedCalendarDate!.Bookings.Length, actualCalendarDate.Bookings.Length);
+            Assert.Equal(expectedCalendarDate!.PreparationTimes.Length, actualCalendarDate.PreparationTimes.Length);
+            Assert.True(expectedCalendarDate.Bookings.All(x => actualCalendarDate.Bookings.Any(x.AreEqual)));
+            Assert.True(expectedCalendarDate.PreparationTimes.All(ept 
+                    => actualCalendarDate.PreparationTimes.Any(apt => ept.Unit == apt.Unit)));
+        }
     }
 }

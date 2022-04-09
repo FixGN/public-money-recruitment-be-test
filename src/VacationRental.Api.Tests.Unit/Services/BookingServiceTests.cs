@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;
-using NUnit.Framework;
 using VacationRental.Api.Models;
 using VacationRental.Api.Repositories;
 using VacationRental.Api.Services;
@@ -11,9 +10,11 @@ using VacationRental.Api.Services.Implementation;
 using VacationRental.Api.Services.Models.Booking;
 using VacationRental.Api.Tests.Unit.DSL;
 using VacationRental.Api.Tests.Unit.Extensions;
+using Xunit;
 
 namespace VacationRental.Api.Tests.Unit.Services;
 
+[Collection("Unit")]
 public class BookingServiceTests
 {
     private readonly IBookingService _bookingService;
@@ -32,7 +33,7 @@ public class BookingServiceTests
         _bookingService = new BookingService(_bookingRepository, _rentalRepository, new NullLogger<BookingService>());
     }
     
-    [Test]
+    [Fact]
     public async Task GetBooking_ReturnsBooking_WhenBookingExists()
     {
         var expectedBooking = Create.Booking().WithId(DefaultBookingId).Please();
@@ -43,7 +44,7 @@ public class BookingServiceTests
         Assert.NotNull(actualBooking);
     }
     
-    [Test]
+    [Fact]
     public async Task GetBooking_ReturnsCorrectBooking_WhenBookingExists()
     {
         var expectedBooking = Create.Booking().WithId(DefaultBookingId).Please();
@@ -51,10 +52,10 @@ public class BookingServiceTests
 
         var actualBooking = await _bookingService.GetBookingOrDefaultAsync(DefaultBookingId);
         
-        Assert.IsTrue(actualBooking!.AreEqual(expectedBooking), "Bookings are not equal");
+        Assert.True(actualBooking!.AreEqual(expectedBooking), "Bookings are not equal");
     }
     
-    [Test]
+    [Fact]
     public async Task GetBooking_ReturnsNull_WhenBookingNotExists()
     {
         _bookingRepository.GetOrDefaultAsync(DefaultBookingId).ReturnsNull();
@@ -64,59 +65,59 @@ public class BookingServiceTests
         Assert.Null(actualBooking);
     }
 
-    [Test]
+    [Fact]
     public async Task CreateBooking_ReturnsIsSuccessFalse_WhenNightsIsNegative()
     {
         var actualBookingCreationResult = await _bookingService.CreateBookingAsync(DefaultRentalId, _defaultStartDate, -1);
         
-        Assert.IsFalse(actualBookingCreationResult.IsSuccess);
+        Assert.False(actualBookingCreationResult.IsSuccess);
     }
     
-    [Test]
+    [Fact]
     public async Task CreateBooking_ReturnsStatusValidationFailed_WhenNightsIsNegative()
     {
         var actualBookingCreationResult = await _bookingService.CreateBookingAsync(DefaultRentalId, _defaultStartDate, -1);
         
-        Assert.AreEqual(CreateBookingResultErrorStatus.ValidationFailed, actualBookingCreationResult.ErrorStatus);
+        Assert.Equal(CreateBookingResultErrorStatus.ValidationFailed, actualBookingCreationResult.ErrorStatus);
     }
     
-    [Test]
+    [Fact]
     public async Task CreateBooking_ReturnsIsSuccessFalse_WhenNightsIsZero()
     {
         var actualBookingCreationResult = await _bookingService.CreateBookingAsync(DefaultRentalId, _defaultStartDate, 0);
         
-        Assert.IsFalse(actualBookingCreationResult.IsSuccess);
+        Assert.False(actualBookingCreationResult.IsSuccess);
     }
     
-    [Test]
+    [Fact]
     public async Task CreateBooking_ReturnsStatusValidationFailed_WhenNightsIsZero()
     {
         var actualBookingCreationResult = await _bookingService.CreateBookingAsync(DefaultRentalId, _defaultStartDate, 0);
         
-        Assert.AreEqual(CreateBookingResultErrorStatus.ValidationFailed, actualBookingCreationResult.ErrorStatus);
+        Assert.Equal(CreateBookingResultErrorStatus.ValidationFailed, actualBookingCreationResult.ErrorStatus);
     }
     
-    [Test]
+    [Fact]
     public async Task CreateBooking_ReturnsIsSuccessFalse_WhenRentalIsNotExists()
     {
         _rentalRepository.GetOrDefaultAsync(DefaultRentalId).ReturnsNull();
         
         var actualBookingCreationResult = await _bookingService.CreateBookingAsync(DefaultRentalId, _defaultStartDate, DefaultNights);
         
-        Assert.IsFalse(actualBookingCreationResult.IsSuccess);
+        Assert.False(actualBookingCreationResult.IsSuccess);
     }
     
-    [Test]
+    [Fact]
     public async Task CreateBooking_ReturnsStatusValidationFailed_WhenRentalIsNotExists()
     {
         _rentalRepository.GetOrDefaultAsync(DefaultRentalId).ReturnsNull();
         
         var actualBookingCreationResult = await _bookingService.CreateBookingAsync(DefaultRentalId, _defaultStartDate, DefaultNights);
         
-        Assert.AreEqual(CreateBookingResultErrorStatus.ValidationFailed, actualBookingCreationResult.ErrorStatus);
+        Assert.Equal(CreateBookingResultErrorStatus.ValidationFailed, actualBookingCreationResult.ErrorStatus);
     }
 
-    [Test]
+    [Fact]
     public async Task CreateBooking_ReturnsIsSuccessFalse_WhenAllUnitsInRentalAlreadyBooked()
     {
         var rental = Create.Rental().WithId(DefaultRentalId).WithUnits(1).Please();
@@ -133,30 +134,29 @@ public class BookingServiceTests
         
         var actualBookingCreationResult = await _bookingService.CreateBookingAsync(DefaultRentalId, _defaultStartDate, DefaultNights);
         
-        Assert.IsFalse(actualBookingCreationResult.IsSuccess);
+        Assert.False(actualBookingCreationResult.IsSuccess);
     }
 
-    [Test]
+    [Fact]
     public async Task CreateBooking_ReturnsStatusConflict_WhenAllUnitsInRentalAlreadyBooked()
     {
         var rental = Create.Rental().WithId(DefaultRentalId).WithUnits(1).Please();
         var booking = Create.Booking().WithRentalId(DefaultRentalId).WithStartDate(_defaultStartDate).WithNights(DefaultNights).Please();
         var bookingArray = new[] {booking};
         _rentalRepository.GetOrDefaultAsync(DefaultRentalId).Returns(rental);
-        var defaultStartDate = _defaultStartDate.Date;
         _bookingRepository
             .GetByRentalIdAndDatePeriodAsync(
                 DefaultRentalId,
-                defaultStartDate.AddDays(-rental.PreparationTimeInDays),
-                defaultStartDate.AddDays(DefaultNights - 1))
+                _defaultStartDate.AddDays(-rental.PreparationTimeInDays),
+                _defaultStartDate.AddDays(DefaultNights + rental.PreparationTimeInDays - 1))
             .Returns(bookingArray);
         
         var actualBookingCreationResult = await _bookingService.CreateBookingAsync(DefaultRentalId, _defaultStartDate, DefaultNights);
         
-        Assert.AreEqual(CreateBookingResultErrorStatus.Conflict, actualBookingCreationResult.ErrorStatus);
+        Assert.Equal(CreateBookingResultErrorStatus.Conflict, actualBookingCreationResult.ErrorStatus);
     }
 
-    [Test]
+    [Fact]
     public async Task CreateBooking_CreateBooking_WhenUnitsInRentalIsAvailable()
     {
         var rental = Create.Rental().WithId(DefaultRentalId).WithUnits(1).Please();
@@ -180,7 +180,7 @@ public class BookingServiceTests
             .CreateAsync(expectedBooking.RentalId, expectedBooking.Start, expectedBooking.Nights);
     }
     
-    [Test]
+    [Fact]
     public async Task CreateBooking_ReturnsIsSuccessTrue_WhenUnitsInRentalIsAvailable()
     {
         var rental = Create.Rental().WithId(DefaultRentalId).WithUnits(1).Please();
@@ -202,10 +202,10 @@ public class BookingServiceTests
             expectedBooking.Start,
             expectedBooking.Nights);
 
-        Assert.IsTrue(actualBookingCreationResult.IsSuccess);
+        Assert.True(actualBookingCreationResult.IsSuccess);
     }
     
-    [Test]
+    [Fact]
     public async Task CreateBooking_ReturnsCorrectBooking_WhenUnitsInRentalIsAvailable()
     {
         var rental = Create.Rental().WithId(DefaultRentalId).WithUnits(1).Please();
@@ -227,6 +227,6 @@ public class BookingServiceTests
             expectedBooking.Start,
             expectedBooking.Nights);
 
-        Assert.IsTrue(actualBookingCreationResult.CreatedBooking!.AreEqual(expectedBooking), "Bookings are not equal");
+        Assert.True(actualBookingCreationResult.CreatedBooking!.AreEqual(expectedBooking), "Bookings are not equal");
     }
 }
