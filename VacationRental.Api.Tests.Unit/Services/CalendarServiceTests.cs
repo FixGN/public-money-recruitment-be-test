@@ -10,7 +10,6 @@ using VacationRental.Api.Models;
 using VacationRental.Api.Repositories;
 using VacationRental.Api.Services;
 using VacationRental.Api.Services.Implementation;
-using VacationRental.Api.Services.Models;
 using VacationRental.Api.Services.Models.Calendar;
 using VacationRental.Api.Tests.Unit.DSL;
 using VacationRental.Api.Tests.Unit.Extensions;
@@ -39,7 +38,7 @@ public class CalendarServiceTests
     {
         var actualResult = await _calendarService.GetCalendarDatesAsync(DefaultRentalId, _defaultStartDate, -1);
         
-        Assert.AreEqual(false, actualResult.IsSuccess);
+        Assert.IsFalse(actualResult.IsSuccess);
     }
 
     [Test]
@@ -47,7 +46,7 @@ public class CalendarServiceTests
     {
         var actualResult = await _calendarService.GetCalendarDatesAsync(DefaultRentalId, _defaultStartDate, 0);
         
-        Assert.AreEqual(false, actualResult.IsSuccess);
+        Assert.IsFalse(actualResult.IsSuccess);
     }
     
     [Test]
@@ -57,7 +56,7 @@ public class CalendarServiceTests
         
         var actualResult = await _calendarService.GetCalendarDatesAsync(DefaultRentalId, _defaultStartDate, DefaultNights);
 
-        Assert.AreEqual(false, actualResult.IsSuccess);
+        Assert.IsFalse(actualResult.IsSuccess);
     }
 
     [Test]
@@ -74,7 +73,7 @@ public class CalendarServiceTests
             .Returns(Array.Empty<Booking>());        
         var actualResult = await _calendarService.GetCalendarDatesAsync(DefaultRentalId, _defaultStartDate, DefaultNights);
 
-        Assert.AreEqual(true, actualResult.IsSuccess);
+        Assert.IsTrue(actualResult.IsSuccess);
     }
 
     [Test]

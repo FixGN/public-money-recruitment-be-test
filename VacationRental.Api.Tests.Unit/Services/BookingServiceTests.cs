@@ -8,7 +8,6 @@ using VacationRental.Api.Models;
 using VacationRental.Api.Repositories;
 using VacationRental.Api.Services;
 using VacationRental.Api.Services.Implementation;
-using VacationRental.Api.Services.Models;
 using VacationRental.Api.Services.Models.Booking;
 using VacationRental.Api.Tests.Unit.DSL;
 using VacationRental.Api.Tests.Unit.Extensions;
@@ -52,7 +51,7 @@ public class BookingServiceTests
 
         var actualBooking = await _bookingService.GetBookingOrDefaultAsync(DefaultBookingId);
         
-        Assert.IsTrue(actualBooking!.AreEqual(expectedBooking));
+        Assert.IsTrue(actualBooking!.AreEqual(expectedBooking), "Bookings are not equal");
     }
     
     [Test]
@@ -70,7 +69,7 @@ public class BookingServiceTests
     {
         var actualBookingCreationResult = await _bookingService.CreateBookingAsync(DefaultRentalId, _defaultStartDate, -1);
         
-        Assert.AreEqual(false, actualBookingCreationResult.IsSuccess);
+        Assert.IsFalse(actualBookingCreationResult.IsSuccess);
     }
     
     [Test]
@@ -86,7 +85,7 @@ public class BookingServiceTests
     {
         var actualBookingCreationResult = await _bookingService.CreateBookingAsync(DefaultRentalId, _defaultStartDate, 0);
         
-        Assert.AreEqual(false, actualBookingCreationResult.IsSuccess);
+        Assert.IsFalse(actualBookingCreationResult.IsSuccess);
     }
     
     [Test]
@@ -104,7 +103,7 @@ public class BookingServiceTests
         
         var actualBookingCreationResult = await _bookingService.CreateBookingAsync(DefaultRentalId, _defaultStartDate, DefaultNights);
         
-        Assert.AreEqual(false, actualBookingCreationResult.IsSuccess);
+        Assert.IsFalse(actualBookingCreationResult.IsSuccess);
     }
     
     [Test]
@@ -134,7 +133,7 @@ public class BookingServiceTests
         
         var actualBookingCreationResult = await _bookingService.CreateBookingAsync(DefaultRentalId, _defaultStartDate, DefaultNights);
         
-        Assert.AreEqual(false, actualBookingCreationResult.IsSuccess);
+        Assert.IsFalse(actualBookingCreationResult.IsSuccess);
     }
 
     [Test]
@@ -203,7 +202,7 @@ public class BookingServiceTests
             expectedBooking.Start,
             expectedBooking.Nights);
 
-        Assert.AreEqual(true, actualBookingCreationResult.IsSuccess);
+        Assert.IsTrue(actualBookingCreationResult.IsSuccess);
     }
     
     [Test]
@@ -228,6 +227,6 @@ public class BookingServiceTests
             expectedBooking.Start,
             expectedBooking.Nights);
 
-        Assert.IsTrue(actualBookingCreationResult.CreatedBooking!.AreEqual(expectedBooking));
+        Assert.IsTrue(actualBookingCreationResult.CreatedBooking!.AreEqual(expectedBooking), "Bookings are not equal");
     }
 }
