@@ -23,11 +23,6 @@ public class RentalService : IRentalService
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        if (id < 0)
-        {
-            return null;
-        }
-
         return await _rentalRepository.GetOrDefaultAsync(id, cancellationToken);
     }
 

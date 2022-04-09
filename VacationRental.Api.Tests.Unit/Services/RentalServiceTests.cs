@@ -47,15 +47,7 @@ public class RentalServiceTests
         
         Assert.IsNull(actualRental);
     }
-    
-    [Test]
-    public async Task GetRental_ReturnsNull_WhenRentalIdIsNegative()
-    {
-        var actualRental = await _rentalService.GetRentalOrDefaultAsync(-1);
-        
-        Assert.IsNull(actualRental);
-    }
-    
+
     [Test]
     public async Task GetRental_ReturnsRental_WhenRentalExists()
     {
