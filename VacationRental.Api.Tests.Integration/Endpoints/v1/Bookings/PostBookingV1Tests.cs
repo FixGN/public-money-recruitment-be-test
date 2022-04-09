@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net;
 using System.Threading.Tasks;
 using VacationRental.Api.Contracts.v1.Booking;
 using VacationRental.Api.Contracts.v1.Rental;
@@ -22,23 +21,35 @@ namespace VacationRental.Api.Tests.Integration.Endpoints.v1.Bookings
         }
 
         [Fact]
-        public async Task GivenCompleteRequest_WhenPostBooking_ThenAPostReturnsErrorWhenThereIsOnPreparation()
+        public async Task GivenCompleteRequest_WhenPostBooking_ThenAPostReturnsErrorWhenAvailableUnitOnPreparation()
         {
             var createRentalRequest = new RentalBindingModel(2, 2);
-            var createRentalResult = await _rentalsV1Client.CreateRentalAsync(createRentalRequest);
-            Assert.True(createRentalResult.IsSuccessStatusCode);
+            var createRentalResponse = await _rentalsV1Client.CreateRentalAsync(createRentalRequest);
+            Assert.True(createRentalResponse.IsSuccessStatusCode);
 
-            var createBooking1Request = new BookingBindingModel(createRentalResult.Message!.Id, new DateTime(2001, 01, 01), 1);
-            var createBooking1Result = await _bookingsV1Client.CreateBookingAsync(createBooking1Request);
-            Assert.True(createBooking1Result.IsSuccessStatusCode);
+            var createBooking1Request = new BookingBindingModel(
+                createRentalResponse.Message!.Id,
+                new DateTime(2001, 01, 01),
+                1);
+            var createBooking1Response = await _bookingsV1Client.CreateBookingAsync(createBooking1Request);
+            Assert.True(createBooking1Response.IsSuccessStatusCode);
             
-            var createBooking2Request = new BookingBindingModel(createRentalResult.Message!.Id, new DateTime(2001, 01, 02), 1);
-            var createBooking2Result = await _bookingsV1Client.CreateBookingAsync(createBooking2Request);
-            Assert.True(createBooking2Result.IsSuccessStatusCode);
+            var createBooking2Request = new BookingBindingModel(
+                createRentalResponse.Message!.Id,
+                new DateTime(2001, 01, 02),
+                1);
+            var createBooking2Response = await _bookingsV1Client.CreateBookingAsync(createBooking2Request);
+            Assert.True(createBooking2Response.IsSuccessStatusCode);
             
-            var createBooking3Request = new BookingBindingModel(createRentalResult.Message!.Id, new DateTime(2001, 01, 03), 1);
-            var createBooking3Result = await _bookingsV1Client.CreateBookingAsync(createBooking3Request);
-            Assert.Equal(HttpStatusCode.Conflict, createBooking3Result.StatusCode);
+            var createBooking3Request = new BookingBindingModel(
+                createRentalResponse.Message!.Id,
+                new DateTime(2001, 01, 03),
+                1);
+            // It's part of contracts. I want making HTTP status Conflict (409) instead 
+            await Assert.ThrowsAsync<ApplicationException>(async () =>
+            {
+                _ = await _bookingsV1Client.CreateBookingAsync(createBooking3Request);
+            });
         }
         
         [Fact]
@@ -69,21 +80,22 @@ namespace VacationRental.Api.Tests.Integration.Endpoints.v1.Bookings
             var createRentalResponse = await _rentalsV1Client.CreateRentalAsync(createRentalRequest);
             Assert.True(createRentalResponse.IsSuccessStatusCode);
 
-            var createBooking1Request = new BookingBindingModel(createRentalResponse.Message!.Id, new DateTime(2002, 01, 01), 3);
+            var createBooking1Request = new BookingBindingModel(
+                createRentalResponse.Message!.Id,
+                new DateTime(2002, 01, 01),
+                3);
             var createBooking1Response = await _bookingsV1Client.CreateBookingAsync(createBooking1Request);
             Assert.True(createBooking1Response.IsSuccessStatusCode);
 
-            var createBooking2Request = new BookingBindingModel(createRentalResponse.Message!.Id, new DateTime(2002, 01, 02), 1);
-            var createBooking2Response = await _bookingsV1Client.CreateBookingAsync(createBooking2Request);
-            Assert.Equal(HttpStatusCode.Conflict, createBooking2Response.StatusCode);
-
-            // TODO: Can I change this test? I want to return 409 instead of 500
-            // await Assert.ThrowsAsync<ApplicationException>(async () =>
-            // {
-            //     using (var postBooking2Response = await _client.PostAsJsonAsync($"/api/v1/bookings", postBooking2Request))
-            //     {
-            //     }
-            // });
+            var createBooking2Request = new BookingBindingModel(
+                createRentalResponse.Message!.Id,
+                new DateTime(2002, 01, 02),
+                1);
+            // It's part of contracts. I want making HTTP status Conflict (409) instead 
+            await Assert.ThrowsAsync<ApplicationException>(async () =>
+            {
+                _ = await _bookingsV1Client.CreateBookingAsync(createBooking2Request);
+            });
         }
     }
 }

@@ -45,10 +45,11 @@ namespace VacationRental.Api.Controllers.v1
             {
                 {IsSuccess: true} 
                     => Ok(new ResourceIdViewModel(bookingCreationResult.CreatedBooking.Id)),
-                {ErrorStatus: CreateBookingResultErrorStatus.ValidationFailed} 
+                {ErrorStatus: CreateBookingResultErrorStatus.ValidationFailed}
                     => BadRequest(new ErrorViewModel(bookingCreationResult.ErrorMessage)),
-                {ErrorStatus: CreateBookingResultErrorStatus.Conflict} 
-                    => Conflict(new ErrorViewModel(bookingCreationResult.ErrorMessage)),
+                // It's part of contract. I want to change this to HTTP Status Conflict (409) instead
+                {ErrorStatus: CreateBookingResultErrorStatus.Conflict}
+                    => throw new ApplicationException(bookingCreationResult.ErrorMessage),
                 _ => throw new ApplicationException("Unknown error status")
             };
         }
