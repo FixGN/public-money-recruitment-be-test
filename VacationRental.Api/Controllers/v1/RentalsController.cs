@@ -35,9 +35,16 @@ namespace VacationRental.Api.Controllers.v1
         [HttpPost]
         public async Task<IActionResult> Post(RentalBindingModel model, CancellationToken cancellationToken)
         {
-            var rental = await _rentalService.CreateRentalAsync(model.Units, model.PreparationTimeInDays, cancellationToken);
+            var createRentalResult = await _rentalService.CreateRentalAsync(model.Units, model.PreparationTimeInDays, cancellationToken);
 
-            return Ok(new ResourceIdViewModel(rental.Id));
+            return createRentalResult switch
+            {
+                {IsSuccess: true} 
+                    => Ok(new ResourceIdViewModel(createRentalResult.Rental.Id)),
+                {ErrorStatus: CreateRentalResultErrorStatus.ValidationFail} 
+                    => BadRequest(new ErrorViewModel(createRentalResult.ErrorMessage)),
+                _ => throw new ApplicationException("Unknown error status")
+            };
         }
 
         [HttpPut("{rentalId:int}")]

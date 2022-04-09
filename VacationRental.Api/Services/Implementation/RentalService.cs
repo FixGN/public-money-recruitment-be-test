@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -21,15 +22,34 @@ public class RentalService : IRentalService
     public async Task<Rental?> GetRentalOrDefaultAsync(int id, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
-        
+
+        if (id < 0)
+        {
+            return null;
+        }
+
         return await _rentalRepository.GetOrDefaultAsync(id, cancellationToken);
     }
 
-    public async Task<Rental> CreateRentalAsync(int units, int preparationTimeInDays, CancellationToken cancellationToken = default)
+    public async Task<CreateRentalResult> CreateRentalAsync(
+        int units,
+        int preparationTimeInDays,
+        CancellationToken cancellationToken = default)
     {
-        cancellationToken.ThrowIfCancellationRequested();        
+        cancellationToken.ThrowIfCancellationRequested();   
 
-        return await _rentalRepository.CreateAsync(units, preparationTimeInDays, cancellationToken);
+        if (units < 0)
+        {
+            return CreateRentalResult.ValidationFail("Units must be positive number");
+        }
+        if (preparationTimeInDays < 0)
+        {
+            return CreateRentalResult.ValidationFail("Preparation time must be positive number");
+        }
+
+        var createdRental = await _rentalRepository.CreateAsync(units, preparationTimeInDays, cancellationToken);
+
+        return CreateRentalResult.Successful(createdRental);
     }
 
     public async Task<UpdateRentalResult> UpdateRentalAsync(
