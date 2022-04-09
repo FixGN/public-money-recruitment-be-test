@@ -74,7 +74,7 @@ public class RentalService : IRentalService
 
         if (rental.Units == units && rental.PreparationTimeInDays == preparationTimeInDays)
         {
-            return UpdateRentalResult.Successful();
+            return UpdateRentalResult.Successful(rental);
         }
         
         var rentalBookings = await _bookingRepository.GetByRentalIdAsync(id, cancellationToken);
@@ -105,7 +105,8 @@ public class RentalService : IRentalService
             }
         }
 
-        await _rentalRepository.UpdateAsync(new Rental(rental.Id, units, preparationTimeInDays), cancellationToken);
-        return UpdateRentalResult.Successful();
+        var updatedRental = new Rental(rental.Id, units, preparationTimeInDays);
+        await _rentalRepository.UpdateAsync(updatedRental, cancellationToken);
+        return UpdateRentalResult.Successful(updatedRental);
     }
 }

@@ -54,10 +54,17 @@ namespace VacationRental.Api.Controllers.v1
 
             return updateRentalResult switch
             {
-                {IsSuccess: true} => Ok(new RentalViewModel(rentalId, model.Units, model.PreparationTimeInDays)),
-                {ResultErrorStatus: UpdateRentalResultErrorStatus.ValidationFailed} => BadRequest(new ErrorViewModel(updateRentalResult.ErrorMessage)),
-                {ResultErrorStatus: UpdateRentalResultErrorStatus.RentalNotFound} => NotFound(new ErrorViewModel(updateRentalResult.ErrorMessage)),
-                {ResultErrorStatus: UpdateRentalResultErrorStatus.Conflict} => Conflict(new ErrorViewModel(updateRentalResult.ErrorMessage)),
+                {IsSuccess: true} 
+                    => Ok(new RentalViewModel(
+                    updateRentalResult.Rental.Id,
+                    updateRentalResult.Rental.Units,
+                    updateRentalResult.Rental.PreparationTimeInDays)),
+                {ResultErrorStatus: UpdateRentalResultErrorStatus.ValidationFailed}
+                    => BadRequest(new ErrorViewModel(updateRentalResult.ErrorMessage)),
+                {ResultErrorStatus: UpdateRentalResultErrorStatus.RentalNotFound} 
+                    => NotFound(new ErrorViewModel(updateRentalResult.ErrorMessage)),
+                {ResultErrorStatus: UpdateRentalResultErrorStatus.Conflict} 
+                    => Conflict(new ErrorViewModel(updateRentalResult.ErrorMessage)),
                 _ => throw new ApplicationException("Unknown error status")
             };
         }
