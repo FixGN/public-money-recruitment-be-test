@@ -1,4 +1,4 @@
-namespace VacationRental.Api.Services.Models;
+namespace VacationRental.Api.Services.Models.Rental;
 
 public enum UpdateRentalErrorStatus
 {

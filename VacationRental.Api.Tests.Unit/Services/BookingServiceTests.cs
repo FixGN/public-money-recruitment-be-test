@@ -9,6 +9,7 @@ using VacationRental.Api.Repositories;
 using VacationRental.Api.Services;
 using VacationRental.Api.Services.Implementation;
 using VacationRental.Api.Services.Models;
+using VacationRental.Api.Services.Models.Booking;
 using VacationRental.Api.Tests.Unit.DSL;
 using VacationRental.Api.Tests.Unit.Extensions;
 

@@ -1,7 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
-using VacationRental.Api.Models;
 
-namespace VacationRental.Api.Services.Models;
+namespace VacationRental.Api.Services.Models.Booking;
 
 public class CreateBookingResult
 {
@@ -9,7 +8,7 @@ public class CreateBookingResult
         bool isSuccess,
         CreateBookingResultErrorStatus errorErrorErrorStatus,
         string? errorMessage,
-        Booking? createdBooking)
+        Api.Models.Booking? createdBooking)
     {
         IsSuccess = isSuccess;
         ErrorStatus = errorErrorErrorStatus;
@@ -22,7 +21,7 @@ public class CreateBookingResult
     public bool IsSuccess { get; }
     public CreateBookingResultErrorStatus ErrorStatus { get; }
     public string? ErrorMessage { get; }
-    public Booking? CreatedBooking { get; }
+    public Api.Models.Booking? CreatedBooking { get; }
 
     public static CreateBookingResult ValidationFail(string message) 
         => new(false, CreateBookingResultErrorStatus.ValidationFailed, message, null);
@@ -30,6 +29,6 @@ public class CreateBookingResult
     public static CreateBookingResult Conflict(string message) 
         => new(false, CreateBookingResultErrorStatus.Conflict, message, null);
 
-    public static CreateBookingResult Successful(Booking createdBooking) 
+    public static CreateBookingResult Successful(Api.Models.Booking createdBooking) 
         => new(true, CreateBookingResultErrorStatus.Undefined, null, createdBooking);
 }

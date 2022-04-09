@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using VacationRental.Api.Models;
 using VacationRental.Api.Services.Models;
+using VacationRental.Api.Services.Models.Booking;
 
 namespace VacationRental.Api.Services;
 

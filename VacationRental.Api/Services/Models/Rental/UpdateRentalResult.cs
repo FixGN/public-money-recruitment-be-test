@@ -1,6 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 
-namespace VacationRental.Api.Services.Models;
+namespace VacationRental.Api.Services.Models.Rental;
 
 public class UpdateRentalResult
 {

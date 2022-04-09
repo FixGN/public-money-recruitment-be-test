@@ -2,7 +2,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using VacationRental.Api.Models;
 
-namespace VacationRental.Api.Services.Models;
+namespace VacationRental.Api.Services.Models.Calendar;
 
 public class GetCalendarDatesResult
 {

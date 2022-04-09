@@ -8,6 +8,7 @@ using VacationRental.Api.Logging.Extensions.Services;
 using VacationRental.Api.Models;
 using VacationRental.Api.Repositories;
 using VacationRental.Api.Services.Models;
+using VacationRental.Api.Services.Models.Booking;
 
 namespace VacationRental.Api.Services.Implementation;
 
