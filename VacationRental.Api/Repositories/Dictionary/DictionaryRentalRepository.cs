@@ -10,7 +10,8 @@ namespace VacationRental.Api.Repositories.Dictionary;
 public class DictionaryRentalRepository : IRentalRepository
 {
     private readonly IDictionary<int, Rental> _repository;
-    private readonly object _lock = new();
+    private readonly object _addLock = new();
+    private readonly object _updateLock = new();
 
     public DictionaryRentalRepository(IDictionary<int, Rental> repository)
     {
@@ -30,7 +31,7 @@ public class DictionaryRentalRepository : IRentalRepository
     {
        cancellationToken.ThrowIfCancellationRequested();
        
-       lock (_lock)
+       lock (_addLock)
        {
            var rental = new Rental(_repository.Count + 1, units, preparationTimeInDays);
            _repository.Add(rental.Id, rental);
@@ -39,22 +40,24 @@ public class DictionaryRentalRepository : IRentalRepository
        }
     }
 
-    public Task UpdateAsync(Rental rental, CancellationToken cancellationToken = default)
+    public Task<Rental> UpdateAsync(Rental rental, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
         
-        lock (_lock)
+        lock (_updateLock)
         {
-            if (_repository.TryGetValue(rental.Id, out _))
-            {
-                Task.FromResult(_repository[rental.Id] = rental);
-            }
-            else
+            if (!_repository.ContainsKey(rental.Id))
             {
                 throw new DBConcurrencyException($"Rental with Id {rental.Id} does not exist");
             }
-        }
 
-        return Task.CompletedTask;
+            if (_repository[rental.Id].Version >= rental.Version)
+            {
+                throw new DBConcurrencyException($"Rental with Id {rental.Id} has been updated by another user");
+            }
+
+            _repository[rental.Id] = rental;
+            return Task.FromResult(_repository[rental.Id]);
+        }
     }
 }

@@ -8,5 +8,5 @@ public interface IRentalRepository
 {
     public Task<Rental?> GetOrDefaultAsync(int id, CancellationToken cancellationToken = default);
     public Task<Rental> CreateAsync(int units, int preparationTimeInDays, CancellationToken cancellationToken = default);
-    public Task UpdateAsync(Rental rental, CancellationToken cancellationToken = default);
+    public Task<Rental> UpdateAsync(Rental rental, CancellationToken cancellationToken = default);
 }

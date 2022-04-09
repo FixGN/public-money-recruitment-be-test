@@ -7,6 +7,7 @@ internal class RentalBuilder
     private int _id = 1;
     private int _units = 1;
     private int _preparationTimeInDays = 1;
+    private int _version = 1;
     
     public RentalBuilder WithId(int id)
     {
@@ -25,9 +26,15 @@ internal class RentalBuilder
         _preparationTimeInDays = preparationTimeInDays;
         return this;
     }
+
+    public RentalBuilder WithVersion(int version)
+    {
+        _version = version;
+        return this;
+    }
     
     public Rental Please()
     {
-        return new(_id, _units, _preparationTimeInDays);
+        return new(_id, _units, _preparationTimeInDays, _version);
     }
 }

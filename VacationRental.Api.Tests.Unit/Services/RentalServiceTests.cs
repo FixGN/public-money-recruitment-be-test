@@ -255,7 +255,7 @@ public class RentalServiceTests
             existingRental.Units, 
             existingRental.PreparationTimeInDays + 1);
         
-        Assert.AreEqual(false, actualResult.IsSuccess);
+        Assert.IsFalse(actualResult.IsSuccess);
     }
     
     [Test]
@@ -317,7 +317,7 @@ public class RentalServiceTests
             existingRental.Units - 1,
             existingRental.PreparationTimeInDays);
         
-        Assert.AreEqual(false, actualResult.IsSuccess);
+        Assert.IsFalse(actualResult.IsSuccess);
     }
     
     [Test]
@@ -446,6 +446,38 @@ public class RentalServiceTests
             existingRental.PreparationTimeInDays + 1);
         
         Assert.IsTrue(actualResult.IsSuccess);
+    }
+    
+    [Test]
+    public async Task UpdateRental_ReturnsCorrectRentalVersion_WhenAllParamsIsCorrectAndConflictsNotFound()
+    {
+        var existingRental = Create.Rental()
+            .WithUnits(3)
+            .WithPreparationTimeInDays(2)
+            .WithVersion(2)
+            .Please();
+        _rentalRepository.GetOrDefaultAsync(existingRental.Id).Returns(existingRental);
+        var booking1 = Create.Booking()
+            .WithRentalId(existingRental.Id)
+            .WithUnit(1)
+            .WithStartDate(new DateTime(2022, 1, 1))
+            .WithNights(2)
+            .Please();
+        var booking2 = Create.Booking()
+            .WithRentalId(existingRental.Id)
+            .WithUnit(2)
+            .WithStartDate(new DateTime(2022, 1, 2))
+            .WithNights(2)
+            .Please();
+        var existingBookings = new[] {booking1, booking2};
+        _bookingRepository.GetByRentalIdAsync(existingRental.Id).Returns(existingBookings);
+
+        var actualResult = await _rentalService.UpdateRentalAsync(
+            existingRental.Id,
+            existingRental.Units - 1,
+            existingRental.PreparationTimeInDays + 1);
+        
+        Assert.AreEqual(existingRental.Version + 1, actualResult.Rental!.Version);
     }
     
     [Test]

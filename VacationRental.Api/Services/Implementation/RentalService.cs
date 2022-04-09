@@ -105,7 +105,7 @@ public class RentalService : IRentalService
             }
         }
 
-        var updatedRental = new Rental(rental.Id, units, preparationTimeInDays);
+        var updatedRental = new Rental(rental.Id, units, preparationTimeInDays, rental.Version + 1);
         await _rentalRepository.UpdateAsync(updatedRental, cancellationToken);
         return UpdateRentalResult.Successful(updatedRental);
     }
