@@ -170,14 +170,14 @@ public class BookingServiceTests
                 defaultStartDate.AddDays(DefaultNights - 1))
             .Returns(Array.Empty<Booking>());
         _bookingRepository
-            .CreateAsync(expectedBooking.RentalId, expectedBooking.Unit, expectedBooking.Start, expectedBooking.Nights)
+            .CreateAsync(expectedBooking.RentalId, expectedBooking.Start, expectedBooking.Nights)
             .Returns(expectedBooking);
         
         await _bookingService.CreateBookingAsync(expectedBooking.RentalId, expectedBooking.Start, expectedBooking.Nights);
 
         await _bookingRepository
             .Received(1)
-            .CreateAsync(expectedBooking.RentalId, expectedBooking.Unit, expectedBooking.Start, expectedBooking.Nights);
+            .CreateAsync(expectedBooking.RentalId, expectedBooking.Start, expectedBooking.Nights);
     }
     
     [Test]
@@ -194,7 +194,7 @@ public class BookingServiceTests
                 defaultStartDate.AddDays(DefaultNights - 1))
             .Returns(Array.Empty<Booking>());
         _bookingRepository
-            .CreateAsync(expectedBooking.RentalId, expectedBooking.Unit, expectedBooking.Start, expectedBooking.Nights)
+            .CreateAsync(expectedBooking.RentalId, expectedBooking.Start, expectedBooking.Nights)
             .Returns(expectedBooking);
         
         var actualBookingCreationResult = await _bookingService.CreateBookingAsync(
@@ -219,7 +219,7 @@ public class BookingServiceTests
                 defaultStartDate.AddDays(DefaultNights - 1))
             .Returns(Array.Empty<Booking>());
         _bookingRepository
-            .CreateAsync(expectedBooking.RentalId, expectedBooking.Unit, expectedBooking.Start, expectedBooking.Nights)
+            .CreateAsync(expectedBooking.RentalId, expectedBooking.Start, expectedBooking.Nights)
             .Returns(expectedBooking);
         
         var actualBookingCreationResult = await _bookingService.CreateBookingAsync(
@@ -228,52 +228,5 @@ public class BookingServiceTests
             expectedBooking.Nights);
 
         Assert.IsTrue(actualBookingCreationResult.CreatedBooking!.AreEqual(expectedBooking));
-    }
-    
-    [Test]
-    public async Task CreateBooking_ReturnsBookingWithFirstAvailableUnit_WhenUnitsInRentalIsAvailable()
-    {
-        var rental = Create.Rental().WithId(DefaultRentalId).WithUnits(4).Please();
-        
-        var bookingWithUnit1 = Create.Booking()
-            .WithRentalId(DefaultRentalId)
-            .WithStartDate(_defaultStartDate)
-            .WithNights(DefaultNights)
-            .WithUnit(1)
-            .Please();
-        var bookingWithUnit3 = Create.Booking()
-            .WithRentalId(DefaultRentalId)
-            .WithStartDate(_defaultStartDate)
-            .WithNights(DefaultNights)
-            .WithUnit(3)
-            .Please();
-        var bookingsInRepository = new[] {bookingWithUnit1, bookingWithUnit3};
-        
-        var expectedBooking = Create.Booking()
-            .WithRentalId(DefaultRentalId)
-            .WithStartDate(_defaultStartDate)
-            .WithNights(DefaultNights)
-            .WithUnit(2)
-            .Please();
-        
-        _rentalRepository.GetOrDefaultAsync(DefaultRentalId).Returns(rental);
-        _bookingRepository
-            .GetByRentalIdAndDatePeriodAsync(
-                expectedBooking.RentalId,
-                expectedBooking.Start.AddDays(-rental.PreparationTimeInDays),
-                expectedBooking.Start.AddDays(DefaultNights + rental.PreparationTimeInDays - 1))
-            .Returns(bookingsInRepository);
-        _bookingRepository
-            .CreateAsync(expectedBooking.RentalId, expectedBooking.Unit, expectedBooking.Start, expectedBooking.Nights)
-            .Returns(expectedBooking);
-        
-        
-        var actualBookingCreationResult = await _bookingService.CreateBookingAsync(
-            expectedBooking.RentalId,
-            expectedBooking.Start,
-            expectedBooking.Nights);
-
-        
-        Assert.AreEqual(expectedBooking.Unit, actualBookingCreationResult.CreatedBooking!.Unit);
     }
 }

@@ -14,5 +14,5 @@ public interface IBookingRepository
         DateTime startDate,
         DateTime endDate,
         CancellationToken cancellationToken = default);
-    public Task<Booking> CreateAsync(int rentalId, int unit, DateTime start, int nights, CancellationToken cancellationToken = default);
+    public Task<Booking> CreateAsync(int rentalId, DateTime start, int nights, CancellationToken cancellationToken = default);
 }

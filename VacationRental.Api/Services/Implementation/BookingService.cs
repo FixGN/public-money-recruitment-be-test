@@ -65,18 +65,10 @@ public class BookingService : IBookingService
             _logger.CreateBookingAvailableUnitsNotFound(rentalId, start, nights);
             return CreateBookingResult.Conflict("No available rooms for the specified dates");
         }
-        
-        // In current implementation - ok, but better get available unit and create booking in one transaction
-        // TODO: Think about one transaction for that
-        var bookedUnits = currentBookings.Select(x => x.Unit);
-        var availableUnit = GetFirstAvailableUnit(bookedUnits, rental.Units);
 
-        var booking = await _bookingRepository.CreateAsync(rentalId, availableUnit, startDate, nights, cancellationToken);
+        var booking = await _bookingRepository.CreateAsync(rentalId, startDate, nights, cancellationToken);
 
         _logger.CreateBookingEnd(rentalId, start, nights);
         return CreateBookingResult.Successful(booking);
     }
-    
-    private static int GetFirstAvailableUnit(IEnumerable<int> bookedUnits, int unitsCount) 
-        => Enumerable.Range(1, unitsCount).Except(bookedUnits).Min();
 }

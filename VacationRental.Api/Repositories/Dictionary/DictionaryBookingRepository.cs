@@ -9,18 +9,22 @@ namespace VacationRental.Api.Repositories.Dictionary;
 
 public class DictionaryBookingRepository : IBookingRepository
 {
-    private readonly IDictionary<int,Booking> _repository;
+    private readonly IDictionary<int,Booking> _bookingRepository;
+    private readonly IDictionary<int,Rental> _rentalRepository;
     private readonly object _lock = new();
 
-    public DictionaryBookingRepository(IDictionary<int, Booking> repository)
+    public DictionaryBookingRepository(
+        IDictionary<int, Booking> bookingRepository, 
+        IDictionary<int, Rental> rentalRepository)
     {
-        _repository = repository;
+        _bookingRepository = bookingRepository ?? throw new ArgumentNullException(nameof(bookingRepository));
+        _rentalRepository = rentalRepository ?? throw new ArgumentNullException(nameof(rentalRepository));
     }
     
     public Task<Booking?> GetOrDefaultAsync(int id, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
-        _repository.TryGetValue(id, out var booking);
+        _bookingRepository.TryGetValue(id, out var booking);
 
         return Task.FromResult(booking);
     }
@@ -29,7 +33,7 @@ public class DictionaryBookingRepository : IBookingRepository
     {
         cancellationToken.ThrowIfCancellationRequested();
         
-        return Task.FromResult(_repository.Values.Where(x => x.RentalId == rentalId).ToArray());
+        return Task.FromResult(_bookingRepository.Values.Where(x => x.RentalId == rentalId).ToArray());
     }
 
     public Task<Booking[]> GetByRentalIdAndDatePeriodAsync(
@@ -40,7 +44,7 @@ public class DictionaryBookingRepository : IBookingRepository
     {
         cancellationToken.ThrowIfCancellationRequested();
         
-        return Task.FromResult(_repository.Values
+        return Task.FromResult(_bookingRepository.Values
             .Where(x =>
             {
                 var currentEndDate = x.Start.AddDays(x.Nights - 1);
@@ -51,16 +55,29 @@ public class DictionaryBookingRepository : IBookingRepository
             .ToArray());
     }
 
-    public Task<Booking> CreateAsync(int rentalId, int unit, DateTime start, int nights, CancellationToken cancellationToken = default)
+    public Task<Booking> CreateAsync(int rentalId, DateTime start, int nights, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
         
         lock (_lock)
         {
-            var booking = new Booking(_repository.Count + 1, rentalId, unit, start, nights);
-            _repository.Add(booking.Id, booking);
+            // It would be better to do this in a transaction. Due to the fact that code lives there.
+            var rental = _rentalRepository[rentalId];
+            var bookedUnits = GetByRentalIdAndDatePeriodAsync(
+                rentalId,
+                start.AddDays(-rental.PreparationTimeInDays),
+                start.AddDays(nights + rental.PreparationTimeInDays - 1),
+                cancellationToken).Result
+                .Select(x => x.Unit);
+            var availableUnit = GetFirstAvailableUnit(bookedUnits, rental.Units);
+            
+            var booking = new Booking(_bookingRepository.Count + 1, rentalId, availableUnit, start, nights);
+            _bookingRepository.Add(booking.Id, booking);
 
             return Task.FromResult(booking);
         }
     }
+    
+    private static int GetFirstAvailableUnit(IEnumerable<int> bookedUnits, int unitsCount) 
+        => Enumerable.Range(1, unitsCount).Except(bookedUnits).Min();
 }
