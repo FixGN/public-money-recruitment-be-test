@@ -95,7 +95,6 @@ public class CalendarServiceTests
             Arg.Any<CancellationToken>())
             .Returns(bookingArray);
         
-        // TODO: Fix test after implementation of first task
         var expectedResult = GetCalendarDatesResult.Success(new CalendarDate[] {
             new(_defaultStartDate, bookingArray, Array.Empty<CalendarPreparationTime>()),
             new(_defaultStartDate.AddDays(1), bookingArray, Array.Empty<CalendarPreparationTime>()),
