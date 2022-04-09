@@ -16,23 +16,15 @@ public class UpdateRentalResult
     public UpdateRentalErrorStatus ErrorStatus { get; }
     public string? ErrorMessage { get; }
     
-    public static UpdateRentalResult ValidationFail(string message)
-    {
-        return new UpdateRentalResult(false, UpdateRentalErrorStatus.ValidationFailed, message);
-    }
-    
-    public static UpdateRentalResult RentalNotFound(int id)
-    {
-        return new UpdateRentalResult(false, UpdateRentalErrorStatus.RentalNotFound, $"Rental with id '{id}' not found");
-    }
-    
-    public static UpdateRentalResult Conflict(string message)
-    {
-        return new UpdateRentalResult(false, UpdateRentalErrorStatus.Conflict, message);
-    }
-    
-    public static UpdateRentalResult Successful()
-    {
-        return new UpdateRentalResult(true, UpdateRentalErrorStatus.Undefined, null);
-    }
+    public static UpdateRentalResult ValidationFail(string message) 
+        => new(false, UpdateRentalErrorStatus.ValidationFailed, message);
+
+    public static UpdateRentalResult RentalNotFound(int id) 
+        => new(false, UpdateRentalErrorStatus.RentalNotFound, $"Rental with id '{id}' not found");
+
+    public static UpdateRentalResult Conflict(string message) 
+        => new(false, UpdateRentalErrorStatus.Conflict, message);
+
+    public static UpdateRentalResult Successful() 
+        => new(true, UpdateRentalErrorStatus.Undefined, null);
 }

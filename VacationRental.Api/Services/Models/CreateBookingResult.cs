@@ -24,18 +24,12 @@ public class CreateBookingResult
     public string? ErrorMessage { get; }
     public Booking? CreatedBooking { get; }
 
-    public static CreateBookingResult ValidationFail(string message)
-    {
-        return new CreateBookingResult(false, CreateBookingResultErrorStatus.ValidationFailed, message, null);
-    }
+    public static CreateBookingResult ValidationFail(string message) 
+        => new(false, CreateBookingResultErrorStatus.ValidationFailed, message, null);
 
-    public static CreateBookingResult Conflict(string message)
-    {
-        return new CreateBookingResult(false, CreateBookingResultErrorStatus.Conflict, message, null);
-    }
-    
-    public static CreateBookingResult Successful(Booking createdBooking)
-    {
-        return new CreateBookingResult(true, CreateBookingResultErrorStatus.Undefined, null, createdBooking);
-    }
+    public static CreateBookingResult Conflict(string message) 
+        => new(false, CreateBookingResultErrorStatus.Conflict, message, null);
+
+    public static CreateBookingResult Successful(Booking createdBooking) 
+        => new(true, CreateBookingResultErrorStatus.Undefined, null, createdBooking);
 }
