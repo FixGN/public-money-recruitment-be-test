@@ -1,7 +1,7 @@
 using Microsoft.Extensions.Logging;
-using VacationRental.Api.Logging.Extensions.Services;
 using VacationRental.Api.Models;
 using VacationRental.Api.Repositories;
+using VacationRental.Api.Services.Implementation.Logging.Extensions;
 using VacationRental.Api.Services.Interfaces;
 using VacationRental.Api.Services.Models.Calendar;
 
@@ -26,19 +26,19 @@ public class CalendarService : ICalendarService
         int nights,
         CancellationToken cancellationToken = default)
     {
-        _logger.GetCalendarDatesStart(rentalId, start, nights);
+        _logger.GetCalendarDatesAsyncStart(rentalId, start, nights);
         cancellationToken.ThrowIfCancellationRequested();
         
         if (nights <= 0)
         {
-            _logger.GetCalendarDatesNightsIsNegativeOrZero(rentalId, start, nights);
+            _logger.GetCalendarDatesAsyncNightsIsNegativeOrZero(rentalId, start, nights);
             return GetCalendarDatesResult.Fail("Nights must be positive");
         }
         
         var rental = await _rentalRepository.GetOrDefaultAsync(rentalId, cancellationToken);
         if (rental == null)
         {
-            _logger.GetCalendarDatesRentalNotFound(rentalId, start, nights);
+            _logger.GetCalendarDatesAsyncRentalNotFound(rentalId, start, nights);
             return GetCalendarDatesResult.Fail("Rental not found");
         }
 
@@ -50,7 +50,7 @@ public class CalendarService : ICalendarService
                 startDate.AddDays(-rental.PreparationTimeInDays),
                 startDate.AddDays(nights + rental.PreparationTimeInDays - 1), 
                 cancellationToken);
-        _logger.GetCalendarDatesFoundBookings(rentalId, start, nights, availableBookings.Length);
+        _logger.GetCalendarDatesAsyncFoundBookings(rentalId, start, nights, availableBookings.Length);
         
         for (var i = 0; i < nights; i++)
         {
@@ -67,7 +67,7 @@ public class CalendarService : ICalendarService
             calendarDates[i] = new CalendarDate(date, bookings, preparationTime);
         }
 
-        _logger.GetCalendarDatesEnd(rentalId, start, nights);
+        _logger.GetCalendarDatesAsyncEnd(rentalId, start, nights);
         return GetCalendarDatesResult.Success(calendarDates);
     }
 }

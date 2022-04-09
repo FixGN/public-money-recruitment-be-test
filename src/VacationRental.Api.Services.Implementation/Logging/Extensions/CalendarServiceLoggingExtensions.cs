@@ -1,65 +1,64 @@
-using System;
 using Microsoft.Extensions.Logging;
 
-namespace VacationRental.Api.Logging.Extensions.Services;
+namespace VacationRental.Api.Services.Implementation.Logging.Extensions;
 
 internal static class CalendarServiceLoggingExtensions
 {
-    // GetCalendarDates(int rentalId, DateTime start, int nights)
-    private static readonly Action<ILogger, int, DateTime, int, Exception?> _getCalendarDatesStart;
-    private static readonly Action<ILogger, int, DateTime, int, Exception?> _getCalendarDatesNightsIsNegativeOrZero;
-    private static readonly Action<ILogger, int, DateTime, int, Exception?> _getCalendarDatesRentalNotFound;
-    private static readonly Action<ILogger, int, DateTime, int, int, Exception?> _getCalendarDatesFoundBookings;
-    private static readonly Action<ILogger, int, DateTime, int, Exception?> _getCalendarDatesEnd;
+    // GetCalendarDatesAsync(int rentalId, DateTime start, int nights)
+    private static readonly Action<ILogger, int, DateTime, int, Exception?> _getCalendarDatesAsyncStart;
+    private static readonly Action<ILogger, int, DateTime, int, Exception?> _getCalendarDatesAsyncNightsIsNegativeOrZero;
+    private static readonly Action<ILogger, int, DateTime, int, Exception?> _getCalendarDatesAsyncRentalNotFound;
+    private static readonly Action<ILogger, int, DateTime, int, int, Exception?> _getCalendarDatesAsyncFoundBookings;
+    private static readonly Action<ILogger, int, DateTime, int, Exception?> _getCalendarDatesAsyncEnd;
     
     static CalendarServiceLoggingExtensions()
     {
-        // GetCalendarDates(int rentalId, DateTime start, int nights)
-        _getCalendarDatesStart = LoggerMessage.Define<int, DateTime, int>(
+        // GetCalendarDatesAsync(int rentalId, DateTime start, int nights)
+        _getCalendarDatesAsyncStart = LoggerMessage.Define<int, DateTime, int>(
             LogLevel.Debug,
             new(102_000),
-            "GetCalendarDates(rentalId: {@rentalId}, start: {@start}, nights: {@nights}) - Start");
-        _getCalendarDatesNightsIsNegativeOrZero = LoggerMessage.Define<int, DateTime, int>(
+            "GetCalendarDatesAsync(rentalId: {@rentalId}, start: {@start}, nights: {@nights}) - Start");
+        _getCalendarDatesAsyncNightsIsNegativeOrZero = LoggerMessage.Define<int, DateTime, int>(
             LogLevel.Information,
             new(102_001),
-            "GetCalendarDates(rentalId: {@rentalId}, start: {@start}, nights: {@nights}) - Nights is negative or zero");
-        _getCalendarDatesRentalNotFound = LoggerMessage.Define<int, DateTime, int>(
+            "GetCalendarDatesAsync(rentalId: {@rentalId}, start: {@start}, nights: {@nights}) - Nights is negative or zero");
+        _getCalendarDatesAsyncRentalNotFound = LoggerMessage.Define<int, DateTime, int>(
             LogLevel.Information,
             new(102_002),
-            "GetCalendarDates(rentalId: {@rentalId}, start: {@start}, nights: {@nights}) - Rental not found");
-        _getCalendarDatesFoundBookings = LoggerMessage.Define<int, DateTime, int, int>(
+            "GetCalendarDatesAsync(rentalId: {@rentalId}, start: {@start}, nights: {@nights}) - Rental not found");
+        _getCalendarDatesAsyncFoundBookings = LoggerMessage.Define<int, DateTime, int, int>(
             LogLevel.Debug,
             new(102_003),
-            "GetCalendarDates(rentalId: {@rentalId}, start: {@start}, nights: {@nights}) - Found {@bookingsCount} bookings");
-        _getCalendarDatesEnd = LoggerMessage.Define<int, DateTime, int>(
+            "GetCalendarDatesAsync(rentalId: {@rentalId}, start: {@start}, nights: {@nights}) - Found {@bookingsCount} bookings");
+        _getCalendarDatesAsyncEnd = LoggerMessage.Define<int, DateTime, int>(
             LogLevel.Debug,
             new(102_999),
-            "CreateBooking(rentalId: {@rentalId}, start: {@start}, nights: {@nights}) - End");
+            "GetCalendarDatesAsync(rentalId: {@rentalId}, start: {@start}, nights: {@nights}) - End");
     }
     
-    // GetCalendarDates(int rentalId, DateTime start, int nights)
-    public static void GetCalendarDatesStart(this ILogger logger, int rentalId, DateTime start, int nights)
+    // GetCalendarDatesAsync(int rentalId, DateTime start, int nights)
+    public static void GetCalendarDatesAsyncStart(this ILogger logger, int rentalId, DateTime start, int nights)
     {
-        _getCalendarDatesStart(logger, rentalId, start, nights, null);
+        _getCalendarDatesAsyncStart(logger, rentalId, start, nights, null);
     }
     
-    public static void GetCalendarDatesNightsIsNegativeOrZero(this ILogger logger, int rentalId, DateTime start, int nights)
+    public static void GetCalendarDatesAsyncNightsIsNegativeOrZero(this ILogger logger, int rentalId, DateTime start, int nights)
     {
-        _getCalendarDatesNightsIsNegativeOrZero(logger, rentalId, start, nights, null);
+        _getCalendarDatesAsyncNightsIsNegativeOrZero(logger, rentalId, start, nights, null);
     }
     
-    public static void GetCalendarDatesRentalNotFound(this ILogger logger, int rentalId, DateTime start, int nights)
+    public static void GetCalendarDatesAsyncRentalNotFound(this ILogger logger, int rentalId, DateTime start, int nights)
     {
-        _getCalendarDatesRentalNotFound(logger, rentalId, start, nights, null);
+        _getCalendarDatesAsyncRentalNotFound(logger, rentalId, start, nights, null);
     }
     
-    public static void GetCalendarDatesFoundBookings(this ILogger logger, int rentalId, DateTime start, int nights, int bookingsCount)
+    public static void GetCalendarDatesAsyncFoundBookings(this ILogger logger, int rentalId, DateTime start, int nights, int bookingsCount)
     {
-        _getCalendarDatesFoundBookings(logger, rentalId, start, nights, bookingsCount, null);
+        _getCalendarDatesAsyncFoundBookings(logger, rentalId, start, nights, bookingsCount, null);
     }
     
-    public static void GetCalendarDatesEnd(this ILogger logger, int rentalId, DateTime start, int nights)
+    public static void GetCalendarDatesAsyncEnd(this ILogger logger, int rentalId, DateTime start, int nights)
     {
-        _getCalendarDatesEnd(logger, rentalId, start, nights, null);
+        _getCalendarDatesAsyncEnd(logger, rentalId, start, nights, null);
     }
 }

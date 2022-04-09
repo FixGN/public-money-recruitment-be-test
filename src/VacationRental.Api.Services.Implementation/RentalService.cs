@@ -1,5 +1,7 @@
+using Microsoft.Extensions.Logging;
 using VacationRental.Api.Models;
 using VacationRental.Api.Repositories;
+using VacationRental.Api.Services.Implementation.Logging.Extensions;
 using VacationRental.Api.Services.Interfaces;
 using VacationRental.Api.Services.Models.Rental;
 
@@ -9,11 +11,13 @@ public class RentalService : IRentalService
 {
     private readonly IRentalRepository _rentalRepository;
     private readonly IBookingRepository _bookingRepository;
+    private readonly ILogger<RentalService> _logger;
 
-    public RentalService(IRentalRepository rentalRepository, IBookingRepository bookingRepository)
+    public RentalService(IRentalRepository rentalRepository, IBookingRepository bookingRepository, ILogger<RentalService> logger)
     {
-        _rentalRepository = rentalRepository;
-        _bookingRepository = bookingRepository;
+        _rentalRepository = rentalRepository ?? throw new ArgumentNullException(nameof(rentalRepository));
+        _bookingRepository = bookingRepository ?? throw new ArgumentNullException(nameof(bookingRepository));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
     
     public async Task<Rental?> GetRentalOrDefaultAsync(int id, CancellationToken cancellationToken = default)
@@ -50,26 +54,31 @@ public class RentalService : IRentalService
         int preparationTimeInDays,
         CancellationToken cancellationToken = default)
     {
+        _logger.UpdateRentalAsyncStart(id, units, preparationTimeInDays);
         cancellationToken.ThrowIfCancellationRequested();
-        
+
         if (units < 0)
         {
+            _logger.UpdateRentalAsyncUnitsIsNegative(id, units, preparationTimeInDays);
             return UpdateRentalResult.ValidationFailed("Units count must be positive number");
         }
 
         if (preparationTimeInDays < 0)
         {
+            _logger.UpdateRentalAsyncPreparationTimeInDaysIsNegative(id, units, preparationTimeInDays);
             return UpdateRentalResult.ValidationFailed("PreparationTime must be positive number");
         }
 
         var rental = await _rentalRepository.GetOrDefaultAsync(id, cancellationToken);
         if (rental == null)
         {
+            _logger.UpdateRentalAsyncRentalNotFound(id, units, preparationTimeInDays);
             return UpdateRentalResult.RentalNotFound(id);
         }
 
         if (rental.Units == units && rental.PreparationTimeInDays == preparationTimeInDays)
         {
+            _logger.UpdateRentalAsyncNothingToChange(id, units, preparationTimeInDays);
             return UpdateRentalResult.Successful(rental);
         }
         
@@ -90,11 +99,18 @@ public class RentalService : IRentalService
 
                 if (bookingsWithNewPreparationTime.Count != bookingsWithNewPreparationTime.Select(x => x.Unit).Distinct().Count())
                 {
+                    _logger.UpdateRentalAsyncNumberOfUnitsConflict(id, units, preparationTimeInDays, date);
                     return UpdateRentalResult.Conflict(
                         $"Preparation time in days '{preparationTimeInDays}' makes conflict with bookings on date '{date:d}'");
                 }
                 if (units < bookingsWithNewPreparationTime.Count)
                 {
+                    _logger.UpdateRentalAsyncNumberOfPreparationTimeInDaysConflict(
+                        id,
+                        units,
+                        preparationTimeInDays,
+                        date,
+                        bookingsWithNewPreparationTime.Count);
                     return UpdateRentalResult.Conflict(
                         $"Units count too small for current bookings (bookings count for day {date:d} is {bookingsWithNewPreparationTime.Count})");
                 }
@@ -103,6 +119,7 @@ public class RentalService : IRentalService
 
         var updatedRental = new Rental(rental.Id, units, preparationTimeInDays, rental.Version + 1);
         await _rentalRepository.UpdateAsync(updatedRental, cancellationToken);
+        _logger.UpdateRentalAsyncEnd(id, units, preparationTimeInDays);
         return UpdateRentalResult.Successful(updatedRental);
     }
 }

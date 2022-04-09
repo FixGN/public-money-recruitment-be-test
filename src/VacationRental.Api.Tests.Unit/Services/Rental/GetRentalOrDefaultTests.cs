@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;
 using VacationRental.Api.Repositories;
@@ -22,7 +23,7 @@ public class GetRentalOrDefaultTests
     {
         _rentalRepository = Substitute.For<IRentalRepository>();
         var postBookingRepository = Substitute.For<IBookingRepository>();
-        _rentalService = new RentalService(_rentalRepository, postBookingRepository);
+        _rentalService = new RentalService(_rentalRepository, postBookingRepository, new NullLogger<RentalService>());
     }
 
     [Fact]

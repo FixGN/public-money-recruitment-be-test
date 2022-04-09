@@ -1,65 +1,64 @@
-using System;
 using Microsoft.Extensions.Logging;
 
-namespace VacationRental.Api.Logging.Extensions.Services;
+namespace VacationRental.Api.Services.Implementation.Logging.Extensions;
 
 internal static class BookingServiceLoggingExtension
 {
-    // CreateBooking(int rentalId, DateTime start, int nights)
-    private static readonly Action<ILogger, int, DateTime, int, Exception?> _createBookingStart;
-    private static readonly Action<ILogger, int, DateTime, int, Exception?> _createBookingNightsIsNegativeOrZero;
-    private static readonly Action<ILogger, int, DateTime, int, Exception?> _createBookingRentalNotFound;
-    private static readonly Action<ILogger, int, DateTime, int, Exception?> _createBookingAvailableUnitsNotFound;
-    private static readonly Action<ILogger, int, DateTime, int, Exception?> _createBookingEnd;
+    // CreateBookingAsync(int rentalId, DateTime start, int nights)
+    private static readonly Action<ILogger, int, DateTime, int, Exception?> _createBookingAsyncStart;
+    private static readonly Action<ILogger, int, DateTime, int, Exception?> _createBookingAsyncNightsIsNegativeOrZero;
+    private static readonly Action<ILogger, int, DateTime, int, Exception?> _createBookingAsyncRentalNotFound;
+    private static readonly Action<ILogger, int, DateTime, int, Exception?> _createBookingAsyncAvailableUnitsNotFound;
+    private static readonly Action<ILogger, int, DateTime, int, Exception?> _createBookingAsyncEnd;
 
     static BookingServiceLoggingExtension()
     {
-        // CreateBooking(int rentalId, DateTime start, int nights)
-        _createBookingStart = LoggerMessage.Define<int, DateTime, int>(
+        // CreateBookingAsync(int rentalId, DateTime start, int nights)
+        _createBookingAsyncStart = LoggerMessage.Define<int, DateTime, int>(
             LogLevel.Debug,
             new(101_000),
-            "CreateBooking(rentalId: {@rentalId}, start: {@start}, nights: {@nights}) - Start");
-        _createBookingNightsIsNegativeOrZero = LoggerMessage.Define<int, DateTime, int>(
+            "CreateBookingAsync(rentalId: {@rentalId}, start: {@start}, nights: {@nights}) - Start");
+        _createBookingAsyncNightsIsNegativeOrZero = LoggerMessage.Define<int, DateTime, int>(
             LogLevel.Information,
             new(101_001),
-            "CreateBooking(rentalId: {@rentalId}, start: {@start}, nights: {@nights}) - Nights is negative or zero");
-        _createBookingRentalNotFound = LoggerMessage.Define<int, DateTime, int>(
+            "CreateBookingAsync(rentalId: {@rentalId}, start: {@start}, nights: {@nights}) - Nights is negative or zero");
+        _createBookingAsyncRentalNotFound = LoggerMessage.Define<int, DateTime, int>(
             LogLevel.Information,
             new(101_002),
-            "CreateBooking(rentalId: {@rentalId}, start: {@start}, nights: {@nights}) - Rental not found");
-        _createBookingAvailableUnitsNotFound = LoggerMessage.Define<int, DateTime, int>(
+            "CreateBookingAsync(rentalId: {@rentalId}, start: {@start}, nights: {@nights}) - Rental not found");
+        _createBookingAsyncAvailableUnitsNotFound = LoggerMessage.Define<int, DateTime, int>(
             LogLevel.Information,
             new(101_003),
-            "CreateBooking(rentalId: {@rentalId}, start: {@start}, nights: {@nights}) - Available for booking units not found");
-        _createBookingEnd = LoggerMessage.Define<int, DateTime, int>(
+            "CreateBookingAsync(rentalId: {@rentalId}, start: {@start}, nights: {@nights}) - Available for booking units not found");
+        _createBookingAsyncEnd = LoggerMessage.Define<int, DateTime, int>(
             LogLevel.Debug,
             new(101_999),
-            "CreateBooking(rentalId: {@rentalId}, start: {@start}, nights: {@nights}) - End");
+            "CreateBookingAsync(rentalId: {@rentalId}, start: {@start}, nights: {@nights}) - End");
     }
     
     // CreateBooking(int rentalId, DateTime start, int nights)
-    public static void CreateBookingStart(this ILogger logger, int rentalId, DateTime start, int nights)
+    public static void CreateBookingAsyncStart(this ILogger logger, int rentalId, DateTime start, int nights)
     {
-        _createBookingStart(logger, rentalId, start, nights, null);
+        _createBookingAsyncStart(logger, rentalId, start, nights, null);
     }
     
-    public static void CreateBookingNightsIsNegativeOrZero(this ILogger logger, int rentalId, DateTime start, int nights)
+    public static void CreateBookingAsyncNightsIsNegativeOrZero(this ILogger logger, int rentalId, DateTime start, int nights)
     {
-        _createBookingNightsIsNegativeOrZero(logger, rentalId, start, nights, null);
+        _createBookingAsyncNightsIsNegativeOrZero(logger, rentalId, start, nights, null);
     }
     
-    public static void CreateBookingRentalNotFound(this ILogger logger, int rentalId, DateTime start, int nights)
+    public static void CreateBookingAsyncRentalNotFound(this ILogger logger, int rentalId, DateTime start, int nights)
     {
-        _createBookingRentalNotFound(logger, rentalId, start, nights, null);
+        _createBookingAsyncRentalNotFound(logger, rentalId, start, nights, null);
     }
     
-    public static void CreateBookingAvailableUnitsNotFound(this ILogger logger, int rentalId, DateTime start, int nights)
+    public static void CreateBookingAsyncAvailableUnitsNotFound(this ILogger logger, int rentalId, DateTime start, int nights)
     {
-        _createBookingAvailableUnitsNotFound(logger, rentalId, start, nights, null);
+        _createBookingAsyncAvailableUnitsNotFound(logger, rentalId, start, nights, null);
     }
     
-    public static void CreateBookingEnd(this ILogger logger, int rentalId, DateTime start, int nights)
+    public static void CreateBookingAsyncEnd(this ILogger logger, int rentalId, DateTime start, int nights)
     {
-        _createBookingEnd(logger, rentalId, start, nights, null);
+        _createBookingAsyncEnd(logger, rentalId, start, nights, null);
     }
 }
