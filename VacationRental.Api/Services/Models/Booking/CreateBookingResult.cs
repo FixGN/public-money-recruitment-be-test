@@ -23,7 +23,7 @@ public class CreateBookingResult
     public string? ErrorMessage { get; }
     public Api.Models.Booking? CreatedBooking { get; }
 
-    public static CreateBookingResult ValidationFail(string message) 
+    public static CreateBookingResult ValidationFailed(string message) 
         => new(false, CreateBookingResultErrorStatus.ValidationFailed, message, null);
 
     public static CreateBookingResult Conflict(string message) 

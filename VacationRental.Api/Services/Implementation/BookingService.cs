@@ -44,13 +44,13 @@ public class BookingService : IBookingService
         if (nights <= 0)
         {
             _logger.CreateBookingNightsIsNegativeOrZero(rentalId, start, nights);
-            return CreateBookingResult.ValidationFail("Nights must be positive");
+            return CreateBookingResult.ValidationFailed("Nights must be positive");
         }
         var rental = await _rentalRepository.GetOrDefaultAsync(rentalId, cancellationToken);
         if (rental == null)
         {
             _logger.CreateBookingRentalNotFound(rentalId, start, nights);
-            return CreateBookingResult.ValidationFail("Rental not found");
+            return CreateBookingResult.ValidationFailed("Rental not found");
         }
         
         var startDate = start.Date;

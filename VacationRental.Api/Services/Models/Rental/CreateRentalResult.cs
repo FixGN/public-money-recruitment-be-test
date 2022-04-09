@@ -19,8 +19,8 @@ public class CreateRentalResult
     public string? ErrorMessage { get; }
     public Api.Models.Rental? Rental { get; }
 
-    public static CreateRentalResult ValidationFail(string message) 
-        => new(false, CreateRentalResultErrorStatus.ValidationFail, message, null);
+    public static CreateRentalResult ValidationFailed(string message) 
+        => new(false, CreateRentalResultErrorStatus.ValidationFailed, message, null);
     public static CreateRentalResult Successful(Api.Models.Rental rental) 
         => new(true, CreateRentalResultErrorStatus.Undefined, null, rental);
 }

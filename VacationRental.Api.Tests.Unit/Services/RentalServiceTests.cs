@@ -7,7 +7,6 @@ using VacationRental.Api.Models;
 using VacationRental.Api.Repositories;
 using VacationRental.Api.Services;
 using VacationRental.Api.Services.Implementation;
-using VacationRental.Api.Services.Models;
 using VacationRental.Api.Services.Models.Rental;
 using VacationRental.Api.Tests.Unit.DSL;
 using VacationRental.Api.Tests.Unit.Extensions;
@@ -84,7 +83,7 @@ public class RentalServiceTests
     {
         var actualRentalResult = await _rentalService.CreateRentalAsync(-1, DefaultPreparationTimeInDays);
         
-        Assert.AreEqual(CreateRentalResultErrorStatus.ValidationFail, actualRentalResult.ErrorStatus);
+        Assert.AreEqual(CreateRentalResultErrorStatus.ValidationFailed, actualRentalResult.ErrorStatus);
     }
     
     [Test]
@@ -100,7 +99,7 @@ public class RentalServiceTests
     {
         var actualRentalResult = await _rentalService.CreateRentalAsync(DefaultUnits, -1);
         
-        Assert.AreEqual(CreateRentalResultErrorStatus.ValidationFail, actualRentalResult.ErrorStatus);
+        Assert.AreEqual(CreateRentalResultErrorStatus.ValidationFailed, actualRentalResult.ErrorStatus);
     }
     
     [Test]
@@ -138,7 +137,7 @@ public class RentalServiceTests
     {
         var actualResult = await _rentalService.UpdateRentalAsync(DefaultRentalId, -1, DefaultPreparationTimeInDays);
         
-        Assert.AreEqual(UpdateRentalErrorStatus.ValidationFailed, actualResult.ErrorStatus);
+        Assert.AreEqual(UpdateRentalResultErrorStatus.ValidationFailed, actualResult.ResultErrorStatus);
     }
     
     [Test]
@@ -154,7 +153,7 @@ public class RentalServiceTests
     {
         var actualResult = await _rentalService.UpdateRentalAsync(DefaultRentalId, DefaultUnits, -1);
         
-        Assert.AreEqual(UpdateRentalErrorStatus.ValidationFailed, actualResult.ErrorStatus);
+        Assert.AreEqual(UpdateRentalResultErrorStatus.ValidationFailed, actualResult.ResultErrorStatus);
     }
     
     [Test]
@@ -174,7 +173,7 @@ public class RentalServiceTests
         
         var actualResult = await _rentalService.UpdateRentalAsync(DefaultRentalId, DefaultUnits, DefaultPreparationTimeInDays);
         
-        Assert.AreEqual(UpdateRentalErrorStatus.RentalNotFound, actualResult.ErrorStatus);
+        Assert.AreEqual(UpdateRentalResultErrorStatus.RentalNotFound, actualResult.ResultErrorStatus);
     }
 
     [Test]
@@ -252,7 +251,7 @@ public class RentalServiceTests
             existingRental.Units,
             existingRental.PreparationTimeInDays + 1);
         
-        Assert.AreEqual(UpdateRentalErrorStatus.Conflict, actualResult.ErrorStatus);
+        Assert.AreEqual(UpdateRentalResultErrorStatus.Conflict, actualResult.ResultErrorStatus);
     }
     
     [Test]
@@ -320,7 +319,7 @@ public class RentalServiceTests
             existingRental.Units - 1,
             existingRental.PreparationTimeInDays);
         
-        Assert.AreEqual(UpdateRentalErrorStatus.Conflict, actualResult.ErrorStatus);
+        Assert.AreEqual(UpdateRentalResultErrorStatus.Conflict, actualResult.ResultErrorStatus);
     }
     
     [Test]

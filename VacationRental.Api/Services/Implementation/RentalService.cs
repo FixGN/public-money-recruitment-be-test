@@ -36,11 +36,11 @@ public class RentalService : IRentalService
 
         if (units < 0)
         {
-            return CreateRentalResult.ValidationFail("Units must be positive number");
+            return CreateRentalResult.ValidationFailed("Units must be positive number");
         }
         if (preparationTimeInDays < 0)
         {
-            return CreateRentalResult.ValidationFail("Preparation time must be positive number");
+            return CreateRentalResult.ValidationFailed("Preparation time must be positive number");
         }
 
         var createdRental = await _rentalRepository.CreateAsync(units, preparationTimeInDays, cancellationToken);
@@ -58,12 +58,12 @@ public class RentalService : IRentalService
         
         if (units < 0)
         {
-            return UpdateRentalResult.ValidationFail("Units count must be positive number");
+            return UpdateRentalResult.ValidationFailed("Units count must be positive number");
         }
 
         if (preparationTimeInDays < 0)
         {
-            return UpdateRentalResult.ValidationFail("PreparationTime must be positive number");
+            return UpdateRentalResult.ValidationFailed("PreparationTime must be positive number");
         }
 
         var rental = await _rentalRepository.GetOrDefaultAsync(id, cancellationToken);

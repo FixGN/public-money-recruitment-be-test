@@ -1,6 +1,6 @@
 namespace VacationRental.Api.Services.Models.Rental;
 
-public enum UpdateRentalErrorStatus
+public enum UpdateRentalResultErrorStatus
 {
     Undefined = 0,
     ValidationFailed = 1,
