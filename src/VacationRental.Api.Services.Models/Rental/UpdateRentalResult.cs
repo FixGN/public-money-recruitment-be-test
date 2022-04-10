@@ -32,6 +32,9 @@ public class UpdateRentalResult
 
     public static UpdateRentalResult Conflict(string message) 
         => new(false, UpdateRentalResultErrorStatus.Conflict, message, null);
+    
+    public static UpdateRentalResult ConcurrencyException(string message) 
+        => new(false, UpdateRentalResultErrorStatus.ConcurrencyException, message, null);
 
     public static UpdateRentalResult Successful(Api.Models.Rental rental) 
         => new(true, UpdateRentalResultErrorStatus.Undefined, null, rental);

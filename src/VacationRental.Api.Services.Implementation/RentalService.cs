@@ -1,3 +1,4 @@
+using System.Data;
 using Microsoft.Extensions.Logging;
 using VacationRental.Api.Models;
 using VacationRental.Api.Repositories;
@@ -120,7 +121,15 @@ public class RentalService : IRentalService
         }
 
         var updatedRental = new Rental(rental.Id, units, preparationTimeInDays, rental.Version + 1);
-        await _rentalRepository.UpdateAsync(updatedRental, cancellationToken);
+        try
+        {
+            await _rentalRepository.UpdateAsync(updatedRental, cancellationToken);
+        }
+        catch (DBConcurrencyException e)
+        {
+            _logger.UpdateRentalAsyncDbConcurrencyExceptionWasThrown(id, units, preparationTimeInDays, e.Message);
+            return UpdateRentalResult.ConcurrencyException(e.Message);
+        }
         _logger.UpdateRentalAsyncEnd(id, units, preparationTimeInDays);
         return UpdateRentalResult.Successful(updatedRental);
     }
