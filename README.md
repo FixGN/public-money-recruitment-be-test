@@ -1,3 +1,5 @@
+### You can find a description of the work done [here](WhatWasDone.md)
+
 ## How we'd like to recieve the soluion?
 
 1. Clone this repository and upload it as a new public repository in your github account
