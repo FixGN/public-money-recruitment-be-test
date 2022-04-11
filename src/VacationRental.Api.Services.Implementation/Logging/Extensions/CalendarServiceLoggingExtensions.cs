@@ -4,7 +4,7 @@ namespace VacationRental.Api.Services.Implementation.Logging.Extensions;
 
 internal static class CalendarServiceLoggingExtensions
 {
-    // GetCalendarDatesAsync(int rentalId, DateTime start, int nights)
+    // GetCalendarDatesAsync(int rentalId, DateOnly start, int nights)
     private static readonly Action<ILogger, int, DateOnly, int, Exception?> _getCalendarDatesAsyncStart;
     private static readonly Action<ILogger, int, DateOnly, int, Exception?> _getCalendarDatesAsyncNightsIsNegativeOrZero;
     private static readonly Action<ILogger, int, DateOnly, int, Exception?> _getCalendarDatesAsyncRentalNotFound;
@@ -13,7 +13,7 @@ internal static class CalendarServiceLoggingExtensions
 
     static CalendarServiceLoggingExtensions()
     {
-        // GetCalendarDatesAsync(int rentalId, DateTime start, int nights)
+        // GetCalendarDatesAsync(int rentalId, DateOnly start, int nights)
         _getCalendarDatesAsyncStart = LoggerMessage.Define<int, DateOnly, int>(
             LogLevel.Debug,
             new EventId(102_000),
@@ -36,7 +36,7 @@ internal static class CalendarServiceLoggingExtensions
             "GetCalendarDatesAsync(rentalId: {@rentalId}, start: {@start}, nights: {@nights}) - End");
     }
 
-    // GetCalendarDatesAsync(int rentalId, DateTime start, int nights)
+    // GetCalendarDatesAsync(int rentalId, DateOnly start, int nights)
     public static void GetCalendarDatesAsyncStart(this ILogger logger, int rentalId, DateOnly start, int nights)
     {
         _getCalendarDatesAsyncStart(logger, rentalId, start, nights, null);

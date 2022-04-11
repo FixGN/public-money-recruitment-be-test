@@ -4,7 +4,7 @@ namespace VacationRental.Api.Services.Implementation.Logging.Extensions;
 
 internal static class BookingServiceLoggingExtension
 {
-    // CreateBookingAsync(int rentalId, DateTime start, int nights)
+    // CreateBookingAsync(int rentalId, DateOnly start, int nights)
     private static readonly Action<ILogger, int, DateOnly, int, Exception?> _createBookingAsyncStart;
     private static readonly Action<ILogger, int, DateOnly, int, Exception?> _createBookingAsyncNightsIsNegativeOrZero;
     private static readonly Action<ILogger, int, DateOnly, int, Exception?> _createBookingAsyncRentalNotFound;
@@ -13,7 +13,7 @@ internal static class BookingServiceLoggingExtension
 
     static BookingServiceLoggingExtension()
     {
-        // CreateBookingAsync(int rentalId, DateTime start, int nights)
+        // CreateBookingAsync(int rentalId, DateOnly start, int nights)
         _createBookingAsyncStart = LoggerMessage.Define<int, DateOnly, int>(
             LogLevel.Debug,
             new EventId(101_000),
@@ -36,7 +36,7 @@ internal static class BookingServiceLoggingExtension
             "CreateBookingAsync(rentalId: {@rentalId}, start: {@start}, nights: {@nights}) - End");
     }
 
-    // CreateBooking(int rentalId, DateTime start, int nights)
+    // CreateBooking(int rentalId, DateOnly start, int nights)
     public static void CreateBookingAsyncStart(this ILogger logger, int rentalId, DateOnly start, int nights)
     {
         _createBookingAsyncStart(logger, rentalId, start, nights, null);
