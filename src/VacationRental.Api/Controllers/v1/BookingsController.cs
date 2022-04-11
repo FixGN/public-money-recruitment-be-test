@@ -37,7 +37,7 @@ public class BookingsController : ControllerBase
     {
         var bookingCreationResult = await _bookingService.CreateBookingAsync(
             model.RentalId,
-            model.Start,
+            DateOnly.FromDateTime(model.Start),
             model.Nights,
             cancellationToken);
 

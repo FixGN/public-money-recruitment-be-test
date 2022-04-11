@@ -156,13 +156,13 @@ public class UpdateRentalTests
         var booking1 = Create.Booking()
             .WithRentalId(existingRental.Id)
             .WithUnit(1)
-            .WithStartDate(new DateTime(2022, 1, 1))
+            .WithStartDate(new DateOnly(2022, 1, 1))
             .WithNights(1)
             .Please();
         var booking2 = Create.Booking()
             .WithRentalId(existingRental.Id)
             .WithUnit(1)
-            .WithStartDate(new DateTime(2022, 1, 4))
+            .WithStartDate(new DateOnly(2022, 1, 4))
             .WithNights(1)
             .Please();
         var existingBookings = new[] {booking1, booking2};
@@ -184,13 +184,13 @@ public class UpdateRentalTests
         var booking1 = Create.Booking()
             .WithRentalId(existingRental.Id)
             .WithUnit(1)
-            .WithStartDate(new DateTime(2022, 1, 1))
+            .WithStartDate(new DateOnly(2022, 1, 1))
             .WithNights(1)
             .Please();
         var booking2 = Create.Booking()
             .WithRentalId(existingRental.Id)
             .WithUnit(1)
-            .WithStartDate(new DateTime(2022, 1, 4))
+            .WithStartDate(new DateOnly(2022, 1, 4))
             .WithNights(1)
             .Please();
         var existingBookings = new[] {booking1, booking2};
@@ -212,19 +212,19 @@ public class UpdateRentalTests
         var booking1 = Create.Booking()
             .WithRentalId(existingRental.Id)
             .WithUnit(1)
-            .WithStartDate(new DateTime(2022, 1, 1))
+            .WithStartDate(new DateOnly(2022, 1, 1))
             .WithNights(2)
             .Please();
         var booking2 = Create.Booking()
             .WithRentalId(existingRental.Id)
             .WithUnit(2)
-            .WithStartDate(new DateTime(2022, 1, 2))
+            .WithStartDate(new DateOnly(2022, 1, 2))
             .WithNights(2)
             .Please();
         var booking3 = Create.Booking()
             .WithRentalId(existingRental.Id)
             .WithUnit(3)
-            .WithStartDate(new DateTime(2022, 1, 3))
+            .WithStartDate(new DateOnly(2022, 1, 3))
             .WithNights(2)
             .Please();
         var existingBookings = new[] {booking1, booking2, booking3};
@@ -246,19 +246,19 @@ public class UpdateRentalTests
         var booking1 = Create.Booking()
             .WithRentalId(existingRental.Id)
             .WithUnit(1)
-            .WithStartDate(new DateTime(2022, 1, 1))
+            .WithStartDate(new DateOnly(2022, 1, 1))
             .WithNights(2)
             .Please();
         var booking2 = Create.Booking()
             .WithRentalId(existingRental.Id)
             .WithUnit(2)
-            .WithStartDate(new DateTime(2022, 1, 2))
+            .WithStartDate(new DateOnly(2022, 1, 2))
             .WithNights(2)
             .Please();
         var booking3 = Create.Booking()
             .WithRentalId(existingRental.Id)
             .WithUnit(3)
-            .WithStartDate(new DateTime(2022, 1, 3))
+            .WithStartDate(new DateOnly(2022, 1, 3))
             .WithNights(2)
             .Please();
         var existingBookings = new[] {booking1, booking2, booking3};
@@ -280,13 +280,13 @@ public class UpdateRentalTests
         var booking1 = Create.Booking()
             .WithRentalId(existingRental.Id)
             .WithUnit(1)
-            .WithStartDate(new DateTime(2022, 1, 1))
+            .WithStartDate(new DateOnly(2022, 1, 1))
             .WithNights(2)
             .Please();
         var booking2 = Create.Booking()
             .WithRentalId(existingRental.Id)
             .WithUnit(2)
-            .WithStartDate(new DateTime(2022, 1, 2))
+            .WithStartDate(new DateOnly(2022, 1, 2))
             .WithNights(2)
             .Please();
         var existingBookings = new[] {booking1, booking2};
@@ -308,13 +308,13 @@ public class UpdateRentalTests
         var booking1 = Create.Booking()
             .WithRentalId(existingRental.Id)
             .WithUnit(1)
-            .WithStartDate(new DateTime(2022, 1, 1))
+            .WithStartDate(new DateOnly(2022, 1, 1))
             .WithNights(2)
             .Please();
         var booking2 = Create.Booking()
             .WithRentalId(existingRental.Id)
             .WithUnit(2)
-            .WithStartDate(new DateTime(2022, 1, 2))
+            .WithStartDate(new DateOnly(2022, 1, 2))
             .WithNights(2)
             .Please();
         var existingBookings = new[] {booking1, booking2};
@@ -346,13 +346,13 @@ public class UpdateRentalTests
         var booking1 = Create.Booking()
             .WithRentalId(existingRental.Id)
             .WithUnit(1)
-            .WithStartDate(new DateTime(2022, 1, 1))
+            .WithStartDate(new DateOnly(2022, 1, 1))
             .WithNights(2)
             .Please();
         var booking2 = Create.Booking()
             .WithRentalId(existingRental.Id)
             .WithUnit(2)
-            .WithStartDate(new DateTime(2022, 1, 2))
+            .WithStartDate(new DateOnly(2022, 1, 2))
             .WithNights(2)
             .Please();
         var existingBookings = new[] {booking1, booking2};
@@ -375,13 +375,13 @@ public class UpdateRentalTests
         var booking1 = Create.Booking()
             .WithRentalId(existingRental.Id)
             .WithUnit(1)
-            .WithStartDate(new DateTime(2022, 1, 1))
+            .WithStartDate(new DateOnly(2022, 1, 1))
             .WithNights(2)
             .Please();
         var booking2 = Create.Booking()
             .WithRentalId(existingRental.Id)
             .WithUnit(2)
-            .WithStartDate(new DateTime(2022, 1, 2))
+            .WithStartDate(new DateOnly(2022, 1, 2))
             .WithNights(2)
             .Please();
         var existingBookings = new[] {booking1, booking2};

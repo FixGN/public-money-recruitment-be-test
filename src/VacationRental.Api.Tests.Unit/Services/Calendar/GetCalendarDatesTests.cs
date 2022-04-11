@@ -21,7 +21,7 @@ public class GetCalendarDatesTests
 {
     private const int DefaultRentalId = 1;
     private const int DefaultNights = 2;
-    private readonly DateTime _defaultStartDate = new(2022, 1, 1);
+    private readonly DateOnly _defaultStartDate = new(2022, 1, 1);
 
     private readonly IBookingRepository _bookingRepository;
     private readonly ICalendarService _calendarService;
@@ -65,12 +65,11 @@ public class GetCalendarDatesTests
     {
         var rental = Create.Rental().WithId(DefaultRentalId).Please();
         _rentalRepository.GetOrDefaultAsync(DefaultRentalId).Returns(rental);
-        var defaultStartDate = _defaultStartDate.Date;
         _bookingRepository
             .GetByRentalIdAndDatePeriodAsync(
                 DefaultRentalId,
-                defaultStartDate,
-                defaultStartDate.AddDays(DefaultNights - 1))
+                _defaultStartDate,
+                _defaultStartDate.AddDays(DefaultNights - 1))
             .Returns(Array.Empty<Models.Booking>());
         var actualResult = await _calendarService.GetCalendarDatesAsync(DefaultRentalId, _defaultStartDate, DefaultNights);
 

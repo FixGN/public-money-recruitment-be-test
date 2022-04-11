@@ -89,7 +89,7 @@ public class RentalService : IRentalService
         {
             var minRentalDate = rentalBookings.Select(x => x.Start).Min();
             var maxRentalDate = rentalBookings.Select(x => x.Start.AddDays(x.Nights + rental.PreparationTimeInDays - 1)).Max();
-            var currentBookingDaysCount = (maxRentalDate - minRentalDate).Days + 1;
+            var currentBookingDaysCount = maxRentalDate.DayNumber - minRentalDate.DayNumber + 1;
 
             for (var i = 0; i < currentBookingDaysCount; i++)
             {

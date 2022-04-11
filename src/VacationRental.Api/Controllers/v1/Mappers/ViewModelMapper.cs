@@ -17,7 +17,12 @@ public static class ViewModelMapper
             throw new ArgumentNullException(nameof(booking));
         }
 
-        return new BookingViewModel(booking.Id, booking.RentalId, booking.Unit, booking.Start, booking.Nights);
+        return new BookingViewModel(
+            booking.Id,
+            booking.RentalId,
+            booking.Unit,
+            booking.Start.ToDateTime(TimeOnly.MinValue),
+            booking.Nights);
     }
 
     public static CalendarViewModel MapRentalIdAndCalendarDatesToCalendarViewModel(
@@ -37,7 +42,7 @@ public static class ViewModelMapper
     private static CalendarDateViewModel MapCalendarDatesToCalendarDatesViewModel(CalendarDate calendarDate)
     {
         return new CalendarDateViewModel(
-            calendarDate.Date,
+            calendarDate.Date.ToDateTime(TimeOnly.MinValue),
             calendarDate.Bookings.Select(x => new CalendarBookingViewModel(x.Id, x.Unit)).ToList(),
             calendarDate.PreparationTimes.Select(x => new CalendarPreparationTimeViewModel(x.Unit)).ToList());
     }
