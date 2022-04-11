@@ -11,6 +11,7 @@ internal static class RentalServiceLoggingExtension
     private static readonly Action<ILogger, int, int, int, Exception?> _updateRentalAsyncRentalNotFound;
     private static readonly Action<ILogger, int, int, int, Exception?> _updateRentalAsyncNothingToChange;
     private static readonly Action<ILogger, int, int, int, DateTime, Exception?> _updateRentalAsyncNumberOfUnitsConflict;
+    private static readonly Action<ILogger, int, int, int, string, Exception?> _updateRentalAsyncDbConcurrencyExceptionWasThrown;
     private static readonly Action<ILogger, int, int, int, DateTime, int, Exception?>
         _updateRentalAsyncNumberOfPreparationTimeInDaysConflict;
 
@@ -53,6 +54,11 @@ internal static class RentalServiceLoggingExtension
             new EventId(103_006),
             "UpdateRentalAsync(id: {@id}, units: {@units}, preparationTimeInDays: {@preparationTimeInDays}) - " +
             "Units count too small for current bookings (bookings count for day {@date} is {bookingsCount}");
+        _updateRentalAsyncDbConcurrencyExceptionWasThrown = LoggerMessage.Define<int, int, int, string>(
+            LogLevel.Warning,
+            new EventId(103_007),
+            "UpdateRentalAsync(id: {@id}, units: {@units}, preparationTimeInDays: {@preparationTimeInDays}) - " +
+            "DbConcurrenceException was thrown when was trying update rental. Error message: '{@errorMessage}'");
         _updateRentalAsyncEnd = LoggerMessage.Define<int, int, int>(
             LogLevel.Debug,
             new EventId(103_999),
@@ -104,6 +110,16 @@ internal static class RentalServiceLoggingExtension
         int bookingsCount)
     {
         _updateRentalAsyncNumberOfPreparationTimeInDaysConflict(logger, id, units, preparationTimeInDays, date, bookingsCount, null);
+    }
+    
+    public static void UpdateRentalAsyncDbConcurrencyExceptionWasThrown(
+        this ILogger logger,
+        int id,
+        int units,
+        int preparationTimeInDays,
+        string errorMessage)
+    {
+        _updateRentalAsyncDbConcurrencyExceptionWasThrown(logger, id, units, preparationTimeInDays, errorMessage, null);
     }
 
     public static void UpdateRentalAsyncEnd(this ILogger logger, int id, int units, int preparationTimeInDays)

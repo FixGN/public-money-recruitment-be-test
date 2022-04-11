@@ -65,6 +65,8 @@ public class RentalsController : ControllerBase
                 => NotFound(new ErrorViewModel(updateRentalResult.ErrorMessage)),
             {ResultErrorStatus: UpdateRentalResultErrorStatus.Conflict}
                 => Conflict(new ErrorViewModel(updateRentalResult.ErrorMessage)),
+            {ResultErrorStatus: UpdateRentalResultErrorStatus.ConcurrencyException}
+                => Conflict(new ErrorViewModel(updateRentalResult.ErrorMessage)),
             _ => throw new ApplicationException("Unknown error status")
         };
     }
