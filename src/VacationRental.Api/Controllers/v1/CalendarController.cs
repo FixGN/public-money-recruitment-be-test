@@ -22,7 +22,11 @@ public class CalendarController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> Get(int rentalId, DateTime start, int nights, CancellationToken cancellationToken)
     {
-        var calendarDatesResult = await _calendarService.GetCalendarDatesAsync(rentalId, start, nights, cancellationToken);
+        var calendarDatesResult = await _calendarService.GetCalendarDatesAsync(
+            rentalId,
+            DateOnly.FromDateTime(start),
+            nights,
+            cancellationToken);
 
         if (!calendarDatesResult.IsSuccess)
         {

@@ -8,7 +8,7 @@ internal class BookingBuilder
     private int _id = 1;
     private int _nights = 1;
     private int _rentalId = 1;
-    private DateTime _startDate = new(2022, 1, 1);
+    private DateOnly _startDate = new(2022, 1, 1);
     private int _unit = 1;
 
     public BookingBuilder WithId(int id)
@@ -29,7 +29,7 @@ internal class BookingBuilder
         return this;
     }
 
-    public BookingBuilder WithStartDate(DateTime startDate)
+    public BookingBuilder WithStartDate(DateOnly startDate)
     {
         _startDate = startDate;
         return this;

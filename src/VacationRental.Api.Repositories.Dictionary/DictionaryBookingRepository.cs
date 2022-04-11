@@ -31,10 +31,9 @@ public class DictionaryBookingRepository : IBookingRepository
         return Task.FromResult(_bookingRepository.Values.Where(x => x.RentalId == rentalId).ToArray());
     }
 
-    public Task<Booking[]> GetByRentalIdAndDatePeriodAsync(
-        int rentalId,
-        DateTime startDate,
-        DateTime endDate,
+    public Task<Booking[]> GetByRentalIdAndDatePeriodAsync(int rentalId,
+        DateOnly startDate,
+        DateOnly endDate,
         CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
@@ -44,13 +43,13 @@ public class DictionaryBookingRepository : IBookingRepository
             {
                 var currentEndDate = x.Start.AddDays(x.Nights - 1);
                 return x.RentalId == rentalId
-                       && x.Start <= endDate.Date
-                       && startDate.Date <= currentEndDate;
+                       && x.Start <= endDate
+                       && startDate <= currentEndDate;
             })
             .ToArray());
     }
 
-    public Task<Booking> CreateAsync(int rentalId, DateTime start, int nights, CancellationToken cancellationToken = default)
+    public Task<Booking> CreateAsync(int rentalId, DateOnly start, int nights, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
 

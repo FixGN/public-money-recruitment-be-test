@@ -29,27 +29,25 @@ public class BookingService : IBookingService
 
     public async Task<CreateBookingResult> CreateBookingAsync(
         int rentalId,
-        DateTime start,
+        DateOnly startDate,
         int nights,
         CancellationToken cancellationToken = default)
     {
-        _logger.CreateBookingAsyncStart(rentalId, start, nights);
+        _logger.CreateBookingAsyncStart(rentalId, startDate, nights);
         cancellationToken.ThrowIfCancellationRequested();
 
         if (nights <= 0)
         {
-            _logger.CreateBookingAsyncNightsIsNegativeOrZero(rentalId, start, nights);
+            _logger.CreateBookingAsyncNightsIsNegativeOrZero(rentalId, startDate, nights);
             return CreateBookingResult.ValidationFailed("Nights must be positive");
         }
 
         var rental = await _rentalRepository.GetOrDefaultAsync(rentalId, cancellationToken);
         if (rental == null)
         {
-            _logger.CreateBookingAsyncRentalNotFound(rentalId, start, nights);
+            _logger.CreateBookingAsyncRentalNotFound(rentalId, startDate, nights);
             return CreateBookingResult.ValidationFailed("Rental not found");
         }
-
-        var startDate = start.Date;
 
         var currentBookings = await _bookingRepository.GetByRentalIdAndDatePeriodAsync(
             rentalId,
@@ -59,13 +57,13 @@ public class BookingService : IBookingService
 
         if (rental.Units <= currentBookings.Length)
         {
-            _logger.CreateBookingAsyncAvailableUnitsNotFound(rentalId, start, nights);
+            _logger.CreateBookingAsyncAvailableUnitsNotFound(rentalId, startDate, nights);
             return CreateBookingResult.Conflict("No available rooms for the specified dates");
         }
 
         var booking = await _bookingRepository.CreateAsync(rentalId, startDate, nights, cancellationToken);
 
-        _logger.CreateBookingAsyncEnd(rentalId, start, nights);
+        _logger.CreateBookingAsyncEnd(rentalId, startDate, nights);
         return CreateBookingResult.Successful(booking);
     }
 }

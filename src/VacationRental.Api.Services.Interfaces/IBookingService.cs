@@ -7,9 +7,8 @@ public interface IBookingService
 {
     public Task<Booking?> GetBookingOrDefaultAsync(int id, CancellationToken cancellationToken = default);
 
-    public Task<CreateBookingResult> CreateBookingAsync(
-        int rentalId,
-        DateTime start,
+    public Task<CreateBookingResult> CreateBookingAsync(int rentalId,
+        DateOnly startDate,
         int nights,
         CancellationToken cancellationToken = default);
 }

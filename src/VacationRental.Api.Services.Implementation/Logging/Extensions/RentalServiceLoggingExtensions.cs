@@ -10,9 +10,9 @@ internal static class RentalServiceLoggingExtension
     private static readonly Action<ILogger, int, int, int, Exception?> _updateRentalAsyncPreparationTimeInDaysIsNegative;
     private static readonly Action<ILogger, int, int, int, Exception?> _updateRentalAsyncRentalNotFound;
     private static readonly Action<ILogger, int, int, int, Exception?> _updateRentalAsyncNothingToChange;
-    private static readonly Action<ILogger, int, int, int, DateTime, Exception?> _updateRentalAsyncNumberOfUnitsConflict;
+    private static readonly Action<ILogger, int, int, int, DateOnly, Exception?> _updateRentalAsyncNumberOfUnitsConflict;
     private static readonly Action<ILogger, int, int, int, string, Exception?> _updateRentalAsyncDbConcurrencyExceptionWasThrown;
-    private static readonly Action<ILogger, int, int, int, DateTime, int, Exception?>
+    private static readonly Action<ILogger, int, int, int, DateOnly, int, Exception?>
         _updateRentalAsyncNumberOfPreparationTimeInDaysConflict;
 
     private static readonly Action<ILogger, int, int, int, Exception?> _updateRentalAsyncEnd;
@@ -44,12 +44,12 @@ internal static class RentalServiceLoggingExtension
             new EventId(103_004),
             "UpdateRentalAsync(id: {@id}, units: {@units}, preparationTimeInDays: {@preparationTimeInDays}) - " +
             "Rental has same values in Units and PreparationTimeInDays. Nothing to change");
-        _updateRentalAsyncNumberOfUnitsConflict = LoggerMessage.Define<int, int, int, DateTime>(
+        _updateRentalAsyncNumberOfUnitsConflict = LoggerMessage.Define<int, int, int, DateOnly>(
             LogLevel.Information,
             new EventId(103_005),
             "UpdateRentalAsync(id: {@id}, units: {@units}, preparationTimeInDays: {@preparationTimeInDays}) - " +
             "Preparation time in days makes conflict with bookings on date '{@date}");
-        _updateRentalAsyncNumberOfPreparationTimeInDaysConflict = LoggerMessage.Define<int, int, int, DateTime, int>(
+        _updateRentalAsyncNumberOfPreparationTimeInDaysConflict = LoggerMessage.Define<int, int, int, DateOnly, int>(
             LogLevel.Information,
             new EventId(103_006),
             "UpdateRentalAsync(id: {@id}, units: {@units}, preparationTimeInDays: {@preparationTimeInDays}) - " +
@@ -96,7 +96,7 @@ internal static class RentalServiceLoggingExtension
         int id,
         int units,
         int preparationTimeInDays,
-        DateTime date)
+        DateOnly date)
     {
         _updateRentalAsyncNumberOfUnitsConflict(logger, id, units, preparationTimeInDays, date, null);
     }
@@ -106,7 +106,7 @@ internal static class RentalServiceLoggingExtension
         int id,
         int units,
         int preparationTimeInDays,
-        DateTime date,
+        DateOnly date,
         int bookingsCount)
     {
         _updateRentalAsyncNumberOfPreparationTimeInDaysConflict(logger, id, units, preparationTimeInDays, date, bookingsCount, null);
