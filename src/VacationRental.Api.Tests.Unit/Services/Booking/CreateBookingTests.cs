@@ -191,4 +191,58 @@ public class CreateBookingTests
 
         Assert.True(actualBookingCreationResult.CreatedBooking!.AreEqual(expectedBooking), "Bookings are not equal");
     }
+
+    [Fact]
+    public async Task GivenRentalExistsAndHasTwoUnitsAndOneBookedUnits_WhenCreateBooking_ThenReturnsIsSuccessTrue()
+    {
+        var rental = Create.Rental().WithId(DefaultRentalId).WithUnits(2).WithPreparationTimeInDays(1).Please();
+        var createdBooking1 = Create.Booking()
+            .WithRentalId(rental.Id)
+            .WithUnit(1)
+            .WithStartDate(new DateOnly(2022, 1, 1))
+            .WithNights(2)
+            .Please();
+        var createdBooking2 = Create.Booking()
+            .WithRentalId(rental.Id)
+            .WithUnit(1)
+            .WithStartDate(new DateOnly(2022, 1, 4))
+            .WithNights(2)
+            .Please();
+        _rentalRepository.GetOrDefaultAsync(rental.Id).Returns(rental);
+        
+        var expectedBooking = Create.Booking()
+            .WithRentalId(rental.Id)
+            .WithUnit(2)
+            .WithStartDate(new DateOnly(2022, 1, 1))
+            .WithNights(6)
+            .Please();
+        _bookingRepository
+            .GetByRentalIdAndDatePeriodAsync(
+                rental.Id,
+                CalculateStartDateForGetByRentalIdAndDatePeriodAsync(expectedBooking.Start, rental.PreparationTimeInDays),
+                CalculateEndDate(expectedBooking.Start, expectedBooking.Nights, rental.PreparationTimeInDays))
+            .Returns(new [] { createdBooking1, createdBooking2 });
+        
+        _bookingRepository
+            .CreateAsync(expectedBooking.RentalId, expectedBooking.Start, expectedBooking.Nights)
+            .Returns(expectedBooking);
+
+        
+        var actualBookingCreationResult = await _bookingService.CreateBookingAsync(
+            expectedBooking.RentalId,
+            expectedBooking.Start,
+            expectedBooking.Nights);
+
+        Assert.True(actualBookingCreationResult.IsSuccess);
+    }
+    
+    private static DateOnly CalculateEndDate(DateOnly startDate, int nights, int preparationTimeInDays)
+    {
+        return startDate.AddDays(nights + preparationTimeInDays - 1);
+    }
+    
+    private static DateOnly CalculateStartDateForGetByRentalIdAndDatePeriodAsync(DateOnly startDate, int preparationTimeInDays)
+    {
+        return startDate.AddDays(-preparationTimeInDays);
+    }
 }
