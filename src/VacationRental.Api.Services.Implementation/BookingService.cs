@@ -55,7 +55,8 @@ public class BookingService : IBookingService
             startDate.AddDays(nights + rental.PreparationTimeInDays - 1),
             cancellationToken);
 
-        if (rental.Units <= currentBookings.Length)
+        var bookedUnits = currentBookings.Select(x => x.Unit).Distinct().Count();
+        if (rental.Units <= bookedUnits)
         {
             _logger.CreateBookingAsyncAvailableUnitsNotFound(rentalId, startDate, nights);
             return CreateBookingResult.Conflict("No available rooms for the specified dates");
